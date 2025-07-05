@@ -31,23 +31,16 @@
         chromophobiaSettings.update(s => ({ ...s, contrast: value }));
     }
 
-    // Preset configurations
-    const presets = {
-        'gentle': { saturationLevel: 20, brightness: 110, contrast: 90 },
-        'moderate': { saturationLevel: 0, brightness: 100, contrast: 100 },
-        'strong': { saturationLevel: 0, brightness: 90, contrast: 110 },
-        'custom': null
-    };
-
     function applyPreset(presetName: string) {
-        if (presetName === 'custom') return;
-        
+        const presets = {
+            'gentle': { saturationLevel: 20, brightness: 110, contrast: 90 },
+            'moderate': { saturationLevel: 0, brightness: 100, contrast: 100 },
+            'strong': { saturationLevel: 0, brightness: 90, contrast: 110 }
+        };
+
         const preset = presets[presetName as keyof typeof presets];
         if (preset) {
-            chromophobiaSettings.update(s => ({
-                ...s,
-                ...preset
-            }));
+            chromophobiaSettings.update(s => ({ ...s, ...preset }));
         }
     }
 

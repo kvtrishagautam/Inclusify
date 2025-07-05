@@ -1,5 +1,5 @@
 import { mount } from "svelte";
-import ChromophobiaSidePanel from "../components/ChromophobiaSidePanel.svelte";
+import ChromophobiaSidePanelView from "../views/ChromophobiaSidePanelView.svelte";
 
 // Options
 // https://developer.chrome.com/docs/extensions/mv3/options/
@@ -8,7 +8,7 @@ function render() {
     const target = document.getElementById("app");
 
     if (target) {
-        mount(ChromophobiaSidePanel, { target });
+        mount(ChromophobiaSidePanelView, { target });
     }
 }
 

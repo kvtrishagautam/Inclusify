@@ -1,6 +1,6 @@
 import { mount } from "svelte";
-import ChromophobiaControls from "../components/ChromophobiaControls.svelte";
-import { chromophobiaSettings } from "../storage";
+import ChromophobiaControlsView from "../views/ChromophobiaControlsView.svelte";
+import { chromophobiaController } from "../controllers/ChromophobiaController";
 
 // Content scripts
 // https://developer.chrome.com/docs/extensions/mv3/content_scripts/
@@ -51,10 +51,52 @@ function applyChromophobiaFilters(settings: any) {
     }
 }
 
-// Subscribe to settings changes
-chromophobiaSettings.subscribe((settings) => {
-    applyChromophobiaFilters(settings);
+// Subscribe to settings changes and apply filters
+chromophobiaController.getSettings().subscribe((settings) => {
+    chromophobiaController.applyFiltersToPage(settings);
 });
 
-// Mount the controls component
-mount(ChromophobiaControls, { target: document.body });
+// Global flag to prevent multiple mounts
+let isMounted = false;
+
+// Mount the controls component with error handling
+try {
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!isMounted) {
+                mountControls();
+            }
+        });
+    } else {
+        // If DOM is already ready, mount immediately
+        if (!isMounted) {
+            mountControls();
+        }
+    }
+} catch (error) {
+    console.error('Failed to mount Inclusify controls:', error);
+}
+
+function mountControls() {
+    try {
+        // Check if already mounted
+        if (isMounted || document.getElementById('inclusify-controls-container')) {
+            console.log('Inclusify controls already mounted');
+            return;
+        }
+        
+        // Create a container for the controls
+        const container = document.createElement('div');
+        container.id = 'inclusify-controls-container';
+        container.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483646; pointer-events: none; transform: none; filter: none;';
+        document.body.appendChild(container);
+        
+        // Mount the Svelte component
+        mount(ChromophobiaControlsView, { target: container });
+        isMounted = true;
+        console.log('Inclusify controls mounted successfully');
+    } catch (error) {
+        console.error('Error mounting Inclusify controls:', error);
+    }
+}

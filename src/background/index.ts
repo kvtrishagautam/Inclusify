@@ -1,4 +1,4 @@
-import { chromophobiaSettings } from "../storage";
+import { chromophobiaModel } from "../models/ChromophobiaModel";
 
 // Background service workers
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
@@ -9,13 +9,7 @@ chrome.runtime.onInstalled.addListener(() => {
     // Initialize default settings if not already set
     chrome.storage.sync.get('chromophobiaSettings').then((result) => {
         if (!result.chromophobiaSettings) {
-            chromophobiaSettings.set({
-                enabled: false,
-                colorMode: 'grayscale',
-                saturationLevel: 0,
-                brightness: 100,
-                contrast: 100
-            });
+            chromophobiaModel.resetToDefaults();
         }
     });
 });
