@@ -259,22 +259,24 @@
 		background-color: rgba(0, 0, 0, 0.5) !important;
 		z-index: 2147483646 !important;
 		display: flex !important;
-		align-items: center !important;
-		justify-content: center !important;
+		align-items: flex-start !important;
+		justify-content: flex-end !important;
 		pointer-events: auto !important;
+		padding: 80px 20px 20px 20px !important;
 	}
 
 	.controls-panel {
 		background-color: #ffffff !important;
 		border-radius: 12px !important;
-		padding: 24px !important;
-		width: 400px !important;
+		padding: 20px !important;
+		width: 350px !important;
 		max-width: 90vw !important;
 		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
 		border: 1px solid #dee2e6 !important;
 		position: relative !important;
 		z-index: 2147483647 !important;
 		pointer-events: auto !important;
+		margin-top: 0 !important;
 	}
 
 	.header {
