@@ -12,8 +12,8 @@ const [major, minor, patch] = version
 
 export default defineManifest(async () => ({
     manifest_version: 3,
-    name: "Chrome Extension Svelte Typescript Boilerplate",
-    description: "Boilerplate for Chrome Extension Svelte Typescript project",
+    name: "Inclusify - Chromophobia-Friendly Browser",
+    description: "A Chrome extension that helps people with chromophobia browse the web comfortably by providing color-free viewing options",
     version: `${major}.${minor}.${patch}`,
     version_name: version,
     icons: {
@@ -24,7 +24,7 @@ export default defineManifest(async () => ({
     },
     content_scripts: [
         {
-            matches: ["https://*/*"],
+            matches: ["https://*/*", "http://*/*"],
             js: ["src/content/index.ts"],
         },
     ],
@@ -47,5 +47,5 @@ export default defineManifest(async () => ({
             "128": "src/assets/icons/icon-128.png",
         },
     },
-    permissions: ["storage", "sidePanel"] as chrome.runtime.ManifestPermissions[],
+    permissions: ["storage", "sidePanel", "activeTab"] as chrome.runtime.ManifestPermissions[],
 }));

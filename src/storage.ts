@@ -52,4 +52,21 @@ export function persistentStore<T>(key: string, initialValue: T): Writable<T> {
     };
 }
 
-export const count = persistentStore("count", 10);
+// Chromophobia-friendly settings
+export type ColorMode = 'grayscale' | 'monochrome' | 'desaturated' | 'off';
+
+export interface ChromophobiaSettings {
+    enabled: boolean;
+    colorMode: ColorMode;
+    saturationLevel: number; // 0-100, where 0 is completely desaturated
+    brightness: number; // 0-200, where 100 is normal
+    contrast: number; // 0-200, where 100 is normal
+}
+
+export const chromophobiaSettings = persistentStore<ChromophobiaSettings>("chromophobiaSettings", {
+    enabled: false,
+    colorMode: 'grayscale',
+    saturationLevel: 0,
+    brightness: 100,
+    contrast: 100
+});

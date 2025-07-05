@@ -1,6 +1,6 @@
 {
-    "name": "chrome-extension-svelte-typescript-boilerplate",
-    "description": "Boilerplate for Chrome Extension Svelte Typescript project",
+    "name": "inclusify-chromophobia-extension",
+    "description": "A Chrome extension that helps people with chromophobia browse the web comfortably by providing color-free viewing options",
     "version": "1.0.0",
     "type": "module",
     "repository": {

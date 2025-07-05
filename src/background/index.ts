@@ -1,10 +1,30 @@
-import { count } from "../storage";
+import { chromophobiaSettings } from "../storage";
 
 // Background service workers
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 
 chrome.runtime.onInstalled.addListener(() => {
-    count.subscribe(console.log);
+    console.log('Inclusify - Chromophobia-Friendly Extension installed');
+    
+    // Initialize default settings if not already set
+    chrome.storage.sync.get('chromophobiaSettings').then((result) => {
+        if (!result.chromophobiaSettings) {
+            chromophobiaSettings.set({
+                enabled: false,
+                colorMode: 'grayscale',
+                saturationLevel: 0,
+                brightness: 100,
+                contrast: 100
+            });
+        }
+    });
+});
+
+// Handle extension icon click to open side panel
+chrome.action.onClicked.addListener((tab) => {
+    if (tab.id) {
+        chrome.sidePanel.open({ tabId: tab.id });
+    }
 });
 
 // NOTE: If you want to toggle the side panel from the extension's action button,
