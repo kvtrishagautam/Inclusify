@@ -1,6 +1,4 @@
-body {
-    background: rgba(232, 240, 254, 0.4) !important;
-}
+/* Extension-specific styles only - no global page modifications */
 
 /* Ensure the Inclusify controls container is properly positioned */
 #inclusify-controls-container {

@@ -53,7 +53,17 @@ function applyChromophobiaFilters(settings: any) {
 
 // Subscribe to settings changes and apply filters
 chromophobiaController.getSettings().subscribe((settings) => {
+    console.log('Settings changed:', settings);
     chromophobiaController.applyFiltersToPage(settings);
+    
+    // Ensure any existing filters are removed when disabled
+    if (!settings.enabled) {
+        const html = document.documentElement;
+        const body = document.body;
+        html.classList.remove('inclusify-enabled', 'inclusify-grayscale', 'inclusify-monochrome', 'inclusify-desaturated');
+        html.style.filter = '';
+        body.style.filter = '';
+    }
 });
 
 // Global flag to prevent multiple mounts
