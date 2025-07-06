@@ -49,8 +49,6 @@
                 <h4>Keyboard Shortcuts:</h4>
                 <ul>
                     <li><strong>Ctrl+Shift+D:</strong> Toggle dyslexia mode</li>
-                    <li><strong>Ctrl+Shift+R:</strong> Read selected text</li>
-                    <li><strong>Ctrl+Shift+S:</strong> Stop speech</li>
                 </ul>
             </div>
         {/if}

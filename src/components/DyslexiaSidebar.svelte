@@ -5,7 +5,6 @@
 
     let controller: DyslexiaController;
     let settings: any;
-    let voices: SpeechSynthesisVoice[] = [];
     let currentSettings: DyslexiaSettings = {
         enabled: true,
         
@@ -97,7 +96,6 @@
         // Use the singleton DyslexiaController
         controller = DyslexiaController.getInstance();
         settings = controller.getSettingsStore();
-        voices = controller.getVoices();
         
         // Subscribe to settings changes
         settings.subscribe((newSettings) => {
@@ -126,10 +124,6 @@
 
     function resetSettings() {
         controller.resetSettings();
-    }
-
-    function readSelectedText() {
-        controller.speakSelectedText();
     }
 
     // Listen for keyboard shortcut to toggle sidebar
@@ -198,9 +192,6 @@
                 <div class="setting-group">
                     <h4>Quick Actions</h4>
                     <div class="action-buttons">
-                        <button class="action-btn" onclick={readSelectedText}>
-                            🔊 Read Selected Text
-                        </button>
                         <button class="action-btn" onclick={resetSettings}>
                             🔄 Reset Settings
                         </button>
@@ -297,48 +288,7 @@
                     </label>
                 </div>
 
-                <!-- Text-to-Speech -->
-                <div class="setting-group">
-                    <h4>Text-to-Speech</h4>
-                    <label class="toggle-label">
-                        <input 
-                            type="checkbox" 
-                            checked={currentSettings.textToSpeech}
-                            onchange={() => updateSetting('textToSpeech', !currentSettings.textToSpeech)}
-                        />
-                        <span class="toggle-text">Enable TTS</span>
-                    </label>
-                    
-                    {#if currentSettings.textToSpeech}
-                        <div class="setting-row">
-                            <label for="speech-rate">Speech Rate:</label>
-                            <input 
-                                id="speech-rate"
-                                type="range" 
-                                min="0.5" 
-                                max="2.0" 
-                                step="0.1"
-                                value={currentSettings.speechRate}
-                                onchange={(e) => updateSetting('speechRate', parseFloat(e.target.value))}
-                            />
-                            <span>{currentSettings.speechRate}x</span>
-                        </div>
-                        
-                        <div class="setting-row">
-                            <label for="speech-voice">Voice:</label>
-                            <select 
-                                id="speech-voice"
-                                value={currentSettings.speechVoice}
-                                onchange={(e) => updateSetting('speechVoice', e.target.value)}
-                            >
-                                <option value="">Default</option>
-                                {#each voices as voice}
-                                    <option value={voice.name}>{voice.name}</option>
-                                {/each}
-                            </select>
-                        </div>
-                    {/if}
-                </div>
+
 
                 <!-- Advanced Features -->
                 <div class="setting-group">

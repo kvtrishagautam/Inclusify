@@ -1,12 +1,10 @@
 import { StorageModel } from '../models/StorageModel';
-import { SpeechModel } from '../models/SpeechModel';
 import { DOMController } from './DOMController';
 import { EventController } from './EventController';
 import type { DyslexiaSettings } from '../models/DyslexiaSettings';
 
 export class DyslexiaController {
     private storageModel: StorageModel;
-    private speechModel: SpeechModel;
     private domController: DOMController;
     private eventController: EventController;
     private static instance: DyslexiaController | null = null;
@@ -18,7 +16,6 @@ export class DyslexiaController {
     private constructor() {
         console.log('DyslexiaController: Creating new instance');
         this.storageModel = StorageModel.getInstance();
-        this.speechModel = new SpeechModel();
         this.domController = DOMController.getInstance();
         this.eventController = new EventController(this);
     }
@@ -146,36 +143,7 @@ export class DyslexiaController {
         }
     }
 
-    public speakText(text: string, rate?: number, voice?: string): void {
-        if (rate && voice) {
-            this.speechModel.speak(text, rate, voice);
-        } else {
-            // Get current settings from store
-            let currentSettings: DyslexiaSettings;
-            const unsubscribe = this.storageModel.getSettingsStore().subscribe(settings => {
-                currentSettings = settings;
-            });
-            unsubscribe();
-            this.speechModel.speak(text, currentSettings!.speechRate, currentSettings!.speechVoice);
-        }
-    }
 
-    public speakSelectedText(): void {
-        if (typeof window === 'undefined') return;
-        
-        const selection = window.getSelection();
-        if (selection && selection.toString().trim()) {
-            this.speakText(selection.toString());
-        }
-    }
-
-    public getVoices(): SpeechSynthesisVoice[] {
-        return this.speechModel.getVoices();
-    }
-
-    public stopSpeech(): void {
-        this.speechModel.stop();
-    }
 
     // Add public method to access DOMController
     public getDOMController(): DOMController {
@@ -194,20 +162,12 @@ export class DyslexiaController {
             this.domController.applyColorSettings(settings);
             this.domController.applyReadingAids(settings);
             
-            // Apply line focus if enabled
-            if (settings.lineFocus) {
-                (this.domController as any).enableLineFocus(settings);
-            } else {
-                (this.domController as any).disableLineFocus();
-            }
-            
             // Start observing for dynamic content changes
             this.domController.startObserving(settings);
         } else {
             console.log('DyslexiaController: Extension disabled, removing all modifications');
             this.domController.removeAllModifications();
             this.domController.stopObserving();
-            (this.domController as any).disableLineFocus();
         }
     }
 
@@ -218,7 +178,6 @@ export class DyslexiaController {
         }
         this.domController.stopObserving();
         this.domController.destroy();
-        this.speechModel.stop();
         this.eventController.destroy();
         this.isInitialized = false;
         DyslexiaController.instance = null;

@@ -9,7 +9,7 @@ A browser extension designed to help people with dyslexia read web content more 
 - **High Contrast Mode**: Switch to high contrast colors for better readability
 - **Link Highlighting**: Make links more visible with background highlighting
 - **Focus Mode**: Highlight text under the cursor for better focus
-- **Text-to-Speech**: Read selected text aloud with adjustable speed and voice
+
 - **Reading Mode**: Simplify pages by removing distractions
 - **Dyslexia Ruler**: Add a ruler that follows your cursor
 - **Magnifier**: Zoom in on content
@@ -44,7 +44,6 @@ npm run dev
 4. **Toggle different features** in the sidebar:
    - Font settings (font family, size, spacing)
    - Visual aids (high contrast, link highlighting, focus mode, line focus)
-   - Text-to-speech settings
    - Advanced features (reading mode, ruler, magnifier)
 
 ## 🔧 Features Explained
@@ -61,11 +60,7 @@ npm run dev
 - **Focus Mode**: Highlight text under your cursor
 - **Line Focus**: Add a yellow highlight that follows your mouse cursor to help track lines while reading
 
-### Text-to-Speech
-- **Enable TTS**: Turn on text-to-speech functionality
-- **Speech Rate**: Adjust how fast the text is read
-- **Voice Selection**: Choose from available system voices
-- **Read Selected Text**: Select any text and click the button to hear it
+
 
 ### Advanced Features
 - **Reading Mode**: Simplify pages by removing ads and distractions
@@ -113,7 +108,6 @@ src/
 │   └── EventController.ts
 ├── models/             # Data models
 │   ├── DyslexiaSettings.ts
-│   ├── SpeechModel.ts
 │   └── StorageModel.ts
 ├── content/            # Content scripts
 │   ├── index.ts

@@ -3,6 +3,7 @@ import type { DyslexiaSettings } from '../models/DyslexiaSettings';
 export class DOMController {
     private overlayElement: HTMLElement | null = null;
     private focusElement: HTMLElement | null = null;
+    private lineFocusElement: HTMLElement | null = null;
     private originalStyles: Map<HTMLElement, string> = new Map();
     private static hasShownIndicator = false; // Static flag
     private static instance: DOMController | null = null;
@@ -411,16 +412,7 @@ export class DOMController {
         }
     }
 
-    private handleClick(event: MouseEvent): void {
-        const target = event.target as HTMLElement;
-        if (target && target.textContent && target.textContent.trim()) {
-            // This will be handled by the EventController
-            const customEvent = new CustomEvent('dyslexia-read-text', {
-                detail: { text: target.textContent }
-            });
-            document.dispatchEvent(customEvent);
-        }
-    }
+
 
     private highlightElement(element: HTMLElement): void {
         this.removeFocusElement();
@@ -674,6 +666,7 @@ export class DOMController {
         this.removeColorOverlay();
         this.removeHighContrast();
         this.disableFocusMode();
+        this.disableLineFocus();
         this.restorePage();
         this.removeLinkHighlights();
         this.removeElementById('dyslexia-font-settings');
@@ -684,6 +677,7 @@ export class DOMController {
         this.removeElementById('dyslexia-manual-injection-notice');
         this.removeElementById('dyslexia-color-overlay');
         this.removeElementById('dyslexia-focus-highlight');
+        this.removeElementById('dyslexia-line-focus');
         
         // Remove all applied styles from elements
         this.removeAllAppliedStyles();
@@ -911,9 +905,9 @@ export class DOMController {
         this.disableLineFocus();
         
         // Create line focus overlay
-        this.focusElement = document.createElement('div');
-        this.focusElement.id = 'dyslexia-line-focus';
-        this.focusElement.style.cssText = `
+        this.lineFocusElement = document.createElement('div');
+        this.lineFocusElement.id = 'dyslexia-line-focus';
+        this.lineFocusElement.style.cssText = `
             position: fixed;
             top: 0;
             left: 0;
@@ -926,7 +920,7 @@ export class DOMController {
             transition: top 0.1s ease;
         `;
         
-        document.body.appendChild(this.focusElement);
+        document.body.appendChild(this.lineFocusElement);
         
         // Create and store the event handler to prevent memory leaks
         this.lineFocusMoveHandler = this.handleLineFocusMove.bind(this);
@@ -936,9 +930,9 @@ export class DOMController {
     }
 
     private disableLineFocus(): void {
-        if (this.focusElement) {
-            this.focusElement.remove();
-            this.focusElement = null;
+        if (this.lineFocusElement) {
+            this.lineFocusElement.remove();
+            this.lineFocusElement = null;
         }
         
         // Remove event listener using stored handler
@@ -951,12 +945,12 @@ export class DOMController {
     }
 
     private handleLineFocusMove(event: MouseEvent): void {
-        if (!this.focusElement || !this.currentSettings) return;
+        if (!this.lineFocusElement || !this.currentSettings) return;
         
         const height = this.currentSettings.lineFocusHeight || 30;
         const y = event.clientY - (height / 2);
         
-        this.focusElement.style.top = `${Math.max(0, y)}px`;
+        this.lineFocusElement.style.top = `${Math.max(0, y)}px`;
     }
 
     // Hover highlighting functionality

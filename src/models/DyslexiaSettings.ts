@@ -2,11 +2,6 @@ export interface DyslexiaSettings {
     // Core settings
     enabled: boolean;
     
-    // Text-to-Speech
-    textToSpeech: boolean;
-    speechRate: number; // 0.5 to 2.0
-    speechVoice: string;
-    
     // Font settings
     customFont: string;
     fontSize: number; // percentage
@@ -103,10 +98,6 @@ export interface DyslexiaSettings {
 
 export const DEFAULT_SETTINGS: DyslexiaSettings = {
     enabled: false,
-    
-    textToSpeech: false,
-    speechRate: 1.0,
-    speechVoice: "",
     
     customFont: "OpenDyslexic",
     fontSize: 100,
