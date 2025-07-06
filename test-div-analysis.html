@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Div Analysis Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .example {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #007cba;
+            border-radius: 4px;
+        }
+        .description {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e8f4fd;
+            border-radius: 4px;
+        }
+        .expected {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .div-example {
+            border: 2px dashed #007cba;
+            padding: 10px;
+            margin: 10px 0;
+            background: #f8f9fa;
+        }
+        .div-example img {
+            max-width: 100px;
+            height: auto;
+            border: 1px solid #ddd;
+        }
+        .div-example button {
+            padding: 5px 10px;
+            margin: 2px;
+            border: none;
+            border-radius: 3px;
+            background: #007cba;
+            color: white;
+            cursor: pointer;
+        }
+        .div-example a {
+            color: #007cba;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        .div-example input {
+            padding: 5px;
+            margin: 2px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .div-example h3 {
+            margin: 5px 0;
+            color: #333;
+        }
+        .div-example p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .div-example ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+        .div-example li {
+            margin: 2px 0;
+        }
+        .form-group {
+            margin: 10px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 3px;
+            font-weight: bold;
+        }
+        .gallery {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .gallery img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <h1>Div Analysis Test Page</h1>
+    <p>This page demonstrates the extension's enhanced div analysis features. The extension now analyzes div content and identifies what types of elements and text are inside each div.</p>
+
+    <div class="test-section">
+        <h2>🔍 Enhanced Div Analysis Features</h2>
+        <div class="description">
+            <strong>What's New:</strong>
+            <ul>
+                <li><strong>Content Detection:</strong> Analyzes what's inside each div (text, images, buttons, links, forms, etc.)</li>
+                <li><strong>Content Counting:</strong> Counts specific types of elements (e.g., "3 image(s)", "2 button(s)")</li>
+                <li><strong>Mixed Content:</strong> Identifies divs with multiple types of content</li>
+                <li><strong>Semantic Suggestions:</strong> Recommends appropriate HTML elements based on content</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📷 Divs with Images</h2>
+        
+        <div class="example">
+            <h3>Div with Images Only</h3>
+            <div class="div-example">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZjZiNmIiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+SW1hZ2U8L3RleHQ+PC9zdmc+" alt="Red image">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiM0ZWNkYzQiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+SW1hZ2U8L3RleHQ+PC9zdmc+" alt="Blue image">
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📷 Div with Images"<br>
+                <strong>Description:</strong> Div containing 2 image(s)<br>
+                <strong>Suggestion:</strong> Consider if this div should be a figure or gallery element
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Div with Images and Text</h3>
+            <div class="div-example">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmMxMDciLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+SW1hZ2U8L3RleHQ+PC9zdmc+" alt="Yellow image">
+                <p>This is a product image with descriptive text below it.</p>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📷 Div with Image & Text"<br>
+                <strong>Description:</strong> Div containing 1 image(s) and text content<br>
+                <strong>Suggestion:</strong> Consider if this div should be an article or figure element
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔘 Divs with Buttons</h2>
+        
+        <div class="example">
+            <h3>Div with Buttons Only</h3>
+            <div class="div-example">
+                <button>Save</button>
+                <button>Cancel</button>
+                <button>Delete</button>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "🔘 Div with Buttons"<br>
+                <strong>Description:</strong> Div containing 3 button(s)<br>
+                <strong>Suggestion:</strong> Consider if this div should be a toolbar or button group
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Div with Buttons and Text</h3>
+            <div class="div-example">
+                <h3>Action Panel</h3>
+                <p>Choose an action:</p>
+                <button>Submit</button>
+                <button>Reset</button>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "🔘 Div with Buttons & Text"<br>
+                <strong>Description:</strong> Div containing 2 button(s) and text content<br>
+                <strong>Suggestion:</strong> Consider if this div should be a toolbar or navigation element
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Divs with Links</h2>
+        
+        <div class="example">
+            <h3>Div with Links Only</h3>
+            <div class="div-example">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <a href="#help">Help</a>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "🔗 Div with Links"<br>
+                <strong>Description:</strong> Div containing 4 link(s)<br>
+                <strong>Suggestion:</strong> Consider if this div should be a navigation element
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Div with Links and Text</h3>
+            <div class="div-example">
+                <h3>Quick Links</h3>
+                <p>Useful resources:</p>
+                <a href="#docs">Documentation</a>
+                <a href="#support">Support</a>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "🔗 Div with Links & Text"<br>
+                <strong>Description:</strong> Div containing 2 link(s) and text content<br>
+                <strong>Suggestion:</strong> Consider if this div should be a navigation or content section
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Divs with Form Controls</h2>
+        
+        <div class="example">
+            <h3>Div with Form Controls Only</h3>
+            <div class="div-example">
+                <input type="text" placeholder="Enter name">
+                <input type="email" placeholder="Enter email">
+                <select>
+                    <option>Choose option</option>
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                </select>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📝 Div with Form Controls"<br>
+                <strong>Description:</strong> Div containing 3 form control(s)<br>
+                <strong>Suggestion:</strong> Consider if this div should be a form or fieldset element
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Div with Form Controls and Text</h3>
+            <div class="div-example">
+                <h3>Contact Form</h3>
+                <p>Please fill out the form below:</p>
+                <input type="text" placeholder="Name">
+                <input type="email" placeholder="Email">
+                <textarea placeholder="Message"></textarea>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📝 Div with Form Controls & Text"<br>
+                <strong>Description:</strong> Div containing 3 form control(s) and text content<br>
+                <strong>Suggestion:</strong> Consider if this div should be a form or fieldset element
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Divs with Headings</h2>
+        
+        <div class="example">
+            <h3>Div with Headings Only</h3>
+            <div class="div-example">
+                <h1>Main Title</h1>
+                <h2>Subtitle</h2>
+                <h3>Section Title</h3>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📋 Div with Headings"<br>
+                <strong>Description:</strong> Div containing 3 heading(s)<br>
+                <strong>Suggestion:</strong> Consider if this div should be a section or article element
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Div with Headings and Text</h3>
+            <div class="div-example">
+                <h2>Article Title</h2>
+                <p>This is the introduction paragraph that explains the article content.</p>
+                <h3>First Section</h3>
+                <p>Content for the first section goes here.</p>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📋 Div with Headings & Text"<br>
+                <strong>Description:</strong> Div containing 2 heading(s) and text content<br>
+                <strong>Suggestion:</strong> Consider if this div should be a section or article element
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Divs with Lists</h2>
+        
+        <div class="example">
+            <h3>Div with Lists Only</h3>
+            <div class="div-example">
+                <ul>
+                    <li>First item</li>
+                    <li>Second item</li>
+                    <li>Third item</li>
+                </ul>
+                <ol>
+                    <li>Step one</li>
+                    <li>Step two</li>
+                </ol>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📋 Div with Lists"<br>
+                <strong>Description:</strong> Div containing lists<br>
+                <strong>Suggestion:</strong> Consider if this div should be a section or article element
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Div with Lists and Text</h3>
+            <div class="div-example">
+                <h3>Features</h3>
+                <p>Our product includes:</p>
+                <ul>
+                    <li>Feature one</li>
+                    <li>Feature two</li>
+                    <li>Feature three</li>
+                </ul>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📋 Div with Lists & Text"<br>
+                <strong>Description:</strong> Div containing lists and text content<br>
+                <strong>Suggestion:</strong> Consider if this div should be a section or article element
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Divs with Text Only</h2>
+        
+        <div class="example">
+            <h3>Div with Text Only</h3>
+            <div class="div-example">
+                This is a div that contains only text content without any other elements.
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📝 Div with Text Only"<br>
+                <strong>Description:</strong> Div containing only text content<br>
+                <strong>Suggestion:</strong> Consider if this div should be a paragraph element
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Div with Mixed Content</h3>
+            <div class="div-example">
+                <h3>Mixed Content Section</h3>
+                <p>This paragraph contains text.</p>
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmMxMDciLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+SW1hZ2U8L3RleHQ+PC9zdmc+" alt="Mixed content image">
+                <button>Action Button</button>
+                <p>Another paragraph with more text content.</p>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📄 Div with Mixed Content"<br>
+                <strong>Description:</strong> Div containing text and other elements<br>
+                <strong>Suggestion:</strong> Consider if this div should be a section or article element
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Divs with Forms</h2>
+        
+        <div class="example">
+            <h3>Div with Form Element</h3>
+            <div class="div-example">
+                <form>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📝 Div with Form"<br>
+                <strong>Description:</strong> Div containing form elements<br>
+                <strong>Suggestion:</strong> Consider if this div should be a form element or if it needs proper form semantics
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📄 Empty and Element-Only Divs</h2>
+        
+        <div class="example">
+            <h3>Empty Div</h3>
+            <div class="div-example">
+                <!-- This div is empty -->
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📄 Empty Div"<br>
+                <strong>Description:</strong> Empty div element<br>
+                <strong>Suggestion:</strong> Remove this div if it serves no purpose, or add content and semantic markup
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Div with Elements Only (No Text)</h3>
+            <div class="div-example">
+                <div style="width: 50px; height: 50px; background: #007cba;"></div>
+                <div style="width: 50px; height: 50px; background: #28a745;"></div>
+                <div style="width: 50px; height: 50px; background: #dc3545;"></div>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📄 Div with Elements"<br>
+                <strong>Description:</strong> Div containing other elements but no text content<br>
+                <strong>Suggestion:</strong> Consider if this div should be a section or if it needs semantic markup
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 Testing Instructions</h2>
+        <div class="description">
+            <ol>
+                <li><strong>Load the extension</strong> in Chrome</li>
+                <li><strong>Navigate to this page</strong> and enable the extension</li>
+                <li><strong>Look for colored borders</strong> around div elements</li>
+                <li><strong>Notice the detailed labels</strong> that show what's inside each div:
+                    <ul>
+                        <li>"📷 Div with Images" - for divs containing images</li>
+                        <li>"🔘 Div with Buttons" - for divs with buttons</li>
+                        <li>"🔗 Div with Links" - for divs with links</li>
+                        <li>"📝 Div with Form Controls" - for divs with inputs</li>
+                        <li>"📋 Div with Headings" - for divs with headings</li>
+                        <li>"📋 Div with Lists" - for divs with lists</li>
+                        <li>"📝 Div with Text Only" - for divs with only text</li>
+                        <li>"📄 Div with Mixed Content" - for divs with multiple types</li>
+                    </ul>
+                </li>
+                <li><strong>Hover over labels</strong> to see detailed descriptions with counts</li>
+                <li><strong>Click labels</strong> to see comprehensive analysis modals</li>
+            </ol>
+            
+            <h3>Key Features:</h3>
+            <ul>
+                <li><strong>Content Counting:</strong> Shows exact counts (e.g., "3 image(s)", "2 button(s)")</li>
+                <li><strong>Mixed Content Detection:</strong> Identifies divs with multiple content types</li>
+                <li><strong>Semantic Suggestions:</strong> Recommends appropriate HTML elements</li>
+                <li><strong>Detailed Analysis:</strong> Provides comprehensive breakdown of div contents</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Div analysis test page loaded');
+            console.log('Enable the extension to see detailed div content analysis');
+        });
+    </script>
+</body>
+</html> 

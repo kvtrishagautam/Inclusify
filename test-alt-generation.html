@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alt Text Generation Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .example {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #007cba;
+            border-radius: 4px;
+        }
+        .description {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e8f4fd;
+            border-radius: 4px;
+        }
+        .expected {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .image-example {
+            border: 2px dashed #007cba;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            text-align: center;
+        }
+        .image-example img {
+            max-width: 200px;
+            height: auto;
+            border: 1px solid #ddd;
+            margin: 5px;
+        }
+        .code {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            border: 1px solid #e9ecef;
+        }
+        .suggestion-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .suggestion-box strong {
+            color: #856404;
+        }
+        .suggestion-box code {
+            background: #fff;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .figure-example {
+            border: 2px dashed #28a745;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8fff9;
+        }
+        .figure-example figcaption {
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+        .context-example {
+            border: 2px dashed #dc3545;
+            padding: 15px;
+            margin: 10px 0;
+            background: #fff8f8;
+        }
+        .context-example h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .context-example p {
+            margin: 5px 0;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Alt Text Generation Test Page</h1>
+    <p>This page demonstrates the extension's intelligent alt text generation feature. The extension analyzes images and suggests appropriate alt text based on various factors.</p>
+
+    <div class="test-section">
+        <h2>🔍 Alt Text Generation Features</h2>
+        <div class="description">
+            <strong>How It Works:</strong>
+            <ul>
+                <li><strong>Context Analysis:</strong> Analyzes surrounding text, parent elements, and image context</li>
+                <li><strong>Filename Analysis:</strong> Extracts meaningful information from image filenames and paths</li>
+                <li><strong>Attribute Analysis:</strong> Uses class names, IDs, and other attributes to understand image purpose</li>
+                <li><strong>Semantic Context:</strong> Considers the semantic role of parent elements (header, nav, article, etc.)</li>
+                <li><strong>Size Analysis:</strong> Provides size-based suggestions for decorative images</li>
+                <li><strong>Pattern Recognition:</strong> Recognizes common image types (logos, icons, avatars, etc.)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📷 Images Without Alt Text</h2>
+        
+        <div class="example">
+            <h3>Image with Descriptive Filename</h3>
+            <div class="image-example">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY2YjZiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="">
+            </div>
+            <div class="suggestion-box">
+                <strong>Expected Suggestion:</strong><br>
+                <code>alt="Product photo showing a red item"</code><br>
+                <em>Based on filename analysis and context</em>
+            </div>
+            <div class="expected">
+                <strong>Label:</strong> "📷 Image (needs alt)"<br>
+                <strong>Description:</strong> Image without alternative text<br>
+                <strong>Suggestion:</strong> Add descriptive alt text with generated suggestion
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Image with Class Name Context</h3>
+            <div class="image-example">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNGVjZGM0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="" class="company-logo">
+            </div>
+            <div class="suggestion-box">
+                <strong>Expected Suggestion:</strong><br>
+                <code>alt="Logo"</code><br>
+                <em>Based on class name containing "logo"</em>
+            </div>
+            <div class="expected">
+                <strong>Label:</strong> "📷 Image (needs alt)"<br>
+                <strong>Description:</strong> Image without alternative text<br>
+                <strong>Suggestion:</strong> Add descriptive alt text with generated suggestion
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Image with ID Context</h3>
+            <div class="image-example">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzI4YTczNSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZTwvdGV4dD48L3N2Zz4=" alt="" id="user-avatar">
+            </div>
+            <div class="suggestion-box">
+                <strong>Expected Suggestion:</strong><br>
+                <code>alt="Avatar"</code><br>
+                <em>Based on ID containing "avatar"</em>
+            </div>
+            <div class="expected">
+                <strong>Label:</strong> "📷 Image (needs alt)"<br>
+                <strong>Description:</strong> Image without alternative text<br>
+                <strong>Suggestion:</strong> Add descriptive alt text with generated suggestion
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📷 Images with Generic Alt Text</h2>
+        
+        <div class="example">
+            <h3>Image with "image" Alt Text</h3>
+            <div class="image-example">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZjMTA3Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="image">
+            </div>
+            <div class="suggestion-box">
+                <strong>Expected Suggestion:</strong><br>
+                <code>alt="Product photo showing a yellow item"</code><br>
+                <em>Replace generic "image" with descriptive text</em>
+            </div>
+            <div class="expected">
+                <strong>Label:</strong> "📷 Image (generic alt)"<br>
+                <strong>Description:</strong> Image with generic alt text<br>
+                <strong>Suggestion:</strong> Replace with descriptive alt text with generated suggestion
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Image with "img" Alt Text</h3>
+            <div class="image-example">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGMzNTQ1Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="img">
+            </div>
+            <div class="suggestion-box">
+                <strong>Expected Suggestion:</strong><br>
+                <code>alt="Icon"</code><br>
+                <em>Replace generic "img" with descriptive text</em>
+            </div>
+            <div class="expected">
+                <strong>Label:</strong> "📷 Image (generic alt)"<br>
+                <strong>Description:</strong> Image with generic alt text<br>
+                <strong>Suggestion:</strong> Replace with descriptive alt text with generated suggestion
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📷 Images with Context</h2>
+        
+        <div class="example">
+            <h3>Image in Figure with Caption</h3>
+            <div class="figure-example">
+                <figure>
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMTdhODU3Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="">
+                    <figcaption>Beautiful landscape photograph showing mountains and trees</figcaption>
+                </figure>
+            </div>
+            <div class="suggestion-box">
+                <strong>Expected Suggestion:</strong><br>
+                <code>alt="Beautiful landscape photograph showing mountains and trees"</code><br>
+                <em>Based on figcaption content</em>
+            </div>
+            <div class="expected">
+                <strong>Label:</strong> "📷 Image (needs alt)"<br>
+                <strong>Description:</strong> Image without alternative text<br>
+                <strong>Suggestion:</strong> Add descriptive alt text based on figcaption
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Image with Surrounding Text</h3>
+            <div class="context-example">
+                <h3>Product Showcase</h3>
+                <p>Our latest product features innovative design and superior quality.</p>
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY2YjZiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="">
+                <p>This product is available in multiple colors and sizes.</p>
+            </div>
+            <div class="suggestion-box">
+                <strong>Expected Suggestion:</strong><br>
+                <code>alt="Product image"</code><br>
+                <em>Based on surrounding text context about products</em>
+            </div>
+            <div class="expected">
+                <strong>Label:</strong> "📷 Image (needs alt)"<br>
+                <strong>Description:</strong> Image without alternative text<br>
+                <strong>Suggestion:</strong> Add descriptive alt text based on surrounding content
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📷 Images with Semantic Context</h2>
+        
+        <div class="example">
+            <h3>Image in Header</h3>
+            <header style="background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 4px;">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjUwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMwMDdjYmEiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+SW1hZ2U8L3RleHQ+PC9zdmc+" alt="">
+                <h1>Company Name</h1>
+            </header>
+            <div class="suggestion-box">
+                <strong>Expected Suggestion:</strong><br>
+                <code>alt="Header image"</code><br>
+                <em>Based on semantic context (header element)</em>
+            </div>
+            <div class="expected">
+                <strong>Label:</strong> "📷 Image (needs alt)"<br>
+                <strong>Description:</strong> Image without alternative text<br>
+                <strong>Suggestion:</strong> Add descriptive alt text based on semantic context
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Image in Navigation</h3>
+            <nav style="background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 4px;">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzY2NjY2NiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5JbWFnZTwvdGV4dD48L3N2Zz4=" alt="">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+            </nav>
+            <div class="suggestion-box">
+                <strong>Expected Suggestion:</strong><br>
+                <code>alt="Navigation image"</code><br>
+                <em>Based on semantic context (nav element)</em>
+            </div>
+            <div class="expected">
+                <strong>Label:</strong> "📷 Image (needs alt)"<br>
+                <strong>Description:</strong> Image without alternative text<br>
+                <em>Suggestion:</em> Add descriptive alt text based on semantic context
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📷 Decorative Images</h2>
+        
+        <div class="example">
+            <h3>Small Decorative Image</h3>
+            <div class="image-example">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzk5OTk5OSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iOCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="" width="20" height="20">
+            </div>
+            <div class="suggestion-box">
+                <strong>Expected Suggestion:</strong><br>
+                <code>alt="Small decorative image"</code><br>
+                <em>Based on small size (20x20 pixels)</em>
+            </div>
+            <div class="expected">
+                <strong>Label:</strong> "📷 Image (needs alt)"<br>
+                <strong>Description:</strong> Image without alternative text<br>
+                <strong>Suggestion:</strong> Add descriptive alt text based on size analysis
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Medium Decorative Image</h3>
+            <div class="image-example">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjOTk5OTk5Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="" width="100" height="100">
+            </div>
+            <div class="suggestion-box">
+                <strong>Expected Suggestion:</strong><br>
+                <code>alt="Medium image"</code><br>
+                <em>Based on medium size (100x100 pixels)</em>
+            </div>
+            <div class="expected">
+                <strong>Label:</strong> "📷 Image (needs alt)"<br>
+                <strong>Description:</strong> Image without alternative text<br>
+                <strong>Suggestion:</strong> Add descriptive alt text based on size analysis
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 Testing Instructions</h2>
+        <div class="description">
+            <ol>
+                <li><strong>Load the extension</strong> in Chrome</li>
+                <li><strong>Navigate to this page</strong> and enable the extension</li>
+                <li><strong>Look for colored borders</strong> around images without alt text</li>
+                <li><strong>Notice the labels</strong> that show "📷 Image (needs alt)" or "📷 Image (generic alt)"</li>
+                <li><strong>Hover over labels</strong> to see tooltips with suggested alt text</li>
+                <li><strong>Click labels</strong> to see detailed modals with:
+                    <ul>
+                        <li>Generated alt text suggestions</li>
+                        <li>Context analysis explanation</li>
+                        <li>HTML code with suggested alt attribute</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <h3>Alt Text Generation Sources:</h3>
+            <ul>
+                <li><strong>Title attribute:</strong> Uses existing title if available</li>
+                <li><strong>Aria attributes:</strong> Checks aria-label and aria-labelledby</li>
+                <li><strong>Figcaption:</strong> Uses figure caption text</li>
+                <li><strong>Surrounding text:</strong> Analyzes nearby text content</li>
+                <li><strong>Filename analysis:</strong> Extracts meaning from image paths</li>
+                <li><strong>Class/ID analysis:</strong> Uses semantic class names and IDs</li>
+                <li><strong>Semantic context:</strong> Considers parent element roles</li>
+                <li><strong>Size analysis:</strong> Provides size-based suggestions</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Alt text generation test page loaded');
+            console.log('Enable the extension to see intelligent alt text suggestions');
+        });
+    </script>
+</body>
+</html> 

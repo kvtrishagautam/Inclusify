@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Element Identification Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .example {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #007cba;
+        }
+        .description {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e8f4fd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #007cba;
+            color: white;
+        }
+        .icon-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .styled-div {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #28a745;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+        }
+        .nav-menu {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .nav-menu a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #007cba;
+        }
+        .low-contrast {
+            color: #888;
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .expected {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Element Identification Test Page</h1>
+    <p>This page demonstrates the extension's new element identification features. Instead of showing error icons, the extension now identifies what each element is and provides contextual information.</p>
+
+    <div class="test-section">
+        <h2>🔍 What You'll See</h2>
+        <div class="description">
+            <strong>New Features:</strong>
+            <ul>
+                <li><strong>Element Labels:</strong> Instead of error icons, you'll see labels like "📷 Image (needs alt)", "🔘 Button", "📋 H1", etc.</li>
+                <li><strong>Contextual Information:</strong> Each element shows what it is and whether it needs improvement</li>
+                <li><strong>Smart Identification:</strong> The extension analyzes HTML structure to identify element types</li>
+                <li><strong>Helpful Suggestions:</strong> Provides specific advice on how to improve each element</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📷 Image Elements</h2>
+        
+        <div class="example">
+            <h3>Image without Alt Text</h3>
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY2YjZiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="">
+            <div class="expected">
+                <strong>Expected Label:</strong> "📷 Image (needs alt)"<br>
+                <strong>Description:</strong> Image without alternative text<br>
+                <strong>Suggestion:</strong> Add descriptive alt text
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Image with Generic Alt</h3>
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNGVjZGM0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="image">
+            <div class="expected">
+                <strong>Expected Label:</strong> "📷 Image (generic alt)"<br>
+                <strong>Description:</strong> Image with generic alt text<br>
+                <strong>Suggestion:</strong> Replace with descriptive alt text
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Image with Good Alt</h3>
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZjMTA3Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="Product photo showing a red item">
+            <div class="expected">
+                <strong>Expected Label:</strong> "📷 Image"<br>
+                <strong>Description:</strong> Image with alt text<br>
+                <strong>Suggestion:</strong> Alt text is present and descriptive
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔘 Button Elements</h2>
+        
+        <div class="example">
+            <h3>Empty Button</h3>
+            <button></button>
+            <div class="expected">
+                <strong>Expected Label:</strong> "🔘 Empty Button"<br>
+                <strong>Description:</strong> Empty button without accessible name<br>
+                <strong>Suggestion:</strong> Add text content or aria-label
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Icon Button</h3>
+            <button class="icon-button">❤️</button>
+            <div class="expected">
+                <strong>Expected Label:</strong> "🔘 Icon Button"<br>
+                <strong>Description:</strong> Button with icon but no accessible name<br>
+                <strong>Suggestion:</strong> Add aria-label to describe the button's purpose
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Proper Button</h3>
+            <button>Submit Form</button>
+            <div class="expected">
+                <strong>Expected Label:</strong> "🔘 Button"<br>
+                <strong>Description:</strong> Button with accessible name<br>
+                <strong>Suggestion:</strong> Button is properly labeled
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Styled Div as Button</h3>
+            <div class="styled-div">Click me</div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "🔘 Div Button"<br>
+                <strong>Description:</strong> Div styled as button<br>
+                <strong>Suggestion:</strong> Use a proper button element instead
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Link Elements</h2>
+        
+        <div class="example">
+            <h3>Empty Link</h3>
+            <a href="#"></a>
+            <div class="expected">
+                <strong>Expected Label:</strong> "🔗 Empty Link"<br>
+                <strong>Description:</strong> Link without accessible text<br>
+                <strong>Suggestion:</strong> Add descriptive text or aria-label
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Proper Link</h3>
+            <a href="https://example.com">Visit Example</a>
+            <div class="expected">
+                <strong>Expected Label:</strong> "🔗 Link"<br>
+                <strong>Description:</strong> Link with accessible text<br>
+                <strong>Suggestion:</strong> Link is properly labeled
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Form Elements</h2>
+        
+        <div class="example">
+            <h3>Unlabeled Input</h3>
+            <input type="text" id="unlabeled-input">
+            <div class="expected">
+                <strong>Expected Label:</strong> "📝 Text Input"<br>
+                <strong>Description:</strong> Input field without label<br>
+                <strong>Suggestion:</strong> Add a label element or aria-label
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Email Input</h3>
+            <input type="email" placeholder="Enter your email">
+            <div class="expected">
+                <strong>Expected Label:</strong> "📝 Email Input"<br>
+                <strong>Description:</strong> Input field without label<br>
+                <strong>Suggestion:</strong> Add a proper label element
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Properly Labeled Input</h3>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name">
+            <div class="expected">
+                <strong>Expected Label:</strong> "📝 Text Input"<br>
+                <strong>Description:</strong> Input field with label<br>
+                <strong>Suggestion:</strong> Input is properly labeled
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Heading Elements</h2>
+        
+        <div class="example">
+            <h3>Empty Heading</h3>
+            <h3></h3>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📋 H3 (empty)"<br>
+                <strong>Description:</strong> Empty heading<br>
+                <strong>Suggestion:</strong> Add text content or remove the heading
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Proper Heading</h3>
+            <h1>Main Title</h1>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📋 H1"<br>
+                <strong>Description:</strong> Heading with content<br>
+                <strong>Suggestion:</strong> Heading is properly structured
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📄 Content Elements</h2>
+        
+        <div class="example">
+            <h3>Paragraph</h3>
+            <p>This is a paragraph of text that should be properly identified.</p>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📝 Paragraph"<br>
+                <strong>Description:</strong> Text paragraph<br>
+                <strong>Suggestion:</strong> Paragraph is properly structured
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Content Card</h3>
+            <div class="card">
+                <h4>Card Title</h4>
+                <p>This is a content card that should be identified as such.</p>
+            </div>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📄 Content Card"<br>
+                <strong>Description:</strong> Content card/item<br>
+                <strong>Suggestion:</strong> Add proper heading structure and semantic markup
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Navigation</h3>
+            <nav class="nav-menu">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </nav>
+            <div class="expected">
+                <strong>Expected Label:</strong> "🧭 Navigation"<br>
+                <strong>Description:</strong> Navigation element<br>
+                <strong>Suggestion:</strong> Navigation is properly structured
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>List</h3>
+            <ul>
+                <li>First item</li>
+                <li>Second item</li>
+                <li>Third item</li>
+            </ul>
+            <div class="expected">
+                <strong>Expected Label:</strong> "📋 List"<br>
+                <strong>Description:</strong> Unordered list<br>
+                <strong>Suggestion:</strong> List is properly structured
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 Testing Instructions</h2>
+        <div class="description">
+            <ol>
+                <li><strong>Load the extension</strong> in Chrome</li>
+                <li><strong>Navigate to this page</strong> and enable the extension</li>
+                <li><strong>Look for colored borders</strong> around elements</li>
+                <li><strong>Notice the labels</strong> instead of error icons - you'll see things like:
+                    <ul>
+                        <li>"📷 Image (needs alt)" instead of ❌</li>
+                        <li>"🔘 Button" instead of ⚠️</li>
+                        <li>"📋 H1" instead of 🚨</li>
+                    </ul>
+                </li>
+                <li><strong>Hover over the labels</strong> to see contextual tooltips</li>
+                <li><strong>Click the labels</strong> to see detailed analysis modals</li>
+            </ol>
+            
+            <h3>Key Differences:</h3>
+            <ul>
+                <li><strong>No Error Icons:</strong> Instead of ❌ or ⚠️, you'll see descriptive labels</li>
+                <li><strong>Element Identification:</strong> Each element is identified by its type and state</li>
+                <li><strong>Contextual Information:</strong> Labels show what the element is and if it needs improvement</li>
+                <li><strong>Helpful Suggestions:</strong> Specific advice on how to improve each element</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Element identification test page loaded');
+            console.log('Enable the extension to see contextual element labels');
+        });
+    </script>
+</body>
+</html> 

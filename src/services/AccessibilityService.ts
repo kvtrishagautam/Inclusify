@@ -188,25 +188,229 @@ export class AccessibilityService {
         return suggestions;
     }
 
-    private async generateAltText(imgElement: HTMLElement): Promise<string> {
-        // Simple alt-text generation based on context
-        const src = imgElement.getAttribute('src') || '';
-        const className = imgElement.className;
-        const parentText = imgElement.parentElement?.textContent || '';
+    private generateAltText(element: HTMLElement): string {
+        const tagName = element.tagName.toLowerCase();
         
-        // Extract filename from src
-        const filename = src.split('/').pop()?.split('.')[0] || '';
-        
-        // Generate alt text based on context
-        if (filename) {
-            return `Image: ${filename.replace(/[-_]/g, ' ')}`;
+        if (tagName !== 'img') {
+            return '';
         }
         
-        if (className) {
-            return `Image: ${className.replace(/[-_]/g, ' ')}`;
+        const img = element as HTMLImageElement;
+        const src = img.src || '';
+        const className = img.className || '';
+        const id = img.id || '';
+        const title = img.title || '';
+        const parent = img.parentElement;
+        const siblings = parent ? Array.from(parent.children) : [];
+        
+        // Check if image has existing alt text
+        const existingAlt = img.alt || '';
+        if (existingAlt && existingAlt !== '') {
+            return existingAlt;
         }
         
-        return 'Image';
+        // Try to extract meaningful information from various sources
+        let altText = '';
+        
+        // 1. Check for title attribute
+        if (title) {
+            altText = title;
+        }
+        // 2. Check for aria-label
+        else if (img.getAttribute('aria-label')) {
+            altText = img.getAttribute('aria-label') || '';
+        }
+        // 3. Check for aria-labelledby
+        else if (img.getAttribute('aria-labelledby')) {
+            const labelledById = img.getAttribute('aria-labelledby');
+            if (labelledById) {
+                const labelledByElement = document.getElementById(labelledById);
+                if (labelledByElement) {
+                    altText = labelledByElement.textContent?.trim() || '';
+                }
+            }
+        }
+        // 4. Check for figcaption (if image is in a figure)
+        else if (parent && parent.tagName.toLowerCase() === 'figure') {
+            const figcaption = parent.querySelector('figcaption');
+            if (figcaption) {
+                altText = figcaption.textContent?.trim() || '';
+            }
+        }
+        // 5. Check for nearby text content
+        else if (parent) {
+            const parentText = parent.textContent?.trim() || '';
+            const imgText = img.textContent?.trim() || '';
+            const remainingText = parentText.replace(imgText, '').trim();
+            if (remainingText && remainingText.length < 100) {
+                altText = remainingText;
+            }
+        }
+        // 6. Analyze filename and path
+        else if (src) {
+            altText = this.generateAltFromSrc(src);
+        }
+        // 7. Analyze class names and IDs
+        else if (className || id) {
+            altText = this.generateAltFromAttributes(className, id);
+        }
+        // 8. Check for common patterns
+        else {
+            altText = this.generateAltFromContext(img);
+        }
+        
+        // Clean up the alt text
+        altText = this.cleanAltText(altText);
+        
+        // If we still don't have alt text, provide a generic suggestion
+        if (!altText) {
+            altText = this.generateGenericAltText(img);
+        }
+        
+        return altText;
+    }
+    
+    private generateAltFromSrc(src: string): string {
+        try {
+            const url = new URL(src, window.location.href);
+            const pathname = url.pathname;
+            const filename = pathname.split('/').pop() || '';
+            
+            // Remove file extension
+            const nameWithoutExt = filename.replace(/\.[^/.]+$/, '');
+            
+            // Convert common patterns
+            let altText = nameWithoutExt
+                .replace(/[-_]/g, ' ') // Replace dashes and underscores with spaces
+                .replace(/([a-z])([A-Z])/g, '$1 $2') // Add spaces before capitals
+                .replace(/\s+/g, ' ') // Normalize spaces
+                .trim();
+            
+            // Capitalize first letter
+            if (altText) {
+                altText = altText.charAt(0).toUpperCase() + altText.slice(1);
+            }
+            
+            // Add context based on path
+            if (pathname.includes('/icons/') || pathname.includes('/icon/')) {
+                altText = `Icon: ${altText}`;
+            } else if (pathname.includes('/images/') || pathname.includes('/img/')) {
+                altText = `Image: ${altText}`;
+            } else if (pathname.includes('/photos/') || pathname.includes('/photo/')) {
+                altText = `Photo: ${altText}`;
+            } else if (pathname.includes('/logos/') || pathname.includes('/logo/')) {
+                altText = `Logo: ${altText}`;
+            } else if (pathname.includes('/avatars/') || pathname.includes('/avatar/')) {
+                altText = `Avatar: ${altText}`;
+            }
+            
+            return altText;
+        } catch {
+            return '';
+        }
+    }
+    
+    private generateAltFromAttributes(className: string, id: string): string {
+        const attributes = [className, id].filter(attr => attr).join(' ');
+        
+        // Common patterns in class names and IDs
+        const patterns = {
+            'logo': 'Logo',
+            'icon': 'Icon',
+            'avatar': 'Avatar',
+            'profile': 'Profile picture',
+            'banner': 'Banner image',
+            'hero': 'Hero image',
+            'thumbnail': 'Thumbnail',
+            'preview': 'Preview image',
+            'product': 'Product image',
+            'team': 'Team member photo',
+            'staff': 'Staff photo',
+            'user': 'User photo',
+            'member': 'Member photo',
+            'photo': 'Photo',
+            'image': 'Image',
+            'picture': 'Picture',
+            'img': 'Image'
+        };
+        
+        for (const [pattern, label] of Object.entries(patterns)) {
+            if (attributes.toLowerCase().includes(pattern)) {
+                return label;
+            }
+        }
+        
+        return '';
+    }
+    
+    private generateAltFromContext(img: HTMLImageElement): string {
+        const parent = img.parentElement;
+        if (!parent) return '';
+        
+        // Check if image is in a specific context
+        const parentTag = parent.tagName.toLowerCase();
+        const parentClass = parent.className.toLowerCase();
+        
+        if (parentTag === 'header' || parentClass.includes('header')) {
+            return 'Header image';
+        } else if (parentTag === 'nav' || parentClass.includes('nav')) {
+            return 'Navigation image';
+        } else if (parentTag === 'footer' || parentClass.includes('footer')) {
+            return 'Footer image';
+        } else if (parentTag === 'aside' || parentClass.includes('sidebar')) {
+            return 'Sidebar image';
+        } else if (parentTag === 'main' || parentClass.includes('main')) {
+            return 'Main content image';
+        } else if (parentTag === 'article' || parentClass.includes('article')) {
+            return 'Article image';
+        } else if (parentTag === 'section' || parentClass.includes('section')) {
+            return 'Section image';
+        }
+        
+        return '';
+    }
+    
+    private cleanAltText(altText: string): string {
+        return altText
+            .replace(/\s+/g, ' ') // Normalize spaces
+            .trim()
+            .substring(0, 125); // Limit length
+    }
+    
+    private generateGenericAltText(img: HTMLImageElement): string {
+        const src = img.src || '';
+        const width = img.width;
+        const height = img.height;
+        
+        // Try to determine image type from src
+        if (src.includes('icon') || src.includes('ico')) {
+            return 'Icon';
+        } else if (src.includes('logo')) {
+            return 'Logo';
+        } else if (src.includes('avatar') || src.includes('profile')) {
+            return 'Profile picture';
+        } else if (src.includes('banner')) {
+            return 'Banner image';
+        } else if (src.includes('hero')) {
+            return 'Hero image';
+        } else if (src.includes('thumbnail')) {
+            return 'Thumbnail image';
+        } else if (src.includes('preview')) {
+            return 'Preview image';
+        } else if (src.includes('product')) {
+            return 'Product image';
+        } else if (width && height) {
+            // Provide size information for decorative images
+            if (width <= 50 && height <= 50) {
+                return 'Small decorative image';
+            } else if (width <= 200 && height <= 200) {
+                return 'Medium image';
+            } else {
+                return 'Large image';
+            }
+        } else {
+            return 'Image';
+        }
     }
 
     public highlightIssues(issues: AccessibilityIssue[]): void {
@@ -256,42 +460,42 @@ export class AccessibilityService {
         overlay.style.left = `${rect.left + window.scrollX}px`;
         overlay.style.width = `${rect.width}px`;
         overlay.style.height = `${rect.height}px`;
-        overlay.style.border = `3px solid ${this.getImpactColor(impact)}`;
-        overlay.style.backgroundColor = `${this.getImpactColor(impact)}20`;
+        overlay.style.border = `2px solid ${this.getImpactColor(impact)}`;
+        overlay.style.backgroundColor = `${this.getImpactColor(impact)}10`;
         overlay.style.pointerEvents = 'none';
         overlay.style.zIndex = '10000';
         overlay.style.boxSizing = 'border-box';
         overlay.style.transition = 'all 0.3s ease';
         
-        // Create icon badge
-        const iconBadge = document.createElement('div');
-        iconBadge.className = 'inclusify-issue-icon';
-        iconBadge.style.position = 'absolute';
-        iconBadge.style.top = '-25px';
-        iconBadge.style.left = '-25px';
-        iconBadge.style.width = '50px';
-        iconBadge.style.height = '50px';
-        iconBadge.style.backgroundColor = this.getImpactColor(impact);
-        iconBadge.style.borderRadius = '50%';
-        iconBadge.style.display = 'flex';
-        iconBadge.style.alignItems = 'center';
-        iconBadge.style.justifyContent = 'center';
-        iconBadge.style.color = 'white';
-        iconBadge.style.fontSize = '20px';
-        iconBadge.style.fontWeight = 'bold';
-        iconBadge.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
-        iconBadge.style.zIndex = '10001';
-        iconBadge.style.cursor = 'pointer';
-        iconBadge.style.pointerEvents = 'auto';
+        // Create contextual info badge instead of error icon
+        const infoBadge = document.createElement('div');
+        infoBadge.className = 'inclusify-element-info';
+        infoBadge.style.position = 'absolute';
+        infoBadge.style.top = '-30px';
+        infoBadge.style.left = '-10px';
+        infoBadge.style.backgroundColor = this.getImpactColor(impact);
+        infoBadge.style.color = 'white';
+        infoBadge.style.padding = '4px 8px';
+        infoBadge.style.borderRadius = '12px';
+        infoBadge.style.fontSize = '10px';
+        infoBadge.style.fontWeight = 'bold';
+        infoBadge.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+        infoBadge.style.zIndex = '10001';
+        infoBadge.style.cursor = 'pointer';
+        infoBadge.style.pointerEvents = 'auto';
+        infoBadge.style.whiteSpace = 'nowrap';
+        infoBadge.style.maxWidth = '200px';
+        infoBadge.style.overflow = 'hidden';
+        infoBadge.style.textOverflow = 'ellipsis';
         
-        // Set icon based on issue type
-        const issueType = this.getIssueType(element, impact);
-        iconBadge.innerHTML = this.getIssueIcon(issueType);
-        iconBadge.title = `${this.getIssueLabel(issueType)} (${impact})`;
+        // Get contextual information about the element
+        const elementInfo = this.getElementContextualInfo(element);
+        infoBadge.textContent = elementInfo.label;
+        infoBadge.title = elementInfo.description;
         
         // Create detailed tooltip
         const tooltip = document.createElement('div');
-        tooltip.className = 'inclusify-issue-tooltip';
+        tooltip.className = 'inclusify-element-tooltip';
         tooltip.style.position = 'absolute';
         tooltip.style.top = '-80px';
         tooltip.style.left = '30px';
@@ -306,36 +510,365 @@ export class AccessibilityService {
         tooltip.style.transition = 'opacity 0.3s ease';
         tooltip.style.zIndex = '10002';
         tooltip.style.pointerEvents = 'none';
-        const analysis = this.analyzeElement(element);
         tooltip.innerHTML = `
             <div style="font-weight: bold; margin-bottom: 4px;">
-                ${analysis.description}
+                ${elementInfo.description}
             </div>
             <div style="font-size: 11px; opacity: 0.9;">
-                ${analysis.suggestion}
+                ${elementInfo.suggestion}
             </div>
         `;
         
         // Add hover effects
-        iconBadge.addEventListener('mouseenter', () => {
+        infoBadge.addEventListener('mouseenter', () => {
             tooltip.style.opacity = '1';
         });
         
-        iconBadge.addEventListener('mouseleave', () => {
+        infoBadge.addEventListener('mouseleave', () => {
             tooltip.style.opacity = '0';
         });
         
         // Add click handler for more details
-        iconBadge.addEventListener('click', () => {
-            this.showIssueDetails(element, issueType, impact);
+        infoBadge.addEventListener('click', () => {
+            this.showElementDetails(element, elementInfo);
         });
         
-        overlay.appendChild(iconBadge);
+        overlay.appendChild(infoBadge);
         overlay.appendChild(tooltip);
         document.body.appendChild(overlay);
         
         this.overlayElements.push(overlay);
         this.highlightedElements.add(element);
+    }
+
+    private getElementContextualInfo(element: HTMLElement): { label: string; description: string; suggestion: string } {
+        const tagName = element.tagName.toLowerCase();
+        const className = element.className;
+        const textContent = element.textContent?.trim() || '';
+        const role = element.getAttribute('role');
+        
+        // Analyze based on tag name and context
+        switch (tagName) {
+            case 'img':
+                const alt = element.getAttribute('alt') || '';
+                if (!alt || alt === '') {
+                    const suggestedAlt = this.generateAltText(element);
+                    return {
+                        label: '📷 Image (needs alt)',
+                        description: 'Image without alternative text',
+                        suggestion: `Add descriptive alt text. Suggested: "${suggestedAlt}"`
+                    };
+                } else if (alt === 'image' || alt === 'img') {
+                    const suggestedAlt = this.generateAltText(element);
+                    return {
+                        label: '📷 Image (generic alt)',
+                        description: 'Image with generic alt text',
+                        suggestion: `Replace with descriptive alt text. Suggested: "${suggestedAlt}"`
+                    };
+                } else {
+                    return {
+                        label: '📷 Image',
+                        description: 'Image with alt text',
+                        suggestion: 'Alt text is present and descriptive'
+                    };
+                }
+
+            case 'button':
+                if (!textContent && !element.getAttribute('aria-label')) {
+                    const icon = element.querySelector('i, span, img');
+                    if (icon) {
+                        return {
+                            label: '🔘 Icon Button',
+                            description: 'Button with icon but no accessible name',
+                            suggestion: 'Add aria-label to describe the button\'s purpose'
+                        };
+                    } else {
+                        return {
+                            label: '🔘 Empty Button',
+                            description: 'Empty button without accessible name',
+                            suggestion: 'Add text content or aria-label to describe what this button does'
+                        };
+                    }
+                } else {
+                    return {
+                        label: '🔘 Button',
+                        description: 'Button with accessible name',
+                        suggestion: 'Button is properly labeled'
+                    };
+                }
+
+            case 'a':
+                if (!textContent && !element.getAttribute('aria-label')) {
+                    const href = element.getAttribute('href') || '';
+                    return {
+                        label: '🔗 Empty Link',
+                        description: 'Link without accessible text',
+                        suggestion: 'Add descriptive text or aria-label to explain where this link goes'
+                    };
+                } else {
+                    return {
+                        label: '🔗 Link',
+                        description: 'Link with accessible text',
+                        suggestion: 'Link is properly labeled'
+                    };
+                }
+
+            case 'input':
+                const type = element.getAttribute('type') || 'text';
+                const label = this.findAssociatedLabel(element);
+                
+                if (!label && !element.getAttribute('aria-label')) {
+                    return {
+                        label: `📝 ${type.charAt(0).toUpperCase() + type.slice(1)} Input`,
+                        description: `Input field without label`,
+                        suggestion: `Add a <label> element or aria-label to describe this ${type} input`
+                    };
+                } else {
+                    return {
+                        label: `📝 ${type.charAt(0).toUpperCase() + type.slice(1)} Input`,
+                        description: 'Input field with label',
+                        suggestion: 'Input is properly labeled'
+                    };
+                }
+
+            case 'h1':
+            case 'h2':
+            case 'h3':
+            case 'h4':
+            case 'h5':
+            case 'h6':
+                if (!textContent) {
+                    return {
+                        label: `📋 ${tagName.toUpperCase()} (empty)`,
+                        description: 'Empty heading',
+                        suggestion: 'Add text content to this heading or remove it if not needed'
+                    };
+                } else {
+                    return {
+                        label: `📋 ${tagName.toUpperCase()}`,
+                        description: 'Heading with content',
+                        suggestion: 'Heading is properly structured'
+                    };
+                }
+
+            case 'div':
+                if (className.includes('button') || className.includes('btn')) {
+                    return {
+                        label: '🔘 Div Button',
+                        description: 'Div styled as button',
+                        suggestion: 'Use a <button> element instead of a styled div for better accessibility'
+                    };
+                } else if (className.includes('card') || className.includes('item')) {
+                    return {
+                        label: '📄 Content Card',
+                        description: 'Content card/item',
+                        suggestion: 'Add proper heading structure and semantic markup'
+                    };
+                } else {
+                    // Analyze div content more thoroughly
+                    const divAnalysis = this.analyzeDivContent(element);
+                    return {
+                        label: divAnalysis.label,
+                        description: divAnalysis.description,
+                        suggestion: divAnalysis.suggestion
+                    };
+                }
+
+            case 'span':
+                if (className.includes('button') || className.includes('btn')) {
+                    return {
+                        label: '🔘 Span Button',
+                        description: 'Span styled as button',
+                        suggestion: 'Use a <button> element instead of a styled span for better accessibility'
+                    };
+                } else {
+                    return {
+                        label: '📝 Span',
+                        description: 'Inline text element',
+                        suggestion: 'Consider if this needs semantic markup'
+                    };
+                }
+
+            case 'p':
+                return {
+                    label: '📝 Paragraph',
+                    description: 'Text paragraph',
+                    suggestion: 'Paragraph is properly structured'
+                };
+
+            case 'ul':
+            case 'ol':
+                return {
+                    label: '📋 List',
+                    description: `${tagName === 'ul' ? 'Unordered' : 'Ordered'} list`,
+                    suggestion: 'List is properly structured'
+                };
+
+            case 'li':
+                return {
+                    label: '📋 List Item',
+                    description: 'List item',
+                    suggestion: 'List item is properly structured'
+                };
+
+            case 'nav':
+                return {
+                    label: '🧭 Navigation',
+                    description: 'Navigation element',
+                    suggestion: 'Navigation is properly structured'
+                };
+
+            case 'main':
+                return {
+                    label: '🏠 Main Content',
+                    description: 'Main content area',
+                    suggestion: 'Main content is properly structured'
+                };
+
+            case 'aside':
+                return {
+                    label: '📌 Sidebar',
+                    description: 'Sidebar content',
+                    suggestion: 'Sidebar is properly structured'
+                };
+
+            case 'header':
+                return {
+                    label: '📋 Header',
+                    description: 'Page header',
+                    suggestion: 'Header is properly structured'
+                };
+
+            case 'footer':
+                return {
+                    label: '📋 Footer',
+                    description: 'Page footer',
+                    suggestion: 'Footer is properly structured'
+                };
+
+            case 'section':
+                return {
+                    label: '📄 Section',
+                    description: 'Content section',
+                    suggestion: 'Section is properly structured'
+                };
+
+            case 'article':
+                return {
+                    label: '📄 Article',
+                    description: 'Article content',
+                    suggestion: 'Article is properly structured'
+                };
+
+            case 'form':
+                return {
+                    label: '📝 Form',
+                    description: 'Form element',
+                    suggestion: 'Ensure all form controls have proper labels and validation'
+                };
+
+            case 'label':
+                return {
+                    label: '🏷️ Label',
+                    description: 'Form label',
+                    suggestion: 'Label is properly associated with form control'
+                };
+
+            case 'select':
+                return {
+                    label: '📋 Dropdown',
+                    description: 'Select dropdown',
+                    suggestion: 'Ensure dropdown has proper label and options'
+                };
+
+            case 'textarea':
+                return {
+                    label: '📝 Text Area',
+                    description: 'Multi-line text input',
+                    suggestion: 'Ensure textarea has proper label'
+                };
+
+            default:
+                return {
+                    label: `📄 ${tagName.charAt(0).toUpperCase() + tagName.slice(1)}`,
+                    description: `${tagName} element`,
+                    suggestion: 'Review for accessibility best practices'
+                };
+        }
+    }
+
+    private showElementDetails(element: HTMLElement, elementInfo: { label: string; description: string; suggestion: string }): void {
+        const modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.top = '50%';
+        modal.style.left = '50%';
+        modal.style.transform = 'translate(-50%, -50%)';
+        modal.style.backgroundColor = 'white';
+        modal.style.padding = '20px';
+        modal.style.borderRadius = '8px';
+        modal.style.boxShadow = '0 8px 32px rgba(0,0,0,0.3)';
+        modal.style.zIndex = '10003';
+        modal.style.maxWidth = '500px';
+        modal.style.fontFamily = 'Arial, sans-serif';
+        
+        const analysis = this.analyzeElement(element);
+        
+        modal.innerHTML = `
+            <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                <span style="font-size: 24px; margin-right: 12px;">${elementInfo.label.split(' ')[0]}</span>
+                <div>
+                    <h3 style="margin: 0; color: #333;">${elementInfo.description}</h3>
+                    <span style="color: #007cba; font-weight: bold;">Element Analysis</span>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <h4 style="margin: 0 0 8px 0; color: #333;">What this element is:</h4>
+                <p style="margin: 0; color: #666; line-height: 1.4;">${analysis.description}</p>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <h4 style="margin: 0 0 8px 0; color: #333;">How to improve it:</h4>
+                <p style="margin: 0; color: #666; line-height: 1.4;">${analysis.suggestion}</p>
+                ${element.tagName.toLowerCase() === 'img' && !element.getAttribute('alt') ? `
+                <div style="background: #f8f9fa; padding: 12px; border-radius: 4px; margin-top: 8px; border-left: 4px solid #007cba;">
+                    <strong>Suggested Alt Text:</strong><br>
+                    <code style="background: #e9ecef; padding: 4px 8px; border-radius: 3px; font-family: monospace;">${this.generateAltText(element)}</code>
+                </div>
+                ` : ''}
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <h4 style="margin: 0 0 8px 0; color: #333;">Why this matters:</h4>
+                <p style="margin: 0; color: #666; line-height: 1.4;">${analysis.context}</p>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 12px; border-radius: 4px; margin-bottom: 16px; font-family: monospace; font-size: 12px;">
+                <strong>HTML Code:</strong><br>
+                ${element.outerHTML.substring(0, 200)}${element.outerHTML.length > 200 ? '...' : ''}
+            </div>
+            
+            <div style="text-align: right;">
+                <button onclick="this.parentElement.parentElement.remove()" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>
+            </div>
+        `;
+        
+        // Add backdrop
+        const backdrop = document.createElement('div');
+        backdrop.style.position = 'fixed';
+        backdrop.style.top = '0';
+        backdrop.style.left = '0';
+        backdrop.style.width = '100%';
+        backdrop.style.height = '100%';
+        backdrop.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        backdrop.style.zIndex = '10002';
+        backdrop.addEventListener('click', () => {
+            backdrop.remove();
+            modal.remove();
+        });
+        
+        document.body.appendChild(backdrop);
+        document.body.appendChild(modal);
     }
 
     private getIssueType(element: HTMLElement, impact: string): string {
@@ -1232,5 +1765,167 @@ export class AccessibilityService {
         context += `Context: ${analysis.context}`;
         
         return context;
+    }
+
+    private analyzeDivContent(element: HTMLElement): { label: string; description: string; suggestion: string } {
+        const textContent = element.textContent?.trim() || '';
+        const children = Array.from(element.children);
+        const hasTextContent = textContent !== '';
+        const hasChildren = children.length > 0;
+        
+        // Analyze child elements
+        const hasImages = children.some(child => child.tagName.toLowerCase() === 'img');
+        const hasButtons = children.some(child => 
+            child instanceof HTMLElement && 
+            (child.tagName.toLowerCase() === 'button' || child.getAttribute('role') === 'button')
+        );
+        const hasLinks = children.some(child => child.tagName.toLowerCase() === 'a');
+        const hasInputs = children.some(child => 
+            child instanceof HTMLElement && 
+            ['input', 'select', 'textarea'].includes(child.tagName.toLowerCase())
+        );
+        const hasHeadings = children.some(child => 
+            child instanceof HTMLElement && 
+            /^h[1-6]$/.test(child.tagName.toLowerCase())
+        );
+        const hasLists = children.some(child => 
+            child instanceof HTMLElement && 
+            ['ul', 'ol'].includes(child.tagName.toLowerCase())
+        );
+        const hasForms = children.some(child => child.tagName.toLowerCase() === 'form');
+        const hasParagraphs = children.some(child => child.tagName.toLowerCase() === 'p');
+        
+        // Count different types of content
+        const imageCount = children.filter(child => child.tagName.toLowerCase() === 'img').length;
+        const buttonCount = children.filter(child => 
+            child instanceof HTMLElement && 
+            (child.tagName.toLowerCase() === 'button' || child.getAttribute('role') === 'button')
+        ).length;
+        const linkCount = children.filter(child => child.tagName.toLowerCase() === 'a').length;
+        const inputCount = children.filter(child => 
+            child instanceof HTMLElement && 
+            ['input', 'select', 'textarea'].includes(child.tagName.toLowerCase())
+        ).length;
+        const headingCount = children.filter(child => 
+            child instanceof HTMLElement && 
+            /^h[1-6]$/.test(child.tagName.toLowerCase())
+        ).length;
+        
+        // Determine the primary content type
+        if (hasForms) {
+            return {
+                label: '📝 Div with Form',
+                description: 'Div containing form elements',
+                suggestion: 'Consider if this div should be a form element or if it needs proper form semantics'
+            };
+        } else if (hasImages && hasTextContent) {
+            return {
+                label: '📷 Div with Image & Text',
+                description: `Div containing ${imageCount} image(s) and text content`,
+                suggestion: 'Consider if this div should be an article or figure element'
+            };
+        } else if (hasImages && !hasTextContent) {
+            return {
+                label: '📷 Div with Images',
+                description: `Div containing ${imageCount} image(s)`,
+                suggestion: 'Consider if this div should be a figure or gallery element'
+            };
+        } else if (hasButtons && hasTextContent) {
+            return {
+                label: '🔘 Div with Buttons & Text',
+                description: `Div containing ${buttonCount} button(s) and text content`,
+                suggestion: 'Consider if this div should be a toolbar or navigation element'
+            };
+        } else if (hasButtons && !hasTextContent) {
+            return {
+                label: '🔘 Div with Buttons',
+                description: `Div containing ${buttonCount} button(s)`,
+                suggestion: 'Consider if this div should be a toolbar or button group'
+            };
+        } else if (hasLinks && hasTextContent) {
+            return {
+                label: '🔗 Div with Links & Text',
+                description: `Div containing ${linkCount} link(s) and text content`,
+                suggestion: 'Consider if this div should be a navigation or content section'
+            };
+        } else if (hasLinks && !hasTextContent) {
+            return {
+                label: '🔗 Div with Links',
+                description: `Div containing ${linkCount} link(s)`,
+                suggestion: 'Consider if this div should be a navigation element'
+            };
+        } else if (hasInputs && hasTextContent) {
+            return {
+                label: '📝 Div with Form Controls & Text',
+                description: `Div containing ${inputCount} form control(s) and text content`,
+                suggestion: 'Consider if this div should be a form or fieldset element'
+            };
+        } else if (hasInputs && !hasTextContent) {
+            return {
+                label: '📝 Div with Form Controls',
+                description: `Div containing ${inputCount} form control(s)`,
+                suggestion: 'Consider if this div should be a form or fieldset element'
+            };
+        } else if (hasHeadings && hasTextContent) {
+            return {
+                label: '📋 Div with Headings & Text',
+                description: `Div containing ${headingCount} heading(s) and text content`,
+                suggestion: 'Consider if this div should be a section or article element'
+            };
+        } else if (hasHeadings && !hasTextContent) {
+            return {
+                label: '📋 Div with Headings',
+                description: `Div containing ${headingCount} heading(s)`,
+                suggestion: 'Consider if this div should be a section or article element'
+            };
+        } else if (hasLists && hasTextContent) {
+            return {
+                label: '📋 Div with Lists & Text',
+                description: 'Div containing lists and text content',
+                suggestion: 'Consider if this div should be a section or article element'
+            };
+        } else if (hasLists && !hasTextContent) {
+            return {
+                label: '📋 Div with Lists',
+                description: 'Div containing lists',
+                suggestion: 'Consider if this div should be a section or article element'
+            };
+        } else if (hasParagraphs && hasTextContent) {
+            return {
+                label: '📝 Div with Paragraphs & Text',
+                description: 'Div containing paragraphs and text content',
+                suggestion: 'Consider if this div should be a section or article element'
+            };
+        } else if (hasParagraphs && !hasTextContent) {
+            return {
+                label: '📝 Div with Paragraphs',
+                description: 'Div containing paragraphs',
+                suggestion: 'Consider if this div should be a section or article element'
+            };
+        } else if (hasTextContent && !hasChildren) {
+            return {
+                label: '📝 Div with Text Only',
+                description: 'Div containing only text content',
+                suggestion: 'Consider if this div should be a paragraph element'
+            };
+        } else if (hasTextContent && hasChildren) {
+            return {
+                label: '📄 Div with Mixed Content',
+                description: 'Div containing text and other elements',
+                suggestion: 'Consider if this div should be a section or article element'
+            };
+        } else if (hasChildren && !hasTextContent) {
+            return {
+                label: '📄 Div with Elements',
+                description: 'Div containing other elements but no text content',
+                suggestion: 'Consider if this div should be a section or if it needs semantic markup'
+            };
+        } else {
+            return {
+                label: '📄 Empty Div',
+                description: 'Empty div element',
+                suggestion: 'Remove this div if it serves no purpose, or add content and semantic markup'
+            };
+        }
     }
 } 
