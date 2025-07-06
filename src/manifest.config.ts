@@ -42,4 +42,10 @@ export default defineManifest(async () => ({
     },
     permissions: ["storage", "sidePanel", "activeTab", "scripting"] as chrome.runtime.ManifestPermissions[],
     host_permissions: ["<all_urls>"],
+    web_accessible_resources: [
+        {
+            resources: ["new-icon1.png"],
+            matches: ["<all_urls>"]
+        }
+    ],
 }));

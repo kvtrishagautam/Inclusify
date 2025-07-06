@@ -3,6 +3,7 @@ import ChromophobiaControlsView from "../views/ChromophobiaControlsView.svelte";
 import CognitiveControlsView from "../views/CognitiveControlsView.svelte";
 import AccessibilityFloatingIcon from "../views/AccessibilityFloatingIcon.svelte";
 import DyslexiaFloatingIcon from "../views/DyslexiaFloatingIcon.svelte";
+import UnifiedFloatingIcon from "../views/UnifiedFloatingIcon.svelte";
 import { chromophobiaController } from "../controllers/ChromophobiaController";
 import { cognitiveController } from "../controllers/CognitiveController";
 
@@ -56,6 +57,19 @@ let isChromophobiaMounted = false;
 let isCognitiveMounted = false;
 let isAccessibilityMounted = false;
 let isDyslexiaMounted = false;
+let isUnifiedMounted = false;
+
+function mountUnifiedFloatingIcon() {
+    try {
+        if (isUnifiedMounted || document.getElementById('inclusify-unified-floating-container')) return;
+        const container = document.createElement('div');
+        container.id = 'inclusify-unified-floating-container';
+        container.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483647; pointer-events: none; transform: none; filter: none;';
+        document.body.appendChild(container);
+        mount(UnifiedFloatingIcon, { target: container });
+        isUnifiedMounted = true;
+    } catch (error) { console.error('Error mounting Inclusify unified floating icon:', error); }
+}
 
 function mountChromophobiaControls() {
     try {
@@ -105,18 +119,53 @@ function mountDyslexiaControls() {
     } catch (error) { console.error('Error mounting Inclusify dyslexia controls:', error); }
 }
 
+// Event listeners for unified floating icon
+function setupUnifiedIconEventListeners() {
+    document.addEventListener('inclusify-open-chromophobia', () => {
+        mountChromophobiaControls();
+        // Show the chromophobia controls
+        const container = document.getElementById('inclusify-chromophobia-controls-container');
+        if (container) {
+            container.style.pointerEvents = 'auto';
+        }
+    });
+
+    document.addEventListener('inclusify-open-cognitive', () => {
+        mountCognitiveControls();
+        // Show the cognitive controls
+        const container = document.getElementById('inclusify-cognitive-controls-container');
+        if (container) {
+            container.style.pointerEvents = 'auto';
+        }
+    });
+
+    document.addEventListener('inclusify-open-accessibility', () => {
+        mountAccessibilityControls();
+        // Show the accessibility controls
+        const container = document.getElementById('inclusify-accessibility-controls-container');
+        if (container) {
+            container.style.pointerEvents = 'auto';
+        }
+    });
+
+    document.addEventListener('inclusify-open-dyslexia', () => {
+        mountDyslexiaControls();
+        // Show the dyslexia controls
+        const container = document.getElementById('inclusify-dyslexia-controls-container');
+        if (container) {
+            container.style.pointerEvents = 'auto';
+        }
+    });
+}
+
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        mountChromophobiaControls();
-        mountCognitiveControls();
-        mountAccessibilityControls();
-        mountDyslexiaControls();
+        mountUnifiedFloatingIcon();
+        setupUnifiedIconEventListeners();
     });
 } else {
-    mountChromophobiaControls();
-    mountCognitiveControls();
-    mountAccessibilityControls();
-    mountDyslexiaControls();
+    mountUnifiedFloatingIcon();
+    setupUnifiedIconEventListeners();
 }
 
 // --- Accessibility Scanning (only activated when toggle is enabled) ---
