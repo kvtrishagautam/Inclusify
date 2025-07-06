@@ -461,7 +461,7 @@ export class AccessibilityService {
         overlay.style.width = `${rect.width}px`;
         overlay.style.height = `${rect.height}px`;
         overlay.style.border = `2px solid ${this.getImpactColor(impact)}`;
-        overlay.style.backgroundColor = `${this.getImpactColor(impact)}10`;
+        overlay.style.backgroundColor = 'transparent'; // Make background transparent
         overlay.style.pointerEvents = 'none';
         overlay.style.zIndex = '10000';
         overlay.style.boxSizing = 'border-box';
@@ -1089,29 +1089,77 @@ export class AccessibilityService {
             return;
         }
 
-        // Inject CSS for better accessibility
+        // Inject CSS for better accessibility - more targeted and less intrusive
         const style = document.createElement('style');
         style.id = 'inclusify-accessibility-styles';
         style.textContent = `
-            .inclusify-high-contrast {
-                filter: contrast(150%) !important;
+            /* Only apply styles to extension-specific elements */
+            .inclusify-issue-overlay {
+                position: absolute;
+                pointer-events: none;
+                z-index: 10000;
+                box-sizing: border-box;
+                transition: all 0.3s ease;
             }
             
-            .inclusify-large-text {
-                font-size: 18px !important;
-                line-height: 1.5 !important;
+            .inclusify-element-info {
+                position: absolute;
+                background-color: #007cba;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 10px;
+                font-weight: bold;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                z-index: 10001;
+                cursor: pointer;
+                pointer-events: auto;
+                white-space: nowrap;
+                max-width: 200px;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             
+            .inclusify-element-tooltip {
+                position: absolute;
+                background-color: #333;
+                color: white;
+                padding: 12px;
+                border-radius: 8px;
+                font-size: 12px;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                z-index: 10002;
+                pointer-events: none;
+            }
+            
+            .inclusify-speech-icon {
+                position: absolute;
+                background-color: #007cba;
+                color: white;
+                padding: 4px;
+                border-radius: 50%;
+                font-size: 12px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                z-index: 10001;
+                cursor: pointer;
+                pointer-events: auto;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            /* Focus styles - only apply to extension elements */
             .inclusify-focus-visible {
                 outline: 3px solid #0066cc !important;
                 outline-offset: 2px !important;
             }
             
-            .inclusify-reduced-motion {
-                animation: none !important;
-                transition: none !important;
-            }
-            
+            /* Interactive element highlighting - only for extension overlays */
             .inclusify-interactive-element {
                 position: relative;
                 outline: 2px dashed #0066cc !important;
@@ -1133,7 +1181,7 @@ export class AccessibilityService {
                 box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.3);
             }
 
-            /* Different colors for different element types */
+            /* Different colors for different element types - only for extension elements */
             .inclusify-button {
                 outline-color: #28a745 !important;
             }
@@ -1173,6 +1221,9 @@ export class AccessibilityService {
             .inclusify-interactive-element:hover .inclusify-tooltip {
                 opacity: 1;
             }
+            
+            /* Remove any global filters that might affect website colors */
+            /* Only apply specific styles to extension elements */
         `;
         
         if (!document.getElementById('inclusify-accessibility-styles')) {
@@ -1185,6 +1236,35 @@ export class AccessibilityService {
         if (style) {
             style.remove();
         }
+        
+        // Also remove any extension-specific classes that might have been added
+        const extensionClasses = [
+            'inclusify-interactive-element',
+            'inclusify-button',
+            'inclusify-link',
+            'inclusify-input',
+            'inclusify-form-control',
+            'inclusify-focusable',
+            'inclusify-focus-visible'
+        ];
+        
+        extensionClasses.forEach(className => {
+            const elements = document.querySelectorAll(`.${className}`);
+            elements.forEach(element => {
+                element.classList.remove(className);
+            });
+        });
+    }
+
+    public ensureStyleIsolation(): void {
+        // Ensure extension styles don't interfere with website styles
+        const existingStyle = document.getElementById('inclusify-accessibility-styles');
+        if (existingStyle) {
+            existingStyle.remove();
+        }
+        
+        // Re-apply styles with proper isolation
+        this.applyAccessibilityStyles();
     }
 
     public highlightInteractiveElements(): void {
@@ -1296,6 +1376,7 @@ export class AccessibilityService {
         const rect = element.getBoundingClientRect();
         console.log(`AccessibilityService: Element rect:`, rect);
         
+        // Create overlay for interactive elements
         const overlay = document.createElement('div');
         overlay.className = 'inclusify-interactive-overlay';
         overlay.style.position = 'absolute';
@@ -1303,10 +1384,10 @@ export class AccessibilityService {
         overlay.style.left = `${rect.left + window.scrollX}px`;
         overlay.style.width = `${rect.width}px`;
         overlay.style.height = `${rect.height}px`;
-        overlay.style.border = `2px dashed ${this.getInteractiveElementColor(element)}`;
-        overlay.style.backgroundColor = `${this.getInteractiveElementColor(element)}10`;
+        overlay.style.border = `2px solid ${this.getInteractiveElementColor(element)}`;
+        overlay.style.backgroundColor = 'transparent'; // Make background transparent
         overlay.style.pointerEvents = 'none';
-        overlay.style.zIndex = '9999';
+        overlay.style.zIndex = '10000';
         overlay.style.boxSizing = 'border-box';
         overlay.style.transition = 'all 0.3s ease';
         

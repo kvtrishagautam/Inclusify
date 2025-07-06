@@ -14,6 +14,16 @@ const accessibilityController = new AccessibilityController();
 // Mount the accessibility overlay
 mount(Overlay, { target: document.body, props: { accessibilityController } });
 
+// Ensure styles are properly isolated when extension is enabled
+const ensureProperStyles = () => {
+    if (accessibilityController.isAccessibilityEnabled()) {
+        accessibilityController.ensureStyleIsolation();
+    }
+};
+
+// Call once on initialization
+ensureProperStyles();
+
 // Enhanced debouncing for SPAs like WhatsApp
 let auditTimeout: NodeJS.Timeout | null = null;
 let lastAuditTime = 0;
