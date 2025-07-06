@@ -246,6 +246,19 @@
                         />
                         <span>{currentSettings.lineSpacing}%</span>
                     </div>
+                    <div class="setting-row">
+                        <label for="word-spacing">Word Spacing:</label>
+                        <input 
+                            id="word-spacing"
+                            type="range" 
+                            min="50" 
+                            max="200" 
+                            step="10"
+                            value={currentSettings.wordSpacing}
+                            onchange={(e) => updateSetting('wordSpacing', parseInt(e.target.value))}
+                        />
+                        <span>{currentSettings.wordSpacing}%</span>
+                    </div>
                 </div>
 
                 <!-- Visual Aids -->
@@ -311,14 +324,7 @@
                         <span class="toggle-text">Dyslexia Ruler</span>
                     </label>
                     
-                    <label class="toggle-label">
-                        <input 
-                            type="checkbox" 
-                            checked={currentSettings.magnifier}
-                            onchange={() => updateSetting('magnifier', !currentSettings.magnifier)}
-                        />
-                        <span class="toggle-text">Magnifier</span>
-                    </label>
+                   
                 </div>
             {/if}
         </div>

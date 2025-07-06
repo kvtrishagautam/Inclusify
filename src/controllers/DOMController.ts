@@ -107,7 +107,7 @@ export class DOMController {
                 el.style.setProperty('font-family', styles.fontFamily, 'important');
                 el.style.setProperty('font-size', `${styles.fontSize}em`, 'important');
                 el.style.setProperty('line-height', `${styles.lineHeight * 1.5}`, 'important');
-                el.style.setProperty('word-spacing', `${styles.wordSpacing * 0.1}em`, 'important');
+                el.style.setProperty('word-spacing', `${styles.wordSpacing * 0.3}em`, 'important');
                 el.style.setProperty('letter-spacing', `${styles.letterSpacing * 0.05}em`, 'important');
                 styledCount++;
             } catch (error) {
@@ -406,6 +406,13 @@ export class DOMController {
     }
 
     private handleMouseMove(event: MouseEvent): void {
+        const target = event.target as HTMLElement;
+        if (target && target.textContent && target.textContent.trim()) {
+            this.highlightElement(target);
+        }
+    }
+
+    private handleClick(event: MouseEvent): void {
         const target = event.target as HTMLElement;
         if (target && target.textContent && target.textContent.trim()) {
             this.highlightElement(target);
