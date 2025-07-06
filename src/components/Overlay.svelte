@@ -1,20 +1,21 @@
 <script lang="ts">
-    import { count } from "../storage";
-    import Options from "./Options.svelte";
+    import AccessibilityPanel from "./AccessibilityPanel.svelte";
+    import type { AccessibilityController } from "../controllers/AccessibilityController";
+
+    export let accessibilityController: AccessibilityController;
 </script>
 
 <div class="overlay">
-    <Options {count} />
+    <AccessibilityPanel {accessibilityController} />
 </div>
 
 <style>
     .overlay {
         position: fixed;
-        width: 300px;
+        width: 320px;
         top: 16px;
-        left: 16px;
-        background-color: white;
-        border: 1px solid black;
-        padding: 16px;
+        right: 16px;
+        z-index: 10000;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 </style>

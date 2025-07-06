@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inclusify Extension Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .issue-example {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #007cba;
+        }
+        .critical-issue {
+            border-left-color: #dc3545;
+        }
+        .serious-issue {
+            border-left-color: #fd7e14;
+        }
+        .moderate-issue {
+            border-left-color: #ffc107;
+        }
+        .minor-issue {
+            border-left-color: #28a745;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .primary { background-color: #007cba; color: white; }
+        .secondary { background-color: #6c757d; color: white; }
+        .success { background-color: #28a745; color: white; }
+        .danger { background-color: #dc3545; color: white; }
+        .warning { background-color: #ffc107; color: black; }
+        .info { background-color: #17a2b8; color: white; }
+        
+        /* Test for visual overlays */
+        .overlay-test {
+            position: relative;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+        }
+        
+        .test-image {
+            width: 200px;
+            height: 150px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            margin: 10px;
+            display: inline-block;
+        }
+        
+        .test-form {
+            margin: 20px 0;
+        }
+        
+        .test-form input,
+        .test-form select,
+        .test-form textarea {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .test-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .test-table th,
+        .test-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .test-table th {
+            background-color: #f2f2f2;
+        }
+        
+        .color-contrast-test {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .low-contrast {
+            color: #888;
+            background-color: #f9f9f9;
+        }
+        
+        .high-contrast {
+            color: #000;
+            background-color: #fff;
+        }
+        
+        /* Debug section */
+        .debug-section {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .debug-log {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .test-controls {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+        
+        .test-controls button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Inclusify Extension Test Page</h1>
+    <p>This page contains various accessibility issues to test the Inclusify Chrome extension.</p>
+
+    <!-- Test Controls -->
+    <div class="test-controls">
+        <h3>Test Controls</h3>
+        <button onclick="testAxeCore()" class="primary">Test Axe-Core</button>
+        <button onclick="testMultipleAudits()" class="secondary">Test Multiple Audits</button>
+        <button onclick="testDOMChanges()" class="success">Test DOM Changes</button>
+        <button onclick="clearConsole()" class="warning">Clear Console</button>
+    </div>
+
+    <!-- Debug Section -->
+    <div class="debug-section">
+        <h3>Debug Information</h3>
+        <div id="debug-log" class="debug-log"></div>
+    </div>
+
+    <!-- Critical Issues -->
+    <div class="test-section">
+        <h2>Critical Issues</h2>
+        
+        <div class="issue-example critical-issue">
+            <h3>Missing Alt Text</h3>
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY2YjZiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="">
+            <p>This image has no alt text (critical issue)</p>
+        </div>
+        
+        <div class="issue-example critical-issue">
+            <h3>Button Without Name</h3>
+            <button></button>
+            <p>This button has no accessible name (critical issue)</p>
+        </div>
+        
+        <div class="issue-example critical-issue">
+            <h3>Form Field Without Label</h3>
+            <input type="text" id="unlabeled-input">
+            <p>This input has no associated label (critical issue)</p>
+        </div>
+    </div>
+
+    <!-- Serious Issues -->
+    <div class="test-section">
+        <h2>Serious Issues</h2>
+        
+        <div class="issue-example serious-issue">
+            <h3>Link Without Text</h3>
+            <a href="#"></a>
+            <p>This link has no text content (serious issue)</p>
+        </div>
+        
+        <div class="issue-example serious-issue">
+            <h3>Empty Heading</h3>
+            <h3></h3>
+            <p>This heading is empty (serious issue)</p>
+        </div>
+    </div>
+
+    <!-- Moderate Issues -->
+    <div class="test-section">
+        <h2>Moderate Issues</h2>
+        
+        <div class="issue-example moderate-issue">
+            <h3>Heading Order</h3>
+            <h1>Main Heading</h1>
+            <h3>Sub Heading (skips h2)</h3>
+            <p>This heading order is incorrect (moderate issue)</p>
+        </div>
+        
+        <div class="issue-example moderate-issue">
+            <h3>Duplicate IDs</h3>
+            <div id="duplicate">First element with duplicate ID</div>
+            <div id="duplicate">Second element with duplicate ID</div>
+            <p>These elements have duplicate IDs (moderate issue)</p>
+        </div>
+    </div>
+
+    <!-- Minor Issues -->
+    <div class="test-section">
+        <h2>Minor Issues</h2>
+        
+        <div class="issue-example minor-issue">
+            <h3>Redundant Alt Text</h3>
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNGVjZGM0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="Image">
+            <p>This image has redundant alt text (minor issue)</p>
+        </div>
+    </div>
+
+    <!-- Interactive Elements -->
+    <div class="test-section">
+        <h2>Interactive Elements</h2>
+        
+        <div class="issue-example">
+            <h3>Buttons</h3>
+            <button class="primary">Primary Button</button>
+            <button class="secondary">Secondary Button</button>
+            <button class="success">Success Button</button>
+            <button class="danger">Danger Button</button>
+            <button class="warning">Warning Button</button>
+            <button class="info">Info Button</button>
+        </div>
+        
+        <div class="issue-example">
+            <h3>Links</h3>
+            <a href="#" class="primary">Primary Link</a>
+            <a href="#" class="secondary">Secondary Link</a>
+            <a href="#" class="success">Success Link</a>
+            <a href="#" class="danger">Danger Link</a>
+            <a href="#" class="warning">Warning Link</a>
+            <a href="#" class="info">Info Link</a>
+        </div>
+        
+        <div class="issue-example">
+            <h3>Form Elements</h3>
+            <form class="test-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name">
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email">
+                
+                <label for="country">Country:</label>
+                <select id="country" name="country">
+                    <option value="">Select a country</option>
+                    <option value="us">United States</option>
+                    <option value="ca">Canada</option>
+                    <option value="uk">United Kingdom</option>
+                </select>
+                
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" placeholder="Enter your message"></textarea>
+                
+                <button type="submit" class="primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Visual Overlay Test -->
+    <div class="test-section">
+        <h2>Visual Overlay Test</h2>
+        <div class="overlay-test">
+            <h3>Test Images for Alt Text Suggestions</h3>
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY2YjZiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" class="test-image">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNGVjZGM0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" class="test-image">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZjMTA3Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" class="test-image">
+            <p>These images should trigger alt text suggestions and visual overlays</p>
+        </div>
+    </div>
+
+    <!-- Color Contrast Test -->
+    <div class="test-section">
+        <h2>Color Contrast Test</h2>
+        <div class="color-contrast-test">
+            <div class="low-contrast">
+                <p>This text has low contrast (should be flagged)</p>
+            </div>
+            <div class="high-contrast">
+                <p>This text has high contrast (should pass)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Test -->
+    <div class="test-section">
+        <h2>Table Test</h2>
+        <table class="test-table">
+            <thead>
+                <tr>
+                    <th>Header 1</th>
+                    <th>Header 2</th>
+                    <th>Header 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Data 1</td>
+                    <td>Data 2</td>
+                    <td>Data 3</td>
+                </tr>
+                <tr>
+                    <td>Data 4</td>
+                    <td>Data 5</td>
+                    <td>Data 6</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Debug logging function
+        function log(message) {
+            const debugLog = document.getElementById('debug-log');
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.innerHTML += `[${timestamp}] ${message}\n`;
+            debugLog.scrollTop = debugLog.scrollHeight;
+            console.log(message);
+        }
+
+        // Test axe-core functionality
+        function testAxeCore() {
+            log('Testing axe-core functionality...');
+            
+            // Check if axe is available
+            if (typeof axe !== 'undefined') {
+                log('✓ Axe-core is available');
+                
+                // Test axe configuration
+                try {
+                    axe.configure({
+                        rules: [
+                            { id: 'color-contrast', enabled: true },
+                            { id: 'image-alt', enabled: true }
+                        ]
+                    });
+                    log('✓ Axe-core configuration successful');
+                } catch (error) {
+                    log('✗ Axe-core configuration failed: ' + error.message);
+                }
+                
+                // Test axe run
+                axe.run().then(results => {
+                    log(`✓ Axe-core audit completed with ${results.violations.length} violations`);
+                    results.violations.forEach(violation => {
+                        log(`  - ${violation.id}: ${violation.description}`);
+                    });
+                }).catch(error => {
+                    log('✗ Axe-core audit failed: ' + error.message);
+                });
+            } else {
+                log('✗ Axe-core is not available');
+            }
+        }
+
+        // Test multiple audits
+        function testMultipleAudits() {
+            log('Testing multiple simultaneous audits...');
+            
+            if (typeof axe !== 'undefined') {
+                // Try to run multiple audits quickly
+                const promises = [];
+                for (let i = 0; i < 3; i++) {
+                    promises.push(axe.run().then(results => {
+                        log(`Audit ${i + 1} completed with ${results.violations.length} violations`);
+                        return results;
+                    }).catch(error => {
+                        log(`Audit ${i + 1} failed: ${error.message}`);
+                        return null;
+                    }));
+                }
+                
+                Promise.all(promises).then(() => {
+                    log('All audits completed');
+                });
+            } else {
+                log('Axe-core not available for testing');
+            }
+        }
+
+        // Test DOM changes
+        function testDOMChanges() {
+            log('Testing DOM change detection...');
+            
+            // Add a new element
+            const newElement = document.createElement('div');
+            newElement.innerHTML = '<img src="test.jpg" alt="">';
+            newElement.className = 'test-dom-change';
+            document.body.appendChild(newElement);
+            
+            log('Added new element with accessibility issue');
+            
+            // Remove it after 3 seconds
+            setTimeout(() => {
+                if (newElement.parentNode) {
+                    newElement.parentNode.removeChild(newElement);
+                    log('Removed test element');
+                }
+            }, 3000);
+        }
+
+        // Clear console
+        function clearConsole() {
+            document.getElementById('debug-log').innerHTML = '';
+            console.clear();
+            log('Console cleared');
+        }
+
+        // Initialize debug logging
+        log('Test page loaded');
+        log('Extension should detect accessibility issues and create visual overlays');
+        
+        // Test if extension is loaded
+        setTimeout(() => {
+            if (document.querySelector('.inclusify-issue-overlay')) {
+                log('✓ Extension overlays detected');
+            } else {
+                log('⚠ Extension overlays not detected - check if extension is enabled');
+            }
+        }, 2000);
+    </script>
+</body>
+</html> 

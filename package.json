@@ -12,6 +12,9 @@
         "build": "vite build",
         "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
     },
+    "dependencies": {
+        "axe-core": "^4.8.4"
+    },
     "devDependencies": {
         "@crxjs/vite-plugin": "2.0.0-beta.29",
         "@sveltejs/vite-plugin-svelte": "5.0.3",

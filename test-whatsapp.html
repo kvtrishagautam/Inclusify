@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp SPA Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .chat-simulation {
+            background: #f5f5f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .message {
+            background: white;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 8px;
+            max-width: 70%;
+        }
+        .message.sent {
+            background: #dcf8c6;
+            margin-left: auto;
+        }
+        .message.received {
+            background: white;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #007cba;
+            color: white;
+        }
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>WhatsApp SPA Test Page</h1>
+    <p>This page simulates WhatsApp's dynamic behavior to test the extension's SPA handling.</p>
+
+    <div class="controls">
+        <h3>Test Controls</h3>
+        <button onclick="simulateChat()">Simulate Chat Messages</button>
+        <button onclick="simulateRapidChanges()">Simulate Rapid DOM Changes</button>
+        <button onclick="triggerManualAudit()">Trigger Manual Audit</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <div class="test-section">
+        <h3>Chat Simulation</h3>
+        <div id="chat-container" class="chat-simulation">
+            <div class="message received">Hello! How are you?</div>
+            <div class="message sent">I'm doing well, thanks!</div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h3>Accessibility Issues (for testing overlays)</h3>
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9Ijc1IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZjZiNmIiLz48L3N2Zz4=" alt="">
+        <button></button>
+        <input type="text" id="test-input">
+    </div>
+
+    <div class="test-section">
+        <h3>Debug Log</h3>
+        <div id="debug-log" class="log"></div>
+    </div>
+
+    <script>
+        let messageCount = 0;
+        
+        function log(message) {
+            const debugLog = document.getElementById('debug-log');
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.innerHTML += `[${timestamp}] ${message}\n`;
+            debugLog.scrollTop = debugLog.scrollHeight;
+            console.log(message);
+        }
+
+        function simulateChat() {
+            log('Simulating chat messages...');
+            
+            const chatContainer = document.getElementById('chat-container');
+            const isSent = Math.random() > 0.5;
+            const messageClass = isSent ? 'sent' : 'received';
+            const messageText = `Message ${++messageCount}`;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${messageClass}`;
+            messageDiv.textContent = messageText;
+            
+            chatContainer.appendChild(messageDiv);
+            log(`Added message: ${messageText}`);
+        }
+
+        function simulateRapidChanges() {
+            log('Simulating rapid DOM changes...');
+            
+            const chatContainer = document.getElementById('chat-container');
+            
+            // Add multiple messages rapidly
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message received';
+                    messageDiv.textContent = `Rapid message ${i + 1}`;
+                    chatContainer.appendChild(messageDiv);
+                    log(`Added rapid message ${i + 1}`);
+                }, i * 100);
+            }
+        }
+
+        function triggerManualAudit() {
+            log('Triggering manual audit...');
+            if (window.triggerAccessibilityAudit) {
+                window.triggerAccessibilityAudit();
+            } else {
+                log('Manual audit function not available');
+            }
+        }
+
+        function clearLog() {
+            document.getElementById('debug-log').innerHTML = '';
+            console.clear();
+            log('Log cleared');
+        }
+
+        // Initialize
+        log('WhatsApp SPA test page loaded');
+        log('Extension should handle rapid DOM changes gracefully');
+        
+        // Monitor for extension activity
+        setInterval(() => {
+            const overlays = document.querySelectorAll('.inclusify-issue-overlay');
+            if (overlays.length > 0) {
+                log(`Found ${overlays.length} accessibility overlays`);
+            }
+        }, 2000);
+    </script>
+</body>
+</html> 

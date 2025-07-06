@@ -12,8 +12,8 @@ const [major, minor, patch] = version
 
 export default defineManifest(async () => ({
     manifest_version: 3,
-    name: "Chrome Extension Svelte Typescript Boilerplate",
-    description: "Boilerplate for Chrome Extension Svelte Typescript project",
+    name: "Inclusify - Accessibility Enhancement Extension",
+    description: "A Chrome extension that enhances website accessibility by scanning for WCAG compliance issues, highlighting interactive elements, and providing alt-text suggestions.",
     version: `${major}.${minor}.${patch}`,
     version_name: version,
     icons: {
@@ -39,7 +39,6 @@ export default defineManifest(async () => ({
         default_path: "src/sidepanel/sidepanel.html",
     },
     action: {
-        default_popup: "src/popup/popup.html",
         default_icon: {
             "16": "src/assets/icons/icon-16.png",
             "32": "src/assets/icons/icon-32.png",
@@ -47,5 +46,5 @@ export default defineManifest(async () => ({
             "128": "src/assets/icons/icon-128.png",
         },
     },
-    permissions: ["storage", "sidePanel"] as chrome.runtime.ManifestPermissions[],
+    permissions: ["storage", "sidePanel", "activeTab"] as chrome.runtime.ManifestPermissions[],
 }));

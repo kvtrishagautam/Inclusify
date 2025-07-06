@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contextual Analysis Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .example {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #007cba;
+        }
+        .description {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e8f4fd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #007cba;
+            color: white;
+        }
+        .icon-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .styled-div {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #28a745;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+        }
+        .nav-menu {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .nav-menu a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #007cba;
+        }
+        .low-contrast {
+            color: #888;
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Contextual Analysis Test Page</h1>
+    <p>This page demonstrates the extension's new contextual analysis features. Instead of just showing accessibility issues, the extension now provides intelligent descriptions of what each element is and how to fix it.</p>
+
+    <div class="test-section">
+        <h2>🔍 What You'll See</h2>
+        <div class="description">
+            <strong>New Features:</strong>
+            <ul>
+                <li><strong>Contextual Descriptions:</strong> Instead of generic "accessibility issue", you'll see specific descriptions like "Image without alternative text" or "Button with icon but no accessible name"</li>
+                <li><strong>Smart Suggestions:</strong> The extension analyzes the HTML and provides specific suggestions like "Add aria-label='Submit form' to this button"</li>
+                <li><strong>Contextual Explanations:</strong> Each issue includes an explanation of why it matters for accessibility</li>
+                <li><strong>HTML Code Preview:</strong> Shows the actual HTML code for the problematic element</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📷 Image Examples</h2>
+        
+        <div class="example">
+            <h3>Missing Alt Text</h3>
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY2YjZiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="">
+            <p><strong>Expected Analysis:</strong> "Image without alternative text" - The extension should suggest adding descriptive alt text based on the image context.</p>
+        </div>
+
+        <div class="example">
+            <h3>Redundant Alt Text</h3>
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNGVjZGM0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="image">
+            <p><strong>Expected Analysis:</strong> "Image with redundant alt text" - The extension should suggest replacing with more descriptive alt text.</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔘 Button Examples</h2>
+        
+        <div class="example">
+            <h3>Empty Button</h3>
+            <button></button>
+            <p><strong>Expected Analysis:</strong> "Empty button without accessible name" - The extension should suggest adding text content or aria-label.</p>
+        </div>
+
+        <div class="example">
+            <h3>Icon Button</h3>
+            <button class="icon-button">❤️</button>
+            <p><strong>Expected Analysis:</strong> "Button with icon but no accessible name" - The extension should suggest adding aria-label to describe the button's purpose.</p>
+        </div>
+
+        <div class="example">
+            <h3>Styled Div as Button</h3>
+            <div class="styled-div">Click me</div>
+            <p><strong>Expected Analysis:</strong> "Div styled as button" - The extension should suggest using a proper button element instead.</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Link Examples</h2>
+        
+        <div class="example">
+            <h3>Empty Link</h3>
+            <a href="#"></a>
+            <p><strong>Expected Analysis:</strong> "Link without accessible text" - The extension should suggest adding descriptive text or aria-label.</p>
+        </div>
+
+        <div class="example">
+            <h3>Link with URL but no text</h3>
+            <a href="https://example.com"></a>
+            <p><strong>Expected Analysis:</strong> "Link without accessible text" - The extension should suggest adding text to describe the destination.</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Form Examples</h2>
+        
+        <div class="example">
+            <h3>Unlabeled Input</h3>
+            <input type="text" id="unlabeled-input">
+            <p><strong>Expected Analysis:</strong> "Input field without label" - The extension should suggest adding a label element or aria-label.</p>
+        </div>
+
+        <div class="example">
+            <h3>Input with Placeholder but no Label</h3>
+            <input type="email" placeholder="Enter your email">
+            <p><strong>Expected Analysis:</strong> "Input field without label" - The extension should suggest adding a proper label element.</p>
+        </div>
+
+        <div class="example">
+            <h3>Select without Label</h3>
+            <select>
+                <option value="">Choose an option</option>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+            </select>
+            <p><strong>Expected Analysis:</strong> "Input field without label" - The extension should suggest adding a label for the select element.</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Content Examples</h2>
+        
+        <div class="example">
+            <h3>Empty Heading</h3>
+            <h3></h3>
+            <p><strong>Expected Analysis:</strong> "Empty heading" - The extension should suggest adding text content or removing the heading.</p>
+        </div>
+
+        <div class="example">
+            <h3>Content Card</h3>
+            <div class="card">
+                <h4>Card Title</h4>
+                <p>This is a content card that should have proper semantic structure.</p>
+            </div>
+            <p><strong>Expected Analysis:</strong> "Content card/item" - The extension should suggest adding proper heading structure and semantic markup.</p>
+        </div>
+
+        <div class="example">
+            <h3>Navigation Menu</h3>
+            <div class="nav-menu">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <p><strong>Expected Analysis:</strong> "Navigation element" - The extension should suggest ensuring proper ARIA roles and labels.</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎨 Contrast Examples</h2>
+        
+        <div class="example">
+            <h3>Low Contrast Text</h3>
+            <div class="low-contrast">
+                This text has low contrast with the background and may be hard to read.
+            </div>
+            <p><strong>Expected Analysis:</strong> The extension should detect contrast issues and suggest improving the color contrast.</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 Testing Instructions</h2>
+        <div class="description">
+            <ol>
+                <li><strong>Load the extension</strong> in Chrome</li>
+                <li><strong>Navigate to this page</strong> and enable the extension</li>
+                <li><strong>Look for colored borders</strong> around elements with issues</li>
+                <li><strong>Hover over the icons</strong> to see contextual tooltips</li>
+                <li><strong>Click the icons</strong> to see detailed analysis modals</li>
+                <li><strong>Compare the descriptions</strong> - they should be specific and helpful rather than generic</li>
+            </ol>
+            
+            <h3>What to Look For:</h3>
+            <ul>
+                <li><strong>Specific Descriptions:</strong> Instead of "accessibility issue", you should see descriptions like "Image without alternative text"</li>
+                <li><strong>Actionable Suggestions:</strong> Specific advice like "Add aria-label='Submit form' to this button"</li>
+                <li><strong>Contextual Explanations:</strong> Why each issue matters for accessibility</li>
+                <li><strong>HTML Code Preview:</strong> The actual HTML code for the problematic element</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive elements for testing
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Contextual analysis test page loaded');
+            console.log('Enable the extension to see intelligent element analysis');
+        });
+    </script>
+</body>
+</html> 
