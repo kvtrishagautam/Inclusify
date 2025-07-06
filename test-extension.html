@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inclusify Extension Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        
+        p {
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .test-section {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+            border-radius: 5px;
+        }
+        
+        .links-section a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        
+        .links-section a:hover {
+            text-decoration: underline;
+        }
+        
+        .form-section input, .form-section textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .button:hover {
+            background: #0056b3;
+        }
+        
+        .status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .debug-info {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="status" id="extension-status">Extension Status: Checking...</div>
+    
+    <div class="container">
+        <h1>Inclusify Dyslexia Helper - Test Page</h1>
+        
+        <div class="debug-info">
+            <strong>Debug Information:</strong><br>
+            <span id="debug-content">Loading...</span>
+        </div>
+        
+        <div class="test-section">
+            <h2>Text Content Test</h2>
+            <p>This is a paragraph with regular text content. The Inclusify extension should modify this text to make it more readable for people with dyslexia.</p>
+            <p>Here's another paragraph with more content to test the font changes, line spacing, and other accessibility features. This text should be easier to read when the extension is enabled.</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>Links Test</h2>
+            <div class="links-section">
+                <a href="#test1">Test Link 1</a>
+                <a href="#test2">Test Link 2</a>
+                <a href="#test3">Test Link 3</a>
+                <a href="https://example.com">External Link</a>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Form Elements Test</h2>
+            <div class="form-section">
+                <label for="name">Name:</label>
+                <input type="text" id="name" placeholder="Enter your name">
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" placeholder="Enter your email">
+                
+                <label for="message">Message:</label>
+                <textarea id="message" rows="4" placeholder="Enter your message"></textarea>
+                
+                <button class="button" onclick="testFunction()">Test Button</button>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Headings Test</h2>
+            <h3>This is a level 3 heading</h3>
+            <p>Content under heading 3.</p>
+            
+            <h4>This is a level 4 heading</h4>
+            <p>Content under heading 4.</p>
+            
+            <h5>This is a level 5 heading</h5>
+            <p>Content under heading 5.</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>List Test</h2>
+            <ul>
+                <li>First list item with some text content</li>
+                <li>Second list item with more content to test readability</li>
+                <li>Third list item to see how the extension handles lists</li>
+            </ul>
+            
+            <ol>
+                <li>First ordered list item</li>
+                <li>Second ordered list item</li>
+                <li>Third ordered list item</li>
+            </ol>
+        </div>
+        
+        <div class="test-section">
+            <h2>Instructions</h2>
+            <p><strong>To test the extension:</strong></p>
+            <ol>
+                <li>Make sure the Inclusify extension is loaded in your browser</li>
+                <li>Look for the floating 📖 icon in the top-right corner</li>
+                <li>Click the icon to open the sidebar</li>
+                <li>Enable the "Enable Dyslexia Helper" toggle</li>
+                <li>Try different font settings, high contrast, and other features</li>
+                <li>Check the console for debug information</li>
+            </ol>
+            
+            <p><strong>Expected behavior:</strong></p>
+            <ul>
+                <li>The main content should change (font, size, spacing, etc.)</li>
+                <li>The sidebar should remain unchanged</li>
+                <li>Links should be highlighted when that feature is enabled</li>
+                <li>High contrast should only affect the main content</li>
+                <li>The floating icon should stay in the top-right corner</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function testFunction() {
+            alert('Button clicked! Extension should not affect this alert.');
+        }
+        
+        // Debug information
+        function updateDebugInfo() {
+            const debugElement = document.getElementById('debug-content');
+            const statusElement = document.getElementById('extension-status');
+            
+            // Check if extension is loaded
+            const extensionLoaded = typeof window.applyDyslexiaStyles === 'function';
+            const controllerExists = typeof window.getDyslexiaSettings === 'function';
+            
+            let debugText = `Extension Loaded: ${extensionLoaded}\n`;
+            debugText += `Controller Available: ${controllerExists}\n`;
+            debugText += `Current URL: ${window.location.href}\n`;
+            debugText += `Document Ready: ${document.readyState}\n`;
+            
+            if (controllerExists) {
+                try {
+                    const settings = window.getDyslexiaSettings();
+                    debugText += `Extension Enabled: ${settings?.enabled}\n`;
+                    debugText += `Font: ${settings?.customFont}\n`;
+                    debugText += `Font Size: ${settings?.fontSize}%\n`;
+                    debugText += `High Contrast: ${settings?.highContrast}\n`;
+                    debugText += `Link Highlighting: ${settings?.highlightLinks}\n`;
+                } catch (error) {
+                    debugText += `Error getting settings: ${error.message}\n`;
+                }
+            }
+            
+            debugElement.textContent = debugText;
+            
+            if (extensionLoaded && controllerExists) {
+                statusElement.textContent = 'Extension Status: ✅ Loaded';
+                statusElement.style.background = '#28a745';
+            } else {
+                statusElement.textContent = 'Extension Status: ❌ Not Loaded';
+                statusElement.style.background = '#dc3545';
+            }
+        }
+        
+        // Update debug info every 2 seconds
+        setInterval(updateDebugInfo, 2000);
+        updateDebugInfo();
+        
+        // Console helper functions
+        console.log('🔧 Test page loaded. Available debug functions:');
+        console.log('  - window.getDyslexiaSettings() - Get current settings');
+        console.log('  - window.refreshDyslexiaStyling() - Force refresh styling');
+        console.log('  - window.debugDyslexiaHelper() - Debug the extension');
+        console.log('  - window.applyDyslexiaStyles(cssText) - Manually inject CSS');
+    </script>
+</body>
+</html> 

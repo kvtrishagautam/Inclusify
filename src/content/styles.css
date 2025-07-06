@@ -1,3 +1,76 @@
-body {
-    background: rgba(232, 240, 254, 0.4) !important;
+/* Import OpenDyslexic font */
+@import url('https://fonts.googleapis.com/css2?family=OpenDyslexic:wght@400;700&display=swap');
+
+/* PROTECT SIDEBAR AND EXTENSION ELEMENTS FROM GLOBAL STYLING */
+[data-dyslexia-sidebar],
+.dyslexia-sidebar,
+.sidebar-overlay,
+.sidebar-toggle,
+.setting-group,
+.setting-row,
+.toggle-label,
+.action-btn,
+.floating-icon,
+.floating-icon-text,
+.sidebar-header,
+.sidebar-content,
+.close-btn,
+#inclusify-dyslexia-sidebar-root,
+#dyslexia-settings-indicator,
+#dyslexia-manual-injection-notice,
+#dyslexia-color-overlay,
+#dyslexia-focus-highlight {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    word-spacing: inherit !important;
+    letter-spacing: inherit !important;
+    background-color: inherit !important;
+    color: inherit !important;
+    filter: none !important;
+    text-decoration: inherit !important;
+    padding: inherit !important;
+    border-radius: inherit !important;
+}
+
+/* Ensure the dyslexia panel is always on top */
+#dyslexia-panel {
+    z-index: 10001 !important;
+}
+
+/* Style for focus mode highlighting */
+#dyslexia-focus-highlight {
+    position: absolute;
+    background-color: yellow;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 10000;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+}
+
+/* Color overlay styles */
+#dyslexia-color-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Responsive design for the panel */
+@media (max-width: 768px) {
+    .dyslexia-panel {
+        width: 90vw !important;
+        right: 5vw !important;
+        left: 5vw !important;
+    }
+    
+    .dyslexia-fab {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 20px !important;
+    }
 }

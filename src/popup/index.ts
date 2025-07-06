@@ -1,6 +1,6 @@
 import { mount } from "svelte";
-import Options from "../components/Options.svelte";
-import { count } from "../storage";
+import DyslexiaSidebar from "../components/DyslexiaSidebar.svelte";
+import { DyslexiaController } from "../controllers/DyslexiaController";
 
 // Action popup
 // https://developer.chrome.com/docs/extensions/reference/action/
@@ -9,7 +9,14 @@ function render() {
     const target = document.getElementById("app");
 
     if (target) {
-        mount(Options, { target, props: { count } });
+        // Initialize the controller first
+        const controller = DyslexiaController.getInstance();
+        controller.initialize().then(() => {
+            // Mount the sidebar in popup mode
+            mount(DyslexiaSidebar, { target });
+        }).catch((error) => {
+            console.error('Failed to initialize dyslexia controller:', error);
+        });
     }
 }
 

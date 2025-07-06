@@ -1,10 +1,8 @@
-import { count } from "../storage";
-
 // Background service workers
 // https://developer.chrome.com/docs/extensions/mv3/service_workers/
 
 chrome.runtime.onInstalled.addListener(() => {
-    count.subscribe(console.log);
+    console.log('Dyslexia Helper extension installed');
 });
 
 // NOTE: If you want to toggle the side panel from the extension's action button,

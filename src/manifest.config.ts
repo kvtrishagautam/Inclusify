@@ -12,8 +12,8 @@ const [major, minor, patch] = version
 
 export default defineManifest(async () => ({
     manifest_version: 3,
-    name: "Chrome Extension Svelte Typescript Boilerplate",
-    description: "Boilerplate for Chrome Extension Svelte Typescript project",
+    name: "Inclusify - Dyslexia Helper",
+    description: "A browser extension to help people with dyslexia read and navigate web content more easily",
     version: `${major}.${minor}.${patch}`,
     version_name: version,
     icons: {
@@ -24,20 +24,14 @@ export default defineManifest(async () => ({
     },
     content_scripts: [
         {
-            matches: ["https://*/*"],
+            matches: ["<all_urls>"],
             js: ["src/content/index.ts"],
         },
     ],
     background: {
         service_worker: "src/background/index.ts",
     },
-    options_ui: {
-        page: "src/options/options.html",
-        open_in_tab: false,
-    },
-    side_panel: {
-        default_path: "src/sidepanel/sidepanel.html",
-    },
+
     action: {
         default_popup: "src/popup/popup.html",
         default_icon: {
@@ -47,5 +41,6 @@ export default defineManifest(async () => ({
             "128": "src/assets/icons/icon-128.png",
         },
     },
-    permissions: ["storage", "sidePanel"] as chrome.runtime.ManifestPermissions[],
+    permissions: ["storage", "activeTab", "scripting"] as chrome.runtime.ManifestPermissions[],
+    host_permissions: ["<all_urls>"],
 }));

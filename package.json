@@ -1,6 +1,6 @@
 {
-    "name": "chrome-extension-svelte-typescript-boilerplate",
-    "description": "Boilerplate for Chrome Extension Svelte Typescript project",
+    "name": "inclusify-dyslexia-helper",
+    "description": "A browser extension to help people with dyslexia read and navigate web content more easily",
     "version": "1.0.0",
     "type": "module",
     "repository": {
