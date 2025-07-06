@@ -12,8 +12,8 @@ const [major, minor, patch] = version
 
 export default defineManifest(async () => ({
     manifest_version: 3,
-    name: "Inclusify - Accessibility Enhancement Extension",
-    description: "A Chrome extension that enhances website accessibility by scanning for WCAG compliance issues, highlighting interactive elements, and providing alt-text suggestions.",
+    name: "Inclusify - Accessibility & Chromophobia-Friendly Browser",
+    description: "A Chrome extension that enhances website accessibility by scanning for WCAG compliance issues, highlighting interactive elements, providing alt-text suggestions, and helping people with chromophobia browse the web comfortably with color-free viewing options.",
     version: `${major}.${minor}.${patch}`,
     version_name: version,
     icons: {
@@ -24,7 +24,7 @@ export default defineManifest(async () => ({
     },
     content_scripts: [
         {
-            matches: ["https://*/*"],
+            matches: ["https://*/*", "http://*/*"],
             js: ["src/content/index.ts"],
         },
     ],

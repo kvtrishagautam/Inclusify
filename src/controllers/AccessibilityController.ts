@@ -60,12 +60,6 @@ export class AccessibilityController {
             return;
         }
 
-        // Check if we're in an extension context where axe-core can't run
-        if (typeof window !== 'undefined' && window.location.href.startsWith('chrome-extension://')) {
-            console.log('Audit skipped - running in extension context');
-            return;
-        }
-
         this.isAuditRunning = true;
 
         try {
@@ -97,12 +91,6 @@ export class AccessibilityController {
     public async runQuickAudit(): Promise<AccessibilityIssue[]> {
         if (!this.isEnabled || this.isAuditRunning) {
             console.log('Quick audit skipped - disabled or already running');
-            return [];
-        }
-
-        // Check if we're in an extension context where axe-core can't run
-        if (typeof window !== 'undefined' && window.location.href.startsWith('chrome-extension://')) {
-            console.log('Quick audit skipped - running in extension context');
             return [];
         }
 

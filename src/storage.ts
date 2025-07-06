@@ -1,3 +1,15 @@
+import { chromophobiaModel, type ChromophobiaSettings, type ColorMode } from "./models/ChromophobiaModel";
+
+// Re-export types for backward compatibility
+export type { ChromophobiaSettings, ColorMode };
+
+// Export the settings store for backward compatibility
+export const chromophobiaSettings = chromophobiaModel.getSettings();
+
+// Compatibility layer for backward compatibility
+// This file maintains the old API while using the new MVC architecture
+
+// Legacy persistentStore function for backward compatibility
 import { writable, type Updater, type Writable } from "svelte/store";
 
 /**
@@ -52,4 +64,5 @@ export function persistentStore<T>(key: string, initialValue: T): Writable<T> {
     };
 }
 
+// Legacy count store for backward compatibility
 export const count = persistentStore("count", 10);

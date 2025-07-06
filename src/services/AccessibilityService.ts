@@ -41,20 +41,20 @@ export class AccessibilityService {
 
         try {
             // Configure axe-core only once
-            axe.configure({
-                rules: [
-                    { id: 'color-contrast', enabled: true },
-                    { id: 'image-alt', enabled: true },
-                    { id: 'button-name', enabled: true },
-                    { id: 'link-name', enabled: true },
-                    { id: 'form-field-multiple-labels', enabled: true },
-                    { id: 'heading-order', enabled: true },
-                    { id: 'list', enabled: true },
-                    { id: 'listitem', enabled: true },
-                    { id: 'landmark-one-main', enabled: true },
-                    { id: 'region', enabled: true }
-                ]
-            });
+        axe.configure({
+            rules: [
+                { id: 'color-contrast', enabled: true },
+                { id: 'image-alt', enabled: true },
+                { id: 'button-name', enabled: true },
+                { id: 'link-name', enabled: true },
+                { id: 'form-field-multiple-labels', enabled: true },
+                { id: 'heading-order', enabled: true },
+                { id: 'list', enabled: true },
+                { id: 'listitem', enabled: true },
+                { id: 'landmark-one-main', enabled: true },
+                { id: 'region', enabled: true }
+            ]
+        });
             this.axeInitialized = true;
             console.log('Axe-core initialized successfully');
         } catch (error) {
@@ -64,13 +64,6 @@ export class AccessibilityService {
 
     public async runAudit(): Promise<AccessibilityIssue[]> {
         if (!this.isEnabled) {
-            return [];
-        }
-
-        // Check if we're in a content script context where axe-core can run
-        if (typeof window !== 'undefined' && window.location.href.startsWith('chrome-extension://')) {
-            // We're in an extension context (popup/panel), skip audit
-            console.log('Skipping audit - in extension context');
             return [];
         }
 
@@ -129,7 +122,7 @@ export class AccessibilityService {
                 console.error('No results from axe audit after retries');
                 return [];
             }
-            
+
             console.log('Accessibility audit completed');
             
             const issues = results.violations.map((violation: any) => ({
@@ -409,7 +402,7 @@ export class AccessibilityService {
                 return 'Large image';
             }
         } else {
-            return 'Image';
+        return 'Image';
         }
     }
 
@@ -424,6 +417,14 @@ export class AccessibilityService {
             issue.nodes.forEach(node => {
                 const elements = this.getElementsBySelector(node.target);
                 elements.forEach(element => {
+                    // Exclude sidebar elements from being highlighted
+                    if (
+                        element.closest('#inclusify-chromophobia-controls-container') ||
+                        element.closest('#inclusify-cognitive-controls-container') ||
+                        element.closest('.sidepanel-container')
+                    ) {
+                        return;
+                    }
                     this.highlightElement(element, issue.impact);
                 });
             });
@@ -1316,6 +1317,16 @@ export class AccessibilityService {
             
             elements.forEach(element => {
                 if (element instanceof HTMLElement) {
+                    // Exclude sidebar elements from being highlighted
+                    if (
+                        element.closest('#inclusify-chromophobia-controls-container') ||
+                        element.closest('#inclusify-cognitive-controls-container') ||
+                        element.closest('.sidepanel-container')
+                    ) {
+                        console.log('AccessibilityService: Skipping sidebar element:', element.tagName);
+                        return;
+                    }
+                    
                     console.log(`AccessibilityService: Adding highlight to element:`, element.tagName, element.textContent?.substring(0, 20));
                     this.addInteractiveHighlight(element);
                     totalOverlaysCreated++;
@@ -1335,6 +1346,15 @@ export class AccessibilityService {
         const allElements = document.querySelectorAll('*');
         allElements.forEach(element => {
             if (element instanceof HTMLElement) {
+                // Exclude sidebar elements from being highlighted
+                if (
+                    element.closest('#inclusify-chromophobia-controls-container') ||
+                    element.closest('#inclusify-cognitive-controls-container') ||
+                    element.closest('.sidepanel-container')
+                ) {
+                    return;
+                }
+                
                 // Check for common interactive patterns
                 const hasClickHandler = element.onclick || 
                     element.getAttribute('onclick') || 

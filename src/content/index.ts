@@ -1,131 +1,109 @@
 import { mount } from "svelte";
-import Overlay from "../components/Overlay.svelte";
-import { AccessibilityController } from "../controllers/AccessibilityController";
+import ChromophobiaControlsView from "../views/ChromophobiaControlsView.svelte";
+import CognitiveControlsView from "../views/CognitiveControlsView.svelte";
+import AccessibilityFloatingIcon from "../views/AccessibilityFloatingIcon.svelte";
+import { chromophobiaController } from "../controllers/ChromophobiaController";
+import { cognitiveController } from "../controllers/CognitiveController";
 
-// Content scripts
-// https://developer.chrome.com/docs/extensions/mv3/content_scripts/
-
-// Some global styles on the page
+// Import global styles
 import "./styles.css";
 
-// Initialize accessibility controller
-const accessibilityController = new AccessibilityController();
-
-// Mount the accessibility overlay
-mount(Overlay, { target: document.body, props: { accessibilityController } });
-
-// Ensure styles are properly isolated when extension is enabled
-const ensureProperStyles = () => {
-    if (accessibilityController.isAccessibilityEnabled()) {
-        accessibilityController.ensureStyleIsolation();
-    }
-};
-
-// Call once on initialization
-ensureProperStyles();
-
-// Enhanced debouncing for SPAs like WhatsApp
-let auditTimeout: NodeJS.Timeout | null = null;
-let lastAuditTime = 0;
-const AUDIT_COOLDOWN = 5000; // Increased to 5 seconds for SPAs
-const DEBOUNCE_DELAY = 1000; // Increased to 1 second
-
-// Track DOM changes to detect SPA behavior
-let domChangeCount = 0;
-let lastDomChangeTime = 0;
-const DOM_CHANGE_THRESHOLD = 10; // If more than 10 changes in 5 seconds, treat as SPA
-const SPA_DETECTION_WINDOW = 5000;
-
-const debouncedAudit = () => {
-    if (!accessibilityController.isAccessibilityEnabled()) {
-        return;
-    }
-
-    const now = Date.now();
-    
-    // Check if we're in a high-frequency DOM change period (SPA)
-    if (now - lastDomChangeTime < SPA_DETECTION_WINDOW) {
-        domChangeCount++;
-        
-        // If too many changes, increase cooldown
-        if (domChangeCount > DOM_CHANGE_THRESHOLD) {
-            console.log('SPA detected - increasing audit cooldown');
-            return; // Skip audit entirely during high-frequency periods
+// --- Chromophobia & Cognitive Controls (v1.1 logic) ---
+function applyChromophobiaFilters(settings: any) {
+    const html = document.documentElement;
+    const body = document.body;
+    if (settings.enabled) {
+        html.classList.remove('inclusify-enabled', 'inclusify-grayscale', 'inclusify-monochrome', 'inclusify-desaturated');
+        html.classList.add('inclusify-enabled');
+        switch (settings.colorMode) {
+            case 'grayscale': html.classList.add('inclusify-grayscale'); break;
+            case 'monochrome': html.classList.add('inclusify-monochrome'); break;
+            case 'desaturated': html.classList.add('inclusify-desaturated'); break;
         }
+        const filter = `grayscale(${settings.colorMode === 'grayscale' ? 100 : 0}%) ` +
+            `saturate(${settings.saturationLevel}%) ` +
+            `brightness(${settings.brightness}%) ` +
+            `contrast(${settings.contrast}%)` +
+            `${settings.colorMode === 'monochrome' ? ' sepia(100%)' : ''}`;
+        html.style.filter = filter;
+        body.style.filter = filter;
     } else {
-        // Reset counters if outside detection window
-        domChangeCount = 0;
+        html.classList.remove('inclusify-enabled', 'inclusify-grayscale', 'inclusify-monochrome', 'inclusify-desaturated');
+        html.style.filter = '';
+        body.style.filter = '';
     }
-    
-    lastDomChangeTime = now;
+}
 
-    if (now - lastAuditTime < AUDIT_COOLDOWN) {
-        console.log('Audit skipped - cooldown period active');
-        return;
+chromophobiaController.getSettings().subscribe((settings) => {
+    chromophobiaController.applyFiltersToPage(settings);
+    if (!settings.enabled) {
+        const html = document.documentElement;
+        const body = document.body;
+        html.classList.remove('inclusify-enabled', 'inclusify-grayscale', 'inclusify-monochrome', 'inclusify-desaturated');
+        html.style.filter = '';
+        body.style.filter = '';
     }
+});
 
-    if (auditTimeout) {
-        clearTimeout(auditTimeout);
-    }
+cognitiveController.getSettings().subscribe((settings) => {
+    cognitiveController.applyCognitiveFeaturesToPage(settings);
+});
 
-    auditTimeout = setTimeout(() => {
-        lastAuditTime = Date.now();
-        console.log('Running accessibility audit...');
-        accessibilityController.refreshAudit().catch(error => {
-            console.error('Audit failed:', error);
-        });
-    }, DEBOUNCE_DELAY);
-};
+cognitiveController.initializeFeatures();
 
-// Listen for DOM changes to re-run accessibility audit
-const observer = new MutationObserver((mutations) => {
-    // Only trigger audit for meaningful changes
-    const hasSignificantChanges = mutations.some(mutation => {
-        // Skip text changes and attribute changes that don't affect accessibility
-        if (mutation.type === 'characterData') {
-            return false;
-        }
-        
-        // Skip attribute changes that are unlikely to affect accessibility
-        if (mutation.type === 'attributes') {
-            const attrName = mutation.attributeName;
-            if (attrName && ['class', 'style', 'data-', 'aria-hidden'].some(prefix => attrName.startsWith(prefix))) {
-                return false;
-            }
-        }
-        
-        // Skip changes to elements that are likely to be dynamic (SPA content)
-        if (mutation.type === 'childList') {
-            const target = mutation.target as Element;
-            if (target && (
-                target.classList.contains('message') ||
-                target.classList.contains('chat') ||
-                target.classList.contains('conversation') ||
-                target.id?.includes('message') ||
-                target.id?.includes('chat')
-            )) {
-                return false; // Skip chat/message updates
-            }
-        }
-        
-        return true;
+let isChromophobiaMounted = false;
+let isCognitiveMounted = false;
+let isAccessibilityMounted = false;
+
+function mountChromophobiaControls() {
+    try {
+        if (isChromophobiaMounted || document.getElementById('inclusify-chromophobia-controls-container')) return;
+        const container = document.createElement('div');
+        container.id = 'inclusify-chromophobia-controls-container';
+        container.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483646; pointer-events: none; transform: none; filter: none;';
+        document.body.appendChild(container);
+        mount(ChromophobiaControlsView, { target: container });
+        isChromophobiaMounted = true;
+    } catch (error) { console.error('Error mounting Inclusify chromophobia controls:', error); }
+}
+
+function mountCognitiveControls() {
+    try {
+        if (isCognitiveMounted || document.getElementById('inclusify-cognitive-controls-container')) return;
+        const container = document.createElement('div');
+        container.id = 'inclusify-cognitive-controls-container';
+        container.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483646; pointer-events: none; transform: none; filter: none;';
+        document.body.appendChild(container);
+        mount(CognitiveControlsView, { target: container });
+        isCognitiveMounted = true;
+    } catch (error) { console.error('Error mounting Inclusify cognitive controls:', error); }
+}
+
+function mountAccessibilityControls() {
+    try {
+        if (isAccessibilityMounted || document.getElementById('inclusify-accessibility-controls-container')) return;
+        const container = document.createElement('div');
+        container.id = 'inclusify-accessibility-controls-container';
+        container.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483646; pointer-events: none; transform: none; filter: none;';
+        document.body.appendChild(container);
+        mount(AccessibilityFloatingIcon, { target: container });
+        isAccessibilityMounted = true;
+    } catch (error) { console.error('Error mounting Inclusify accessibility controls:', error); }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        mountChromophobiaControls();
+        mountCognitiveControls();
+        mountAccessibilityControls();
     });
+} else {
+    mountChromophobiaControls();
+    mountCognitiveControls();
+    mountAccessibilityControls();
+}
 
-    if (hasSignificantChanges) {
-        debouncedAudit();
-    }
-});
-
-// Start observing DOM changes with more specific filters
-observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['alt', 'aria-', 'role', 'tabindex', 'id', 'name', 'title', 'lang']
-});
-
-// Add a manual audit trigger for testing
-(window as any).triggerAccessibilityAudit = () => {
-    console.log('Manual audit triggered');
-    accessibilityController.refreshAudit();
-};
+// --- Accessibility Scanning (only activated when toggle is enabled) ---
+// This will be controlled by the v1.1 sidebar toggle
+// The accessibility scanning logic is now integrated into the v1.1 sidebar
+// and will only run when the user enables it through the sidebar toggle

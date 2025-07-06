@@ -1,2 +1,501 @@
-/* Remove global body background - let websites keep their original colors */
-/* Extension styles should only affect extension elements, not the website */
+/* Extension-specific styles only - no global page modifications */
+
+/* Ensure the Inclusify controls containers are properly positioned */
+#inclusify-chromophobia-controls-container,
+#inclusify-cognitive-controls-container,
+#inclusify-accessibility-controls-container {
+    position: relative !important;
+    z-index: 2147483646 !important;
+    pointer-events: none !important;
+}
+
+#inclusify-chromophobia-controls-container > *,
+#inclusify-cognitive-controls-container > *,
+#inclusify-accessibility-controls-container > * {
+    pointer-events: auto !important;
+}
+
+/* Ensure the floating toggles are never affected by page filters or transforms */
+#inclusify-chromophobia-controls-container .floating-toggle {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    transform: none !important;
+    filter: none !important;
+    z-index: 2147483647 !important;
+}
+
+#inclusify-cognitive-controls-container .cognitive-floating-toggle {
+    position: fixed !important;
+    top: 20px !important;
+    right: 80px !important;
+    transform: none !important;
+    filter: none !important;
+    z-index: 2147483647 !important;
+}
+
+#inclusify-accessibility-controls-container .accessibility-floating-toggle {
+    position: fixed !important;
+    top: 80px !important;
+    right: 20px !important;
+    transform: none !important;
+    filter: none !important;
+    z-index: 2147483647 !important;
+}
+
+/* Ensure the controls overlays appear as proper modals */
+#inclusify-chromophobia-controls-container .controls-overlay,
+#inclusify-cognitive-controls-container .cognitive-controls-overlay,
+#inclusify-accessibility-controls-container .accessibility-controls-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    z-index: 2147483646 !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: flex-end !important;
+    pointer-events: auto !important;
+    padding: 80px 20px 20px 20px !important;
+}
+
+#inclusify-chromophobia-controls-container .controls-panel,
+#inclusify-cognitive-controls-container .cognitive-controls-panel,
+#inclusify-accessibility-controls-container .accessibility-controls-panel {
+    background-color: #ffffff !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    width: 350px !important;
+    max-width: 90vw !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid #dee2e6 !important;
+    position: relative !important;
+    z-index: 2147483647 !important;
+    pointer-events: auto !important;
+    margin-top: 0 !important;
+}
+
+/* Ensure the floating toggle button is always visible and not affected by page styles */
+.floating-toggle,
+.accessibility-floating-toggle {
+    position: fixed !important;
+    width: 50px !important;
+    height: 50px !important;
+    background-color: #ffffff !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    z-index: 2147483647 !important;
+    transition: all 0.3s ease !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    animation: inclusify-fade-in 0.5s ease-out !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    outline: none !important;
+    text-decoration: none !important;
+    list-style: none !important;
+    box-sizing: border-box !important;
+    transform: none !important;
+    filter: none !important;
+    left: auto !important;
+    bottom: auto !important;
+}
+
+.floating-toggle {
+    top: 20px !important;
+    right: 20px !important;
+    border: 2px solid #007bff !important;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3) !important;
+}
+
+.accessibility-floating-toggle {
+    top: 80px !important;
+    right: 20px !important;
+    border: 2px solid #28a745 !important;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3) !important;
+}
+
+.floating-toggle.enabled {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+    border-color: #0056b3 !important;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.5) !important;
+}
+
+.accessibility-floating-toggle.enabled {
+    background-color: #28a745 !important;
+    color: #ffffff !important;
+    border-color: #1e7e34 !important;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.5) !important;
+}
+
+.floating-toggle:hover {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4) !important;
+}
+
+.accessibility-floating-toggle:hover {
+    background-color: #28a745 !important;
+    color: #ffffff !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4) !important;
+}
+
+.floating-toggle.enabled:hover {
+    background-color: #0056b3 !important;
+    border-color: #004085 !important;
+    box-shadow: 0 6px 16px rgba(0, 123, 255, 0.6) !important;
+}
+
+.accessibility-floating-toggle.enabled:hover {
+    background-color: #218838 !important;
+    border-color: #1e7e34 !important;
+    box-shadow: 0 6px 16px rgba(40, 167, 69, 0.6) !important;
+}
+
+.floating-toggle:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3) !important;
+}
+
+.accessibility-floating-toggle:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3) !important;
+}
+
+.floating-toggle .icon,
+.accessibility-floating-toggle .icon {
+    font-size: 20px !important;
+    line-height: 1 !important;
+    pointer-events: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+@keyframes inclusify-fade-in {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Chromophobia-friendly styles */
+/* These styles will be applied to webpages when the extension is enabled */
+
+/* Base filter that can be modified by JavaScript */
+.inclusify-chromophobia-filter {
+    filter: grayscale(100%) brightness(100%) contrast(100%);
+    transition: filter 0.3s ease;
+}
+
+/* Specific color mode filters */
+.inclusify-grayscale {
+    filter: grayscale(100%) brightness(100%) contrast(100%);
+}
+
+.inclusify-monochrome {
+    filter: grayscale(100%) sepia(100%) brightness(100%) contrast(100%);
+}
+
+.inclusify-desaturated {
+    filter: saturate(0%) brightness(100%) contrast(100%);
+}
+
+/* Ensure the filter applies to all elements */
+.inclusify-enabled * {
+    filter: inherit;
+}
+
+/* Exclude the floating toggle from any chromophobia filters */
+.inclusify-enabled .floating-toggle,
+.inclusify-enabled #inclusify-controls-container .floating-toggle,
+.floating-toggle,
+#inclusify-controls-container .floating-toggle {
+    filter: none !important;
+    transform: none !important;
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: 50px !important;
+    height: 50px !important;
+    background-color: #ffffff !important;
+    border: 2px solid #007bff !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    z-index: 2147483647 !important;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3) !important;
+    transition: all 0.3s ease !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    outline: none !important;
+    text-decoration: none !important;
+    list-style: none !important;
+    box-sizing: border-box !important;
+}
+
+/* Override for images and videos to ensure proper filtering */
+.inclusify-enabled img,
+.inclusify-enabled video,
+.inclusify-enabled canvas {
+    filter: inherit !important;
+}
+
+/* Ensure background colors are also affected */
+.inclusify-enabled {
+    background-color: #f5f5f5 !important;
+    color: #333333 !important;
+}
+
+/* Override any existing color styles */
+.inclusify-enabled * {
+    background-color: inherit !important;
+    color: inherit !important;
+    border-color: #cccccc !important;
+}
+
+/* Cognitive accessibility styles */
+/* Only apply text size increase when cognitive mode is explicitly enabled */
+.inclusify-cognitive-enabled {
+    font-size: var(--inclusify-font-size, 105%) !important;
+    line-height: var(--inclusify-line-spacing, 1.3) !important;
+    filter: contrast(var(--inclusify-contrast, 110%)) !important;
+}
+
+.inclusify-cognitive-enabled * {
+    font-size: var(--inclusify-font-size, 105%) !important;
+    line-height: var(--inclusify-line-spacing, 1.3) !important;
+}
+
+/* Exclude control panels from cognitive styling */
+.inclusify-cognitive-enabled #inclusify-chromophobia-controls-container,
+.inclusify-cognitive-enabled #inclusify-cognitive-controls-container,
+.inclusify-cognitive-enabled .cognitive-controls-panel,
+.inclusify-cognitive-enabled .controls-panel,
+.inclusify-cognitive-enabled .floating-toggle,
+.inclusify-cognitive-enabled .cognitive-floating-toggle {
+    font-size: initial !important;
+    line-height: initial !important;
+    filter: none !important;
+}
+
+/* Big cursor styles */
+.inclusify-big-cursor {
+    cursor: none !important;
+}
+
+.inclusify-big-cursor * {
+    cursor: none !important;
+}
+
+/* Reading mask styles - ensure they appear on the website */
+#inclusify-reading-mask {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0,0,0,0.1) !important;
+    pointer-events: none !important;
+    z-index: 2147483646 !important;
+}
+
+#inclusify-reading-window {
+    position: fixed !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 4em !important;
+    background: transparent !important;
+    pointer-events: none !important;
+    z-index: 2147483647 !important;
+    border-top: 3px solid #007bff !important;
+    border-bottom: 3px solid #007bff !important;
+    transition: top 0.1s ease !important;
+    box-shadow: 0 0 0 9999px rgba(0,0,0,0.15) !important;
+}
+
+/* Reading guide styles */
+#inclusify-reading-guide {
+    position: fixed !important;
+    width: 2px !important;
+    height: 100% !important;
+    background-color: var(--inclusify-guide-color, #ffeb3b) !important;
+    pointer-events: none !important;
+    z-index: 2147483646 !important;
+    box-shadow: 0 0 10px var(--inclusify-guide-color, #ffeb3b) !important;
+}
+
+/* Big cursor styles */
+#inclusify-big-cursor {
+    position: fixed !important;
+    width: 32px !important;
+    height: 32px !important;
+    background-image: url("data:image/svg+xml;utf8,<svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'><polygon points='2,2 30,16 20,20 24,30 20,30 14,20 2,30' fill='black' stroke='white' stroke-width='1'/></svg>") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    pointer-events: none !important;
+    z-index: 2147483647 !important;
+    transition: all 0.1s ease !important;
+    mix-blend-mode: difference !important;
+}
+
+/* Accessibility scanning overlay styles - from main branch */
+/* These styles ensure accessibility overlays don't affect website colors */
+
+/* Issue overlay styles */
+.inclusify-issue-overlay {
+    position: absolute !important;
+    pointer-events: none !important;
+    z-index: 10000 !important;
+    box-sizing: border-box !important;
+    transition: all 0.3s ease !important;
+    background-color: transparent !important; /* Ensure no background color affects website */
+}
+
+/* Interactive element overlay styles */
+.inclusify-interactive-overlay {
+    position: absolute !important;
+    pointer-events: none !important;
+    z-index: 10000 !important;
+    box-sizing: border-box !important;
+    transition: all 0.3s ease !important;
+    background-color: transparent !important; /* Ensure no background color affects website */
+}
+
+/* Info badge styles */
+.inclusify-info-badge {
+    position: absolute !important;
+    top: -8px !important;
+    right: -8px !important;
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: white !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    z-index: 10001 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Speech icon styles */
+.inclusify-speech-icon {
+    position: absolute !important;
+    top: -8px !important;
+    left: -8px !important;
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: white !important;
+    font-size: 10px !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    z-index: 10001 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+    transition: all 0.3s ease !important;
+    background-color: #007cba !important;
+}
+
+/* Tooltip styles */
+.inclusify-tooltip {
+    position: absolute !important;
+    background-color: #333 !important;
+    color: white !important;
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    font-size: 12px !important;
+    max-width: 250px !important;
+    z-index: 10002 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+    pointer-events: none !important;
+}
+
+/* Modal styles */
+.inclusify-modal {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    background-color: white !important;
+    padding: 20px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3) !important;
+    z-index: 10003 !important;
+    max-width: 90vw !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+}
+
+/* Backdrop styles */
+.inclusify-backdrop {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: rgba(0,0,0,0.5) !important;
+    z-index: 10002 !important;
+}
+
+/* Feedback styles */
+.inclusify-feedback {
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    background-color: #007cba !important;
+    color: white !important;
+    padding: 12px 20px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    z-index: 10004 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Ensure all accessibility elements are excluded from chromophobia filters */
+.inclusify-enabled .inclusify-issue-overlay,
+.inclusify-enabled .inclusify-interactive-overlay,
+.inclusify-enabled .inclusify-info-badge,
+.inclusify-enabled .inclusify-speech-icon,
+.inclusify-enabled .inclusify-tooltip,
+.inclusify-enabled .inclusify-modal,
+.inclusify-enabled .inclusify-backdrop,
+.inclusify-enabled .inclusify-feedback {
+    filter: none !important;
+    background-color: initial !important;
+    color: initial !important;
+}
