@@ -409,9 +409,6 @@
         0% {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
-        50% {
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.6);
-        }
         100% {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
@@ -445,8 +442,12 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.3);
         z-index: 10001;
+        /* Allow clicks to pass through to page content */
+        pointer-events: auto;
+        /* Ensure it doesn't block page interactions */
+        user-select: none;
     }
 
     .dyslexia-sidebar {
@@ -462,20 +463,6 @@
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         /* Ensure sidebar doesn't block page interactions */
         pointer-events: auto;
-    }
-
-    .sidebar-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.3);
-        z-index: 10001;
-        /* Allow clicks to pass through to page content */
-        pointer-events: auto;
-        /* Ensure it doesn't block page interactions */
-        user-select: none;
     }
 
     /* Popup mode styles */
@@ -662,14 +649,6 @@
 
         .sidebar-content {
             padding: 15px;
-        }
-
-        .action-buttons {
-            flex-direction: column;
-        }
-
-        .action-btn {
-            min-width: auto;
         }
     }
 </style> 

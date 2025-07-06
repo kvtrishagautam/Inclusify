@@ -137,8 +137,13 @@ export class DyslexiaController {
 
     public async resetSettings(): Promise<void> {
         console.log('DyslexiaController: Resetting settings');
-        await this.storageModel.resetSettings();
-        // The settings store subscription will automatically call applySettings
+        try {
+            await this.saveSettings(DEFAULT_SETTINGS);
+        } catch (error) {
+            console.error('StorageModel: Error resetting settings:', error);
+            // Still update the store even if storage fails
+            this.settingsStore.set(DEFAULT_SETTINGS);
+        }
     }
 
     public speakText(text: string, rate?: number, voice?: string): void {

@@ -1,29 +1,19 @@
 export class SpeechModel {
-    private speechSynthesis: SpeechSynthesis | null = null;
+    private synth: SpeechSynthesis;
+    private utterance: SpeechSynthesisUtterance | null = null;
     private voices: SpeechSynthesisVoice[] = [];
 
     constructor() {
-        this.initializeSpeechSynthesis();
+        this.synth = window.speechSynthesis;
+        this.loadVoices();
     }
 
-    private initializeSpeechSynthesis(): void {
-        // Check if we're in a context where window is available
-        if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-            this.speechSynthesis = window.speechSynthesis;
-            this.loadVoices();
-            
-            // Listen for voices to be loaded
-            if (this.speechSynthesis.onvoiceschanged) {
-                this.speechSynthesis.onvoiceschanged = () => {
-                    this.loadVoices();
-                };
-            }
-        }
-    }
-
-    private loadVoices(): void {
-        if (this.speechSynthesis) {
-            this.voices = this.speechSynthesis.getVoices();
+    private loadVoices() {
+        this.voices = this.synth.getVoices();
+        if (this.voices.length === 0) {
+            this.synth.onvoiceschanged = () => {
+                this.voices = this.synth.getVoices();
+            };
         }
     }
 
@@ -31,34 +21,23 @@ export class SpeechModel {
         return this.voices;
     }
 
-    public speak(text: string, rate: number = 1.0, voiceName?: string): void {
-        if (!this.speechSynthesis || !text.trim() || typeof window === 'undefined') {
-            return;
-        }
-
-        // Stop any current speech
-        this.speechSynthesis.cancel();
-
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = rate;
-        
+    public speak(text: string, rate: number = 1.0, voiceName: string = ""): void {
+        this.stop();
+        this.utterance = new SpeechSynthesisUtterance(text);
+        this.utterance.rate = rate;
         if (voiceName) {
             const voice = this.voices.find(v => v.name === voiceName);
             if (voice) {
-                utterance.voice = voice;
+                this.utterance.voice = voice;
             }
         }
-
-        this.speechSynthesis.speak(utterance);
+        this.synth.speak(this.utterance);
     }
 
     public stop(): void {
-        if (this.speechSynthesis && typeof window !== 'undefined') {
-            this.speechSynthesis.cancel();
+        if (this.synth.speaking) {
+            this.synth.cancel();
         }
-    }
-
-    public isSpeaking(): boolean {
-        return this.speechSynthesis && typeof window !== 'undefined' ? this.speechSynthesis.speaking : false;
+        this.utterance = null;
     }
 } 
