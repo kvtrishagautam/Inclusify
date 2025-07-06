@@ -21,9 +21,7 @@
 		lineFocus: false,
 		highContrast: false,
 		linkHighlighting: false,
-		readingMode: false,
-		dyslexiaRuler: false,
-		magnifier: false
+		dyslexiaRuler: false
 	};
 
 	// Available fonts for dyslexia
@@ -118,9 +116,7 @@
 		if (dyslexiaSettings.lineFocus) applyLineFocus();
 		if (dyslexiaSettings.highContrast) applyHighContrast();
 		if (dyslexiaSettings.linkHighlighting) applyLinkHighlighting();
-		if (dyslexiaSettings.readingMode) applyReadingMode();
 		if (dyslexiaSettings.dyslexiaRuler) applyDyslexiaRuler();
-		if (dyslexiaSettings.magnifier) applyMagnifier();
 	}
 
 	function removeDyslexiaSettings() {
@@ -143,9 +139,7 @@
 		removeLineFocus();
 		removeHighContrast();
 		removeLinkHighlighting();
-		removeReadingMode();
 		removeDyslexiaRuler();
-		removeMagnifier();
 	}
 
 	function applyColorOverlay() {
@@ -297,38 +291,6 @@
 		}
 	}
 
-	function applyReadingMode() {
-		const html = document.documentElement;
-		html.classList.add('inclusify-reading-mode');
-		
-		// Hide additional distracting elements
-		const selectors = [
-			'.ad', '.advertisement', '.ads', '.banner', '.popup', '.modal',
-			'.sidebar', '.nav', '.menu', '.header', '.footer', '.social',
-			'.share', '.comment', '.related', '.recommendation',
-			'[class*="ad"]', '[class*="banner"]', '[class*="popup"]',
-			'iframe', 'script', 'noscript'
-		];
-		
-		selectors.forEach(selector => {
-			const elements = document.querySelectorAll(selector);
-			elements.forEach(el => {
-				(el as HTMLElement).style.display = 'none';
-			});
-		});
-	}
-
-	function removeReadingMode() {
-		const html = document.documentElement;
-		html.classList.remove('inclusify-reading-mode');
-		
-		// Restore hidden elements
-		const hiddenElements = document.querySelectorAll('[style*="display: none"]');
-		hiddenElements.forEach(el => {
-			(el as HTMLElement).style.display = '';
-		});
-	}
-
 	function applyDyslexiaRuler() {
 		const ruler = document.createElement('div');
 		ruler.id = 'dyslexia-ruler';
@@ -361,42 +323,6 @@
 		const ruler = document.getElementById('dyslexia-ruler');
 		if (ruler) {
 			ruler.style.top = (e.clientY - 2) + 'px';
-		}
-	}
-
-	function applyMagnifier() {
-		const magnifier = document.createElement('div');
-		magnifier.id = 'dyslexia-magnifier';
-		magnifier.style.cssText = `
-			position: fixed;
-			width: 200px;
-			height: 200px;
-			border: 2px solid #ff6b35;
-			border-radius: 50%;
-			pointer-events: none;
-			z-index: 10002;
-			background: rgba(255, 255, 255, 0.9);
-			transform: scale(2);
-			transform-origin: center;
-			display: block;
-		`;
-		document.body.appendChild(magnifier);
-		
-		// Add mouse tracking
-		document.addEventListener('mousemove', updateMagnifier);
-	}
-
-	function removeMagnifier() {
-		const magnifier = document.getElementById('dyslexia-magnifier');
-		if (magnifier) magnifier.remove();
-		document.removeEventListener('mousemove', updateMagnifier);
-	}
-
-	function updateMagnifier(e: MouseEvent) {
-		const magnifier = document.getElementById('dyslexia-magnifier');
-		if (magnifier) {
-			magnifier.style.left = (e.clientX - 100) + 'px';
-			magnifier.style.top = (e.clientY - 100) + 'px';
 		}
 	}
 
@@ -495,17 +421,6 @@
 		}
 	}
 
-	function toggleReadingMode() {
-		dyslexiaSettings.readingMode = !dyslexiaSettings.readingMode;
-		if (isDyslexiaEnabled) {
-			if (dyslexiaSettings.readingMode) {
-				applyReadingMode();
-			} else {
-				removeReadingMode();
-			}
-		}
-	}
-
 	function toggleDyslexiaRuler() {
 		dyslexiaSettings.dyslexiaRuler = !dyslexiaSettings.dyslexiaRuler;
 		if (isDyslexiaEnabled) {
@@ -517,14 +432,23 @@
 		}
 	}
 
-	function toggleMagnifier() {
-		dyslexiaSettings.magnifier = !dyslexiaSettings.magnifier;
+	function resetToDefault() {
+		dyslexiaSettings = {
+			fontFamily: 'Comic Neue',
+			fontSize: 16,
+			lineSpacing: 1.5,
+			wordSpacing: 0.16,
+			letterSpacing: 0.12,
+			colorOverlay: false,
+			focusMode: false,
+			lineFocus: false,
+			highContrast: false,
+			linkHighlighting: false,
+			dyslexiaRuler: false
+		};
+		
 		if (isDyslexiaEnabled) {
-			if (dyslexiaSettings.magnifier) {
-				applyMagnifier();
-			} else {
-				removeMagnifier();
-			}
+			applyDyslexiaSettings();
 		}
 	}
 </script>
@@ -548,8 +472,8 @@
 	<div class="dyslexia-controls-overlay">
 		<div class="dyslexia-controls-panel">
 			<div class="header">
+				<button class="close-btn-left" on:click={toggleVisibility}>×</button>
 				<h3>Inclusify - Dyslexia Support</h3>
-				<button class="close-btn" on:click={toggleVisibility}>×</button>
 			</div>
 
 			<div class="control-group">
@@ -714,50 +638,16 @@
 						<label class="toggle-label">
 							<input
 								type="checkbox"
-								checked={dyslexiaSettings.readingMode}
-								on:change={toggleReadingMode}
-							/>
-							<span class="toggle-text">Reading Mode</span>
-						</label>
-					</div>
-
-					<div class="setting-row">
-						<label class="toggle-label">
-							<input
-								type="checkbox"
 								checked={dyslexiaSettings.dyslexiaRuler}
 								on:change={toggleDyslexiaRuler}
 							/>
 							<span class="toggle-text">Dyslexia Ruler</span>
 						</label>
 					</div>
-
-					<div class="setting-row">
-						<label class="toggle-label">
-							<input
-								type="checkbox"
-								checked={dyslexiaSettings.magnifier}
-								on:change={toggleMagnifier}
-							/>
-							<span class="toggle-text">Magnifier</span>
-						</label>
-					</div>
 				</div>
 
-				<div class="info-section">
-					<h4>Dyslexia Support Features:</h4>
-					<ul>
-						<li>OpenDyslexic font for better readability</li>
-						<li>Adjustable font size and line spacing</li>
-						<li>Color overlay to reduce visual stress</li>
-						<li>Focus mode to highlight text areas</li>
-						<li>Line focus for guided reading</li>
-						<li>High contrast mode for better visibility</li>
-						<li>Link highlighting for easier navigation</li>
-						<li>Reading mode to simplify pages</li>
-						<li>Dyslexia ruler for line tracking</li>
-						<li>Magnifier for detailed viewing</li>
-					</ul>
+				<div class="control-group">
+					<button class="reset-default-btn" on:click={resetToDefault}>Reset to Default</button>
 				</div>
 			{/if}
 
@@ -862,11 +752,12 @@
 
 	.dyslexia-controls-panel .header {
 		display: flex !important;
-		justify-content: space-between !important;
+		justify-content: center !important;
 		align-items: center !important;
 		margin-bottom: 20px !important;
 		padding-bottom: 16px !important;
 		border-bottom: 2px solid #e9ecef !important;
+		position: relative !important;
 	}
 
 	.dyslexia-controls-panel .header h3 {
@@ -876,18 +767,26 @@
 		font-weight: 600 !important;
 	}
 
-	.dyslexia-controls-panel .close-btn {
+	.dyslexia-controls-panel .close-btn-left {
+		position: absolute !important;
+		top: -10px !important;
+		left: 0 !important;
 		background: none !important;
 		border: none !important;
 		font-size: 24px !important;
 		cursor: pointer !important;
 		color: #666 !important;
-		padding: 4px !important;
-		border-radius: 4px !important;
-		transition: color 0.2s !important;
+		width: 30px !important;
+		height: 30px !important;
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		border-radius: 50% !important;
+		transition: all 0.3s ease !important;
 	}
 
-	.dyslexia-controls-panel .close-btn:hover {
+	.dyslexia-controls-panel .close-btn-left:hover {
+		background-color: #f0f0f0 !important;
 		color: #333 !important;
 	}
 
@@ -1006,5 +905,29 @@
 	.dyslexia-controls-panel .footer small {
 		color: #666 !important;
 		font-size: 12px !important;
+	}
+
+	.dyslexia-controls-panel .reset-default-btn {
+		background-color: #ff6b35 !important;
+		color: white !important;
+		padding: 10px 20px !important;
+		border: none !important;
+		border-radius: 8px !important;
+		cursor: pointer !important;
+		font-size: 14px !important;
+		font-weight: 600 !important;
+		transition: background-color 0.3s ease !important;
+		margin-top: 15px !important;
+		display: inline-block !important;
+		text-align: center !important;
+	}
+
+	.dyslexia-controls-panel .reset-default-btn:hover {
+		background-color: #e55a2b !important;
+	}
+
+	.dyslexia-controls-panel .reset-default-btn:focus {
+		outline: none !important;
+		box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.5) !important;
 	}
 </style> 

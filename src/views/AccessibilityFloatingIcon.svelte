@@ -44,6 +44,18 @@
 		}
 	}
 
+	function resetToDefault() {
+		isAccessibilityEnabled = false;
+		isReadingMaskEnabled = false;
+		isBigCursorEnabled = false;
+		isMagnifierEnabled = false;
+		
+		// Remove all overlays
+		removeReadingMask();
+		removeBigCursor();
+		removeMagnifier();
+	}
+
 	// Keyboard shortcut to toggle controls
 	onMount(() => {
 		function handleKeyPress(event: KeyboardEvent) {
@@ -79,8 +91,8 @@
 	<div class="accessibility-controls-overlay">
 		<div class="accessibility-controls-panel">
 			<div class="header">
+				<button class="close-btn-left" on:click={toggleVisibility}>×</button>
 				<h3>Inclusify - Accessibility Scanner</h3>
-				<button class="close-btn" on:click={toggleVisibility}>×</button>
 			</div>
 
 			<div class="control-group">
@@ -107,18 +119,11 @@
 						Scans the current webpage for WCAG compliance issues, missing alt text, and accessibility problems.
 					</p>
 				</div>
-
-				<div class="info-section">
-					<h4>What this scanner finds:</h4>
-					<ul>
-						<li>Images without alt text</li>
-						<li>Missing form labels</li>
-						<li>Color contrast issues</li>
-						<li>Keyboard navigation problems</li>
-						<li>Screen reader compatibility</li>
-					</ul>
-				</div>
 			{/if}
+
+			<div class="control-group">
+				<button class="reset-default-btn" on:click={resetToDefault}>Reset to Default</button>
+			</div>
 
 			<div class="footer">
 				<small>Press Ctrl+Shift+A to toggle controls</small>
@@ -223,11 +228,12 @@
 
 	.accessibility-controls-panel .header {
 		display: flex !important;
-		justify-content: space-between !important;
+		justify-content: center !important;
 		align-items: center !important;
 		margin-bottom: 20px !important;
 		padding-bottom: 16px !important;
 		border-bottom: 2px solid #e9ecef !important;
+		position: relative !important;
 	}
 
 	.accessibility-controls-panel .header h3 {
@@ -237,19 +243,51 @@
 		font-weight: 600 !important;
 	}
 
-	.accessibility-controls-panel .close-btn {
+	.accessibility-controls-panel .close-btn-left {
+		position: absolute !important;
+		top: 15px !important;
+		left: 15px !important;
 		background: none !important;
 		border: none !important;
 		font-size: 24px !important;
 		cursor: pointer !important;
 		color: #666 !important;
-		padding: 4px !important;
-		border-radius: 4px !important;
-		transition: color 0.2s !important;
+		width: 30px !important;
+		height: 30px !important;
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		border-radius: 50% !important;
+		transition: all 0.3s ease !important;
 	}
 
-	.accessibility-controls-panel .close-btn:hover {
+	.accessibility-controls-panel .close-btn-left:hover {
+		background-color: #f0f0f0 !important;
 		color: #333 !important;
+	}
+
+	.accessibility-controls-panel .reset-default-btn {
+		background-color: #28a745 !important;
+		color: white !important;
+		padding: 10px 20px !important;
+		border: none !important;
+		border-radius: 8px !important;
+		cursor: pointer !important;
+		font-size: 14px !important;
+		font-weight: 600 !important;
+		transition: background-color 0.3s ease !important;
+		margin-top: 15px !important;
+		display: inline-block !important;
+		text-align: center !important;
+	}
+
+	.accessibility-controls-panel .reset-default-btn:hover {
+		background-color: #218838 !important;
+	}
+
+	.accessibility-controls-panel .reset-default-btn:focus {
+		outline: none !important;
+		box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.5) !important;
 	}
 
 	.accessibility-controls-panel .control-group {

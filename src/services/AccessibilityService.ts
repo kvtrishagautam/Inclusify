@@ -62,6 +62,46 @@ export class AccessibilityService {
         }
     }
 
+    private shouldExcludeElement(element: HTMLElement): boolean {
+        // Check if element is part of any Inclusify sidebar or control panel
+        const inclusifySelectors = [
+            '#inclusify-chromophobia-controls-container',
+            '#inclusify-cognitive-controls-container', 
+            '#inclusify-accessibility-controls-container',
+            '#inclusify-dyslexia-controls-container',
+            '.dyslexia-sidebar',
+            '.cognitive-sidebar',
+            '.chromophobia-sidebar',
+            '.accessibility-sidebar',
+            '[data-dyslexia-sidebar]',
+            '.controls-panel',
+            '.cognitive-controls-panel',
+            '.accessibility-controls-panel',
+            '.dyslexia-controls-panel',
+            '.floating-toggle',
+            '.cognitive-floating-toggle',
+            '.accessibility-floating-toggle',
+            '.dyslexia-floating-toggle'
+        ];
+
+        // Check if element is within any of these containers
+        for (const selector of inclusifySelectors) {
+            const container = document.querySelector(selector);
+            if (container && container.contains(element)) {
+                return true;
+            }
+        }
+
+        // Check if element itself is one of these containers
+        for (const selector of inclusifySelectors) {
+            if (element.matches(selector)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public async runAudit(): Promise<AccessibilityIssue[]> {
         if (!this.isEnabled) {
             return [];
@@ -94,7 +134,27 @@ export class AccessibilityService {
             
             while (retryCount < maxRetries) {
                 try {
-                    results = await axe.run();
+                    results = await axe.run({
+                        exclude: [
+                            '#inclusify-chromophobia-controls-container',
+                            '#inclusify-cognitive-controls-container',
+                            '#inclusify-accessibility-controls-container', 
+                            '#inclusify-dyslexia-controls-container',
+                            '.dyslexia-sidebar',
+                            '.cognitive-sidebar',
+                            '.chromophobia-sidebar',
+                            '.accessibility-sidebar',
+                            '[data-dyslexia-sidebar]',
+                            '.controls-panel',
+                            '.cognitive-controls-panel',
+                            '.accessibility-controls-panel',
+                            '.dyslexia-controls-panel',
+                            '.floating-toggle',
+                            '.cognitive-floating-toggle',
+                            '.accessibility-floating-toggle',
+                            '.dyslexia-floating-toggle'
+                        ]
+                    });
                     break; // Success, exit retry loop
                 } catch (error: any) {
                     retryCount++;
@@ -167,6 +227,12 @@ export class AccessibilityService {
 
         for (const img of images) {
             const element = img as HTMLElement;
+            
+            // Skip elements that are part of Inclusify sidebars or control panels
+            if (this.shouldExcludeElement(element)) {
+                continue;
+            }
+            
             const suggestedAltText = await this.generateAltText(element);
             
             if (suggestedAltText) {
@@ -1318,11 +1384,7 @@ export class AccessibilityService {
             elements.forEach(element => {
                 if (element instanceof HTMLElement) {
                     // Exclude sidebar elements from being highlighted
-                    if (
-                        element.closest('#inclusify-chromophobia-controls-container') ||
-                        element.closest('#inclusify-cognitive-controls-container') ||
-                        element.closest('.sidepanel-container')
-                    ) {
+                    if (this.shouldExcludeElement(element)) {
                         console.log('AccessibilityService: Skipping sidebar element:', element.tagName);
                         return;
                     }
@@ -1347,11 +1409,7 @@ export class AccessibilityService {
         allElements.forEach(element => {
             if (element instanceof HTMLElement) {
                 // Exclude sidebar elements from being highlighted
-                if (
-                    element.closest('#inclusify-chromophobia-controls-container') ||
-                    element.closest('#inclusify-cognitive-controls-container') ||
-                    element.closest('.sidepanel-container')
-                ) {
+                if (this.shouldExcludeElement(element)) {
                     return;
                 }
                 

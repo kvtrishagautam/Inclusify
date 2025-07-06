@@ -37,6 +37,16 @@
 		chromophobiaSettings.update((s) => ({ ...s, contrast: value }));
 	}
 
+	function resetToDefault() {
+		chromophobiaSettings.set({
+			enabled: false,
+			colorMode: 'grayscale',
+			saturationLevel: 50,
+			brightness: 100,
+			contrast: 100
+		});
+	}
+
 	// Keyboard shortcut to toggle controls
 	onMount(() => {
 		function handleKeyPress(event: KeyboardEvent) {
@@ -72,8 +82,8 @@
 	<div class="controls-overlay">
 		<div class="controls-panel">
 			<div class="header">
+				<button class="close-btn-left" on:click={toggleVisibility}>×</button>
 				<h3>Inclusify - Chromophobia-Friendly</h3>
-				<button class="close-btn" on:click={toggleVisibility}>×</button>
 			</div>
 
 			<div class="control-group">
@@ -169,6 +179,10 @@
 					/>
 				</div>
 			{/if}
+
+			<div class="control-group">
+				<button class="reset-default-btn" on:click={resetToDefault}>Reset to Default</button>
+			</div>
 
 			<div class="footer">
 				<small>Press Ctrl+Shift+C to toggle controls</small>
@@ -281,11 +295,12 @@
 
 	.header {
 		display: flex;
-		justify-content: space-between;
+		justify-content: center;
 		align-items: center;
 		margin-bottom: 20px;
 		padding-bottom: 15px;
 		border-bottom: 1px solid #dee2e6;
+		position: relative;
 	}
 
 	.header h3 {
@@ -295,24 +310,51 @@
 		font-weight: 600;
 	}
 
-	.close-btn {
-		background: none;
-		border: none;
-		font-size: 24px;
-		cursor: pointer;
-		color: #666;
-		padding: 0;
-		width: 30px;
-		height: 30px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: 50%;
-		transition: background-color 0.2s;
+	.close-btn-left {
+		position: absolute !important;
+		top: 15px !important;
+		left: 15px !important;
+		background: none !important;
+		border: none !important;
+		font-size: 24px !important;
+		cursor: pointer !important;
+		color: #666 !important;
+		width: 30px !important;
+		height: 30px !important;
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		border-radius: 50% !important;
+		transition: all 0.3s ease !important;
 	}
 
-	.close-btn:hover {
-		background-color: #f8f9fa;
+	.close-btn-left:hover {
+		background-color: #f0f0f0 !important;
+		color: #333 !important;
+	}
+
+	.reset-default-btn {
+		background-color: #007bff !important;
+		color: white !important;
+		padding: 10px 20px !important;
+		border: none !important;
+		border-radius: 8px !important;
+		cursor: pointer !important;
+		font-size: 14px !important;
+		font-weight: 600 !important;
+		transition: background-color 0.3s ease !important;
+		margin-top: 15px !important;
+		display: inline-block !important;
+		text-align: center !important;
+	}
+
+	.reset-default-btn:hover {
+		background-color: #0056b3 !important;
+	}
+
+	.reset-default-btn:focus {
+		outline: none !important;
+		box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5) !important;
 	}
 
 	.control-group {
