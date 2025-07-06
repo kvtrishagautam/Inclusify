@@ -13,7 +13,7 @@ const [major, minor, patch] = version
 export default defineManifest(async () => ({
     manifest_version: 3,
     name: "Inclusify - Accessibility & Chromophobia-Friendly Browser",
-    description: "A Chrome extension that enhances website accessibility by scanning for WCAG compliance issues, highlighting interactive elements, providing alt-text suggestions, and helping people with chromophobia browse the web comfortably with color-free viewing options.",
+    description: "A Chrome extension that enhances website accessibility by scanning for WCAG compliance issues, highlighting interactive elements, providing alt-text suggestions, and helping people with chromophobia, cognitive disabilities, and dyslexia browse the web comfortably with color-free viewing options.",
     version: `${major}.${minor}.${patch}`,
     version_name: version,
     icons: {
@@ -24,20 +24,14 @@ export default defineManifest(async () => ({
     },
     content_scripts: [
         {
-            matches: ["https://*/*", "http://*/*"],
+            matches: ["<all_urls>"],
             js: ["src/content/index.ts"],
         },
     ],
     background: {
         service_worker: "src/background/index.ts",
     },
-    options_ui: {
-        page: "src/options/options.html",
-        open_in_tab: false,
-    },
-    side_panel: {
-        default_path: "src/sidepanel/sidepanel.html",
-    },
+
     action: {
         default_icon: {
             "16": "src/assets/icons/icon-16.png",
@@ -46,5 +40,6 @@ export default defineManifest(async () => ({
             "128": "src/assets/icons/icon-128.png",
         },
     },
-    permissions: ["storage", "sidePanel", "activeTab"] as chrome.runtime.ManifestPermissions[],
+    permissions: ["storage", "sidePanel", "activeTab", "scripting"] as chrome.runtime.ManifestPermissions[],
+    host_permissions: ["<all_urls>"],
 }));

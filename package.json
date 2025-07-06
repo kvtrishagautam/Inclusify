@@ -1,6 +1,6 @@
 {
     "name": "inclusify-chromophobia-extension",
-    "description": "A Chrome extension that helps people with chromophobia browse the web comfortably by providing color-free viewing options",
+    "description": "A Chrome extension that helps people with chromophobia, cognitive disabilities, and dyslexia browse the web comfortably by providing accessibility features",
     "version": "1.0.0",
     "type": "module",
     "repository": {

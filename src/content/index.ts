@@ -2,6 +2,7 @@ import { mount } from "svelte";
 import ChromophobiaControlsView from "../views/ChromophobiaControlsView.svelte";
 import CognitiveControlsView from "../views/CognitiveControlsView.svelte";
 import AccessibilityFloatingIcon from "../views/AccessibilityFloatingIcon.svelte";
+import DyslexiaFloatingIcon from "../views/DyslexiaFloatingIcon.svelte";
 import { chromophobiaController } from "../controllers/ChromophobiaController";
 import { cognitiveController } from "../controllers/CognitiveController";
 
@@ -54,6 +55,7 @@ cognitiveController.initializeFeatures();
 let isChromophobiaMounted = false;
 let isCognitiveMounted = false;
 let isAccessibilityMounted = false;
+let isDyslexiaMounted = false;
 
 function mountChromophobiaControls() {
     try {
@@ -91,16 +93,30 @@ function mountAccessibilityControls() {
     } catch (error) { console.error('Error mounting Inclusify accessibility controls:', error); }
 }
 
+function mountDyslexiaControls() {
+    try {
+        if (isDyslexiaMounted || document.getElementById('inclusify-dyslexia-controls-container')) return;
+        const container = document.createElement('div');
+        container.id = 'inclusify-dyslexia-controls-container';
+        container.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483646; pointer-events: none; transform: none; filter: none;';
+        document.body.appendChild(container);
+        mount(DyslexiaFloatingIcon, { target: container });
+        isDyslexiaMounted = true;
+    } catch (error) { console.error('Error mounting Inclusify dyslexia controls:', error); }
+}
+
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         mountChromophobiaControls();
         mountCognitiveControls();
         mountAccessibilityControls();
+        mountDyslexiaControls();
     });
 } else {
     mountChromophobiaControls();
     mountCognitiveControls();
     mountAccessibilityControls();
+    mountDyslexiaControls();
 }
 
 // --- Accessibility Scanning (only activated when toggle is enabled) ---

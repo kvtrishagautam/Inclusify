@@ -1,9 +1,14 @@
 /* Extension-specific styles only - no global page modifications */
 
+/* Import dyslexia-friendly fonts */
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 /* Ensure the Inclusify controls containers are properly positioned */
 #inclusify-chromophobia-controls-container,
 #inclusify-cognitive-controls-container,
-#inclusify-accessibility-controls-container {
+#inclusify-accessibility-controls-container,
+#inclusify-dyslexia-controls-container {
     position: relative !important;
     z-index: 2147483646 !important;
     pointer-events: none !important;
@@ -11,7 +16,8 @@
 
 #inclusify-chromophobia-controls-container > *,
 #inclusify-cognitive-controls-container > *,
-#inclusify-accessibility-controls-container > * {
+#inclusify-accessibility-controls-container > *,
+#inclusify-dyslexia-controls-container > * {
     pointer-events: auto !important;
 }
 
@@ -43,10 +49,20 @@
     z-index: 2147483647 !important;
 }
 
+#inclusify-dyslexia-controls-container .dyslexia-floating-toggle {
+    position: fixed !important;
+    top: 140px !important;
+    right: 20px !important;
+    transform: none !important;
+    filter: none !important;
+    z-index: 2147483647 !important;
+}
+
 /* Ensure the controls overlays appear as proper modals */
 #inclusify-chromophobia-controls-container .controls-overlay,
 #inclusify-cognitive-controls-container .cognitive-controls-overlay,
-#inclusify-accessibility-controls-container .accessibility-controls-overlay {
+#inclusify-accessibility-controls-container .accessibility-controls-overlay,
+#inclusify-dyslexia-controls-container .dyslexia-controls-overlay {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
@@ -63,7 +79,8 @@
 
 #inclusify-chromophobia-controls-container .controls-panel,
 #inclusify-cognitive-controls-container .cognitive-controls-panel,
-#inclusify-accessibility-controls-container .accessibility-controls-panel {
+#inclusify-accessibility-controls-container .accessibility-controls-panel,
+#inclusify-dyslexia-controls-container .dyslexia-controls-panel {
     background-color: #ffffff !important;
     border-radius: 12px !important;
     padding: 20px !important;
@@ -79,7 +96,8 @@
 
 /* Ensure the floating toggle button is always visible and not affected by page styles */
 .floating-toggle,
-.accessibility-floating-toggle {
+.accessibility-floating-toggle,
+.dyslexia-floating-toggle {
     position: fixed !important;
     width: 50px !important;
     height: 50px !important;
@@ -123,6 +141,13 @@
     box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3) !important;
 }
 
+.dyslexia-floating-toggle {
+    top: 140px !important;
+    right: 20px !important;
+    border: 2px solid #ff6b35 !important;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3) !important;
+}
+
 .floating-toggle.enabled {
     background-color: #007bff !important;
     color: #ffffff !important;
@@ -135,6 +160,13 @@
     color: #ffffff !important;
     border-color: #1e7e34 !important;
     box-shadow: 0 4px 12px rgba(40, 167, 69, 0.5) !important;
+}
+
+.dyslexia-floating-toggle.enabled {
+    background-color: #ff6b35 !important;
+    color: #ffffff !important;
+    border-color: #e55a2b !important;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.5) !important;
 }
 
 .floating-toggle:hover {
@@ -151,6 +183,13 @@
     box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4) !important;
 }
 
+.dyslexia-floating-toggle:hover {
+    background-color: #ff6b35 !important;
+    color: #ffffff !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4) !important;
+}
+
 .floating-toggle.enabled:hover {
     background-color: #0056b3 !important;
     border-color: #004085 !important;
@@ -163,6 +202,12 @@
     box-shadow: 0 6px 16px rgba(40, 167, 69, 0.6) !important;
 }
 
+.dyslexia-floating-toggle.enabled:hover {
+    background-color: #e55a2b !important;
+    border-color: #cc4a1f !important;
+    box-shadow: 0 6px 16px rgba(255, 107, 53, 0.6) !important;
+}
+
 .floating-toggle:focus {
     outline: none !important;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3) !important;
@@ -173,8 +218,14 @@
     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3) !important;
 }
 
+.dyslexia-floating-toggle:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.3) !important;
+}
+
 .floating-toggle .icon,
-.accessibility-floating-toggle .icon {
+.accessibility-floating-toggle .icon,
+.dyslexia-floating-toggle .icon {
     font-size: 20px !important;
     line-height: 1 !important;
     pointer-events: none !important;
@@ -255,6 +306,8 @@
     text-decoration: none !important;
     list-style: none !important;
     box-sizing: border-box !important;
+    background-color: initial !important;
+    color: initial !important;
 }
 
 /* Override for images and videos to ensure proper filtering */
@@ -452,11 +505,10 @@
     background-color: white !important;
     padding: 20px !important;
     border-radius: 8px !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
     z-index: 10003 !important;
-    max-width: 90vw !important;
-    max-height: 90vh !important;
-    overflow-y: auto !important;
+    max-width: 500px !important;
+    width: 90% !important;
 }
 
 /* Backdrop styles */
@@ -473,29 +525,215 @@
 /* Feedback styles */
 .inclusify-feedback {
     position: fixed !important;
-    bottom: 20px !important;
+    top: 20px !important;
     right: 20px !important;
-    background-color: #007cba !important;
+    background-color: #28a745 !important;
     color: white !important;
     padding: 12px 20px !important;
-    border-radius: 8px !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    border-radius: 6px !important;
     z-index: 10004 !important;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-    font-size: 14px !important;
-    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    animation: inclusify-fade-in 0.3s ease-out !important;
 }
 
-/* Ensure all accessibility elements are excluded from chromophobia filters */
+/* Ensure accessibility overlays work with chromophobia filters */
 .inclusify-enabled .inclusify-issue-overlay,
 .inclusify-enabled .inclusify-interactive-overlay,
 .inclusify-enabled .inclusify-info-badge,
 .inclusify-enabled .inclusify-speech-icon,
-.inclusify-enabled .inclusify-tooltip,
-.inclusify-enabled .inclusify-modal,
-.inclusify-enabled .inclusify-backdrop,
-.inclusify-enabled .inclusify-feedback {
+.inclusify-enabled .inclusify-tooltip {
     filter: none !important;
     background-color: initial !important;
     color: initial !important;
+}
+
+/* PROTECT SIDEBAR AND EXTENSION ELEMENTS FROM GLOBAL STYLING */
+[data-dyslexia-sidebar],
+.dyslexia-sidebar,
+.sidebar-overlay,
+.sidebar-toggle,
+.setting-group,
+.setting-row,
+.toggle-label,
+.action-btn,
+.floating-icon,
+.floating-icon-text,
+.sidebar-header,
+.sidebar-content,
+.close-btn,
+#inclusify-dyslexia-sidebar-root,
+#dyslexia-settings-indicator,
+#dyslexia-manual-injection-notice,
+#dyslexia-color-overlay,
+#dyslexia-focus-highlight,
+#dyslexia-line-focus {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    word-spacing: inherit !important;
+    letter-spacing: inherit !important;
+    color: inherit !important;
+    filter: none !important;
+    text-decoration: inherit !important;
+    padding: inherit !important;
+    border-radius: inherit !important;
+}
+
+/* Ensure sidebar has white background */
+.dyslexia-sidebar,
+#inclusify-dyslexia-sidebar-root {
+    background-color: white !important;
+}
+
+/* Ensure the dyslexia panel is always on top */
+#dyslexia-panel {
+    z-index: 10001 !important;
+}
+
+/* Style for focus mode highlighting */
+#dyslexia-focus-highlight {
+    position: absolute;
+    background-color: yellow;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 10000;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+}
+
+/* Color overlay styles */
+#dyslexia-color-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Responsive design for the panel */
+@media (max-width: 768px) {
+    .dyslexia-panel {
+        width: 90vw !important;
+        right: 5vw !important;
+        left: 5vw !important;
+    }
+    
+    .dyslexia-fab {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 20px !important;
+    }
+}
+
+/* Dyslexia support styles */
+.inclusify-dyslexia-enabled {
+    font-family: var(--dyslexia-font-family, 'Comic Neue'), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-size: var(--dyslexia-font-size, 16px) !important;
+    line-height: var(--dyslexia-line-spacing, 1.5) !important;
+    word-spacing: var(--dyslexia-word-spacing, 0.16em) !important;
+    letter-spacing: var(--dyslexia-letter-spacing, 0.12em) !important;
+}
+
+.inclusify-dyslexia-enabled * {
+    font-family: var(--dyslexia-font-family, 'Comic Neue'), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-size: var(--dyslexia-font-size, 16px) !important;
+    line-height: var(--dyslexia-line-spacing, 1.5) !important;
+    word-spacing: var(--dyslexia-word-spacing, 0.16em) !important;
+    letter-spacing: var(--dyslexia-letter-spacing, 0.12em) !important;
+}
+
+/* Exclude control panels from dyslexia styling */
+.inclusify-dyslexia-enabled #inclusify-chromophobia-controls-container,
+.inclusify-dyslexia-enabled #inclusify-cognitive-controls-container,
+.inclusify-dyslexia-enabled #inclusify-accessibility-controls-container,
+.inclusify-dyslexia-enabled #inclusify-dyslexia-controls-container,
+.inclusify-dyslexia-enabled .controls-panel,
+.inclusify-dyslexia-enabled .cognitive-controls-panel,
+.inclusify-dyslexia-enabled .accessibility-controls-panel,
+.inclusify-dyslexia-enabled .dyslexia-controls-panel,
+.inclusify-dyslexia-enabled .floating-toggle,
+.inclusify-dyslexia-enabled .cognitive-floating-toggle,
+.inclusify-dyslexia-enabled .accessibility-floating-toggle,
+.inclusify-dyslexia-enabled .dyslexia-floating-toggle {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-size: initial !important;
+    line-height: initial !important;
+    word-spacing: initial !important;
+    letter-spacing: initial !important;
+}
+
+/* High contrast mode */
+.inclusify-high-contrast {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+.inclusify-high-contrast * {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+}
+
+.inclusify-high-contrast a {
+    color: #ffff00 !important;
+    text-decoration: underline !important;
+}
+
+/* Link highlighting */
+.inclusify-link-highlight {
+    background-color: #ffff00 !important;
+    color: #000000 !important;
+    padding: 2px 4px !important;
+    border-radius: 3px !important;
+    text-decoration: underline !important;
+}
+
+/* Reading mode */
+.inclusify-reading-mode {
+    background-color: #f8f9fa !important;
+}
+
+.inclusify-reading-mode * {
+    background-color: #f8f9fa !important;
+}
+
+.inclusify-reading-mode img,
+.inclusify-reading-mode video,
+.inclusify-reading-mode iframe,
+.inclusify-reading-mode .ad,
+.inclusify-reading-mode .advertisement,
+.inclusify-reading-mode .sidebar,
+.inclusify-reading-mode .nav,
+.inclusify-reading-mode .menu {
+    display: none !important;
+}
+
+/* Dyslexia ruler */
+#dyslexia-ruler {
+    position: fixed !important;
+    width: 100% !important;
+    height: 2px !important;
+    background: linear-gradient(to right, transparent, #ff6b35, transparent) !important;
+    pointer-events: none !important;
+    z-index: 10001 !important;
+    transition: top 0.1s ease !important;
+}
+
+/* Magnifier */
+#dyslexia-magnifier {
+    position: fixed !important;
+    width: 200px !important;
+    height: 200px !important;
+    border: 2px solid #ff6b35 !important;
+    border-radius: 50% !important;
+    pointer-events: none !important;
+    z-index: 10002 !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    transform: scale(2) !important;
+    transform-origin: center !important;
+    display: block !important;
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.3) !important;
+    backdrop-filter: blur(2px) !important;
 }

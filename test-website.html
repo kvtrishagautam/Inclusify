@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Website for Dyslexia Helper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.4;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #555;
+            font-size: 1.8em;
+            margin-top: 30px;
+        }
+        p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Our Test Website</h1>
+        
+        <p>This is a test website designed to demonstrate the Dyslexia Helper extension functionality. The text below contains various elements that should be affected by the extension's accessibility features.</p>
+        
+        <div class="highlight">
+            <strong>Important Note:</strong> This page is designed to test how the Dyslexia Helper extension modifies website content for better readability.
+        </div>
+        
+        <h2>About Dyslexia</h2>
+        <p>Dyslexia is a learning disorder that affects reading and related language-based processing skills. It can make it difficult for people to read, write, and spell. However, with the right tools and support, people with dyslexia can excel in many areas.</p>
+        
+        <p>Common challenges include:</p>
+        <ul>
+            <li>Difficulty with reading fluency</li>
+            <li>Problems with word recognition</li>
+            <li>Issues with spelling and writing</li>
+            <li>Challenges with phonological processing</li>
+        </ul>
+        
+        <h2>How This Extension Helps</h2>
+        <p>The Dyslexia Helper extension provides various tools to make web content more accessible:</p>
+        
+        <ul>
+            <li><strong>Font Changes:</strong> Uses dyslexia-friendly fonts like OpenDyslexic</li>
+            <li><strong>Text Spacing:</strong> Adjusts letter, word, and line spacing</li>
+            <li><strong>Color Overlays:</strong> Adds colored overlays to reduce visual stress</li>
+            <li><strong>High Contrast:</strong> Increases contrast for better readability</li>
+
+        </ul>
+        
+        <div class="highlight">
+            <p><strong>Test Instructions:</strong></p>
+            <ol>
+                <li>Load the Dyslexia Helper extension</li>
+                <li>Click the floating icon or use Ctrl+Shift+B to open settings</li>
+                <li>Enable the extension and try different features</li>
+                <li>Observe how the text on this page changes</li>
+            </ol>
+        </div>
+        
+        <h2>Sample Content</h2>
+        <p>Here's some sample text to test the extension's font and spacing features. This paragraph contains various words and sentences that should be affected by the dyslexia-friendly modifications.</p>
+        
+        <p>The quick brown fox jumps over the lazy dog. This pangram contains every letter of the alphabet and is commonly used to test fonts and typography. When the Dyslexia Helper extension is active, you should notice changes in how this text appears.</p>
+        
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <button class="button" onclick="alert('Button clicked!')">Test Button</button>
+            <a href="#" class="button" style="display: inline-block;">Test Link</a>
+        </div>
+        
+        <h2>Technical Details</h2>
+        <p>This test page includes various HTML elements that the extension should modify:</p>
+        <ul>
+            <li>Headings (h1, h2)</li>
+            <li>Paragraphs with different text content</li>
+            <li>Lists (ordered and unordered)</li>
+            <li>Links and buttons</li>
+            <li>Highlighted sections</li>
+        </ul>
+        
+        <p>If the extension is working correctly, you should see changes in font family, size, spacing, and potentially color overlays when you enable different features in the sidebar.</p>
+    </div>
+    
+    <script>
+        // Add some dynamic content to test MutationObserver
+        setTimeout(() => {
+            const container = document.querySelector('.container');
+            if (container) {
+                const newSection = document.createElement('div');
+                newSection.innerHTML = `
+                    <h2>Dynamic Content (Added by JavaScript)</h2>
+                    <p>This content was added dynamically after the page loaded. The Dyslexia Helper extension should apply its modifications to this new content as well.</p>
+                    <p>This tests whether the extension's MutationObserver is working correctly to handle dynamically added content.</p>
+                `;
+                container.appendChild(newSection);
+            }
+        }, 3000);
+    </script>
+</body>
+</html> 
