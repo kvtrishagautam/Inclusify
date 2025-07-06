@@ -1,27 +1,31 @@
-# Inclusify - Chromophobia-Friendly Browser Extension
+# Inclusify - Chromophobia & Cognitive Accessibility Extension
 
-A Chrome extension designed to help people with chromophobia (fear of colors) browse the web comfortably by providing various color-free viewing options.
+A Chrome extension designed to help people with chromophobia (fear of colors) and cognitive disabilities browse the web comfortably by providing color-free viewing options and cognitive accessibility aids.
 
 ## Features
 
-### 🎨 Color-Free Modes
+### 🎨 Chromophobia-Friendly Modes
 
 - **Grayscale**: Converts all colors to pure black and white
 - **Monochrome**: Applies a sepia tone effect for a warmer, vintage look
 - **Desaturated**: Reduces color intensity while maintaining some color information
+- **Saturation, Brightness, Contrast Controls**: Fine-tune the page appearance
 
-### ⚙️ Customizable Settings
+### 🧠 Cognitive Accessibility (NEW)
 
-- **Saturation Control**: Adjust color intensity from 0% (no color) to 100% (full color)
-- **Brightness Control**: Modify page brightness from 0% to 200%
-- **Contrast Control**: Adjust contrast levels from 0% to 200%
+- **Big Cursor**: Enlarges the mouse cursor for easier tracking
+- **Reading Mask**: Adds a transparent horizontal window with a dimmed overlay to help focus on lines of text
+- **Reading Guide**: Shows a colored line that follows the mouse to guide reading
+- **Text Size Control**: Slider to increase or decrease text size for better readability
 
-### 🚀 Quick Access
+> **Note:** Only these 4 cognitive features are currently supported. All other cognitive features (Bionic Reading, Readability Mode, Focus Mode, Language Simplifier, Hide Distractions, etc.) have been removed for stability and usability.
 
-- **Floating Controls**: Click the floating palette icon on any webpage
-- **Keyboard Shortcut**: Press `Ctrl+Shift+C` to toggle controls
-- **Extension Popup**: Click the extension icon for quick settings
-- **Side Panel**: Access advanced settings in the browser side panel
+## Popup Interface
+
+- The extension popup now contains **two panels**:
+  - **Chromophobia Controls**: For color filtering and adjustments
+  - **Cognitive Accessibility Controls**: For big cursor, reading mask, reading guide, and text size
+- Each panel can be enabled/disabled independently
 
 ## Installation
 
@@ -60,25 +64,20 @@ npm run build
 
 ## Usage
 
-### Basic Usage
+### Chromophobia Controls
 
 1. **Enable the Extension**: Click the extension icon in your browser toolbar
 2. **Toggle Color-Free Mode**: Use the main toggle switch to enable/disable color filtering
 3. **Choose a Mode**: Select from Grayscale, Monochrome, or Desaturated modes
 4. **Adjust Settings**: Use the sliders to fine-tune saturation, brightness, and contrast
 
-### Advanced Usage
+### Cognitive Accessibility Controls
 
-1. **Side Panel**: Click "Advanced Settings" in the popup to open the side panel
-2. **Quick Presets**: Use the Gentle, Moderate, or Strong presets for common configurations
-3. **Fine Tuning**: Adjust individual settings for a personalized experience
-4. **Keyboard Shortcuts**: Use `Ctrl+Shift+C` on any webpage to quickly access controls
-
-### Settings Explained
-
-- **Saturation**: Controls how much color is present (0% = no color, 100% = full color)
-- **Brightness**: Controls overall page brightness (100% = normal, <100% = darker, >100% = brighter)
-- **Contrast**: Controls the difference between light and dark elements (100% = normal, <100% = less contrast, >100% = more contrast)
+1. **Enable Cognitive Mode**: In the popup, toggle the Cognitive Accessibility panel
+2. **Big Cursor**: Enable to make the cursor larger and more visible
+3. **Reading Mask**: Enable to add a horizontal reading window with dimmed overlay
+4. **Reading Guide**: Enable to show a colored line following the mouse
+5. **Text Size**: Use the slider to increase or decrease text size (default is 105%)
 
 ## Technical Details
 
@@ -87,12 +86,12 @@ npm run build
 - Built with **Svelte 5** and **TypeScript**
 - Uses **Chrome Extension Manifest V3**
 - Persistent settings stored in Chrome's sync storage
-- Real-time webpage filtering using CSS filters
+- Real-time webpage filtering using CSS filters and overlays
 
 ### Components
 
-- **Content Script**: Applies filters to webpages
-- **Popup**: Quick access interface
+- **Content Script**: Applies filters and cognitive aids to webpages
+- **Popup**: Quick access interface for both chromophobia and cognitive controls
 - **Side Panel**: Advanced settings and controls
 - **Background Script**: Handles extension lifecycle
 - **Options Page**: Detailed configuration (if needed)
@@ -109,16 +108,17 @@ npm run build
 
 ```
 src/
-├── components/          # Svelte components
-│   ├── ChromophobiaControls.svelte
-│   ├── ChromophobiaPopup.svelte
-│   └── ChromophobiaSidePanel.svelte
-├── content/            # Content scripts
-├── popup/              # Extension popup
-├── sidepanel/          # Side panel interface
-├── background/         # Background scripts
-├── storage.ts          # Persistent storage utilities
-└── manifest.config.ts  # Extension manifest
+├── assets/                # Icons and static assets
+├── background/            # Background scripts
+├── content/               # Content scripts
+├── controllers/           # Logic for chromophobia and cognitive features
+├── models/                # State management for features
+├── options/               # Options page
+├── popup/                 # Extension popup
+├── sidepanel/             # Side panel interface
+├── views/                 # Svelte views for popup, controls, sidepanel
+├── storage.ts             # Persistent storage utilities
+└── manifest.config.ts     # Extension manifest
 ```
 
 ### Available Scripts
@@ -145,7 +145,7 @@ src/
 ## Privacy & Security
 
 - **No Data Collection**: The extension doesn't collect or transmit any user data
-- **Local Processing**: All color filtering happens locally in the browser
+- **Local Processing**: All filtering and accessibility features happen locally in the browser
 - **Minimal Permissions**: Only requests necessary permissions for functionality
 - **Open Source**: Full transparency with open source code
 
@@ -163,10 +163,10 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgments
 
-- Built for the chromophobia community
+- Built for the chromophobia and neurodivergent community
 - Inspired by accessibility needs in web browsing
 - Uses modern web technologies for optimal performance
 
 ---
 
-**Note**: This extension is designed to help people with chromophobia, but it's not a substitute for professional medical advice. If you're experiencing severe anxiety related to colors, please consult with a healthcare professional.
+**Note**: This extension is designed to help people with chromophobia and cognitive disabilities, but it's not a substitute for professional medical advice. If you're experiencing severe anxiety or accessibility challenges, please consult with a healthcare professional.

@@ -214,6 +214,38 @@
     filter: inherit !important;
 }
 
+/* Enhanced video filtering for chromophobia */
+.inclusify-enabled video {
+    filter: inherit !important;
+    -webkit-filter: inherit !important;
+}
+
+/* Target video elements more specifically */
+.inclusify-enabled video[src],
+.inclusify-enabled video source,
+.inclusify-enabled video track {
+    filter: inherit !important;
+    -webkit-filter: inherit !important;
+}
+
+/* Handle video containers and iframes */
+.inclusify-enabled iframe[src*="youtube"],
+.inclusify-enabled iframe[src*="vimeo"],
+.inclusify-enabled iframe[src*="dailymotion"],
+.inclusify-enabled .video-container,
+.inclusify-enabled .video-wrapper {
+    filter: inherit !important;
+    -webkit-filter: inherit !important;
+}
+
+/* Ensure video controls are also filtered */
+.inclusify-enabled video::-webkit-media-controls,
+.inclusify-enabled video::-webkit-media-controls-panel,
+.inclusify-enabled video::-webkit-media-controls-play-button {
+    filter: inherit !important;
+    -webkit-filter: inherit !important;
+}
+
 /* Ensure background colors are also affected */
 .inclusify-enabled {
     background-color: #f5f5f5 !important;
