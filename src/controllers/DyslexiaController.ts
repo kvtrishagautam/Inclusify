@@ -2,6 +2,7 @@ import { StorageModel } from '../models/StorageModel';
 import { DOMController } from './DOMController';
 import { EventController } from './EventController';
 import type { DyslexiaSettings } from '../models/DyslexiaSettings';
+import { DEFAULT_SETTINGS } from '../models/DyslexiaSettings';
 
 export class DyslexiaController {
     private storageModel: StorageModel;
@@ -135,11 +136,11 @@ export class DyslexiaController {
     public async resetSettings(): Promise<void> {
         console.log('DyslexiaController: Resetting settings');
         try {
-            await this.saveSettings(DEFAULT_SETTINGS);
+            await this.storageModel.resetSettings();
         } catch (error) {
-            console.error('StorageModel: Error resetting settings:', error);
+            console.error('DyslexiaController: Error resetting settings:', error);
             // Still update the store even if storage fails
-            this.settingsStore.set(DEFAULT_SETTINGS);
+            this.storageModel.getSettingsStore().set(DEFAULT_SETTINGS);
         }
     }
 

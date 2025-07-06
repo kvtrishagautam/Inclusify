@@ -122,8 +122,13 @@
         }
     }
 
-    function resetSettings() {
-        controller.resetSettings();
+    async function resetSettings() {
+        try {
+            await controller.resetSettings();
+            console.log('Settings reset successfully');
+        } catch (error) {
+            console.error('Failed to reset settings:', error);
+        }
     }
 
     // Listen for keyboard shortcut to toggle sidebar
@@ -252,7 +257,7 @@
                             id="word-spacing"
                             type="range" 
                             min="50" 
-                            max="200" 
+                            max="200n" 
                             step="10"
                             value={currentSettings.wordSpacing}
                             onchange={(e) => updateSetting('wordSpacing', parseInt(e.target.value))}
