@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-to-Speech Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .example {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #007cba;
+            border-radius: 4px;
+        }
+        .description {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e8f4fd;
+            border-radius: 4px;
+        }
+        .expected {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .content-example {
+            border: 2px dashed #007cba;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            position: relative;
+        }
+        .speech-icon {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: #007cba;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .speech-icon:hover {
+            background: #005a8b;
+        }
+        .speech-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 8px 0;
+            font-size: 12px;
+            color: #856404;
+        }
+        .image-example {
+            text-align: center;
+            margin: 10px 0;
+        }
+        .image-example img {
+            max-width: 200px;
+            height: auto;
+            border: 1px solid #ddd;
+        }
+        .button-example {
+            margin: 10px 0;
+        }
+        .button-example button {
+            padding: 8px 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #007cba;
+            color: white;
+        }
+        .link-example {
+            margin: 10px 0;
+        }
+        .link-example a {
+            color: #007cba;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        .link-example a:hover {
+            text-decoration: underline;
+        }
+        .heading-example {
+            margin: 10px 0;
+        }
+        .heading-example h1,
+        .heading-example h2,
+        .heading-example h3 {
+            margin: 10px 0;
+            color: #333;
+        }
+        .paragraph-example {
+            margin: 10px 0;
+        }
+        .paragraph-example p {
+            margin: 8px 0;
+            color: #666;
+        }
+        .list-example {
+            margin: 10px 0;
+        }
+        .list-example ul,
+        .list-example ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        .list-example li {
+            margin: 4px 0;
+        }
+        .form-example {
+            margin: 10px 0;
+        }
+        .form-example input,
+        .form-example textarea {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+        .form-example label {
+            display: block;
+            margin: 5px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text-to-Speech Test Page</h1>
+    <p>This page demonstrates the extension's text-to-speech feature. Look for the 🔊 icon on elements with text content.</p>
+
+    <div class="test-section">
+        <h2>🔊 Text-to-Speech Features</h2>
+        <div class="description">
+            <strong>How It Works:</strong>
+            <ul>
+                <li><strong>Speech Icon:</strong> A 🔊 icon appears on elements with text content</li>
+                <li><strong>Click to Hear:</strong> Click the icon to hear the content read aloud</li>
+                <li><strong>Smart Content:</strong> For images, uses alt text or generates description</li>
+                <li><strong>Visual Feedback:</strong> Shows a notification when speaking</li>
+                <li><strong>Voice Selection:</strong> Automatically selects the best available voice</li>
+                <li><strong>Multiple Languages:</strong> Supports different languages based on content</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📷 Images with Text-to-Speech</h2>
+        
+        <div class="example">
+            <h3>Image with Alt Text</h3>
+            <div class="content-example">
+                <div class="speech-icon">🔊</div>
+                <div class="image-example">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY2YjZiIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="Product photo showing a red item">
+                </div>
+                <div class="speech-note">
+                    <strong>Expected:</strong> Click the 🔊 icon to hear "Product photo showing a red item"
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Image without Alt Text</h3>
+            <div class="content-example">
+                <div class="speech-icon">🔊</div>
+                <div class="image-example">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNGVjZGM0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzAwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg==" alt="">
+                </div>
+                <div class="speech-note">
+                    <strong>Expected:</strong> Click the 🔊 icon to hear generated alt text description
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔘 Buttons with Text-to-Speech</h2>
+        
+        <div class="example">
+            <h3>Buttons with Text Content</h3>
+            <div class="content-example">
+                <div class="speech-icon">🔊</div>
+                <div class="button-example">
+                    <button>Submit Form</button>
+                    <button>Cancel</button>
+                    <button>Delete Item</button>
+                </div>
+                <div class="speech-note">
+                    <strong>Expected:</strong> Click the 🔊 icon to hear all button text content
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Icon Button with Aria-Label</h3>
+            <div class="content-example">
+                <div class="speech-icon">🔊</div>
+                <div class="button-example">
+                    <button aria-label="Close dialog">❌</button>
+                    <button aria-label="Save changes">💾</button>
+                    <button aria-label="Print document">🖨️</button>
+                </div>
+                <div class="speech-note">
+                    <strong>Expected:</strong> Click the 🔊 icon to hear the aria-label descriptions
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Links with Text-to-Speech</h2>
+        
+        <div class="example">
+            <h3>Links with Descriptive Text</h3>
+            <div class="content-example">
+                <div class="speech-icon">🔊</div>
+                <div class="link-example">
+                    <a href="#home">Home Page</a>
+                    <a href="#about">About Us</a>
+                    <a href="#contact">Contact Information</a>
+                    <a href="#help">Help and Support</a>
+                </div>
+                <div class="speech-note">
+                    <strong>Expected:</strong> Click the 🔊 icon to hear all link text content
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Headings with Text-to-Speech</h2>
+        
+        <div class="example">
+            <h3>Heading Hierarchy</h3>
+            <div class="content-example">
+                <div class="speech-icon">🔊</div>
+                <div class="heading-example">
+                    <h1>Main Page Title</h1>
+                    <h2>Section Heading</h2>
+                    <h3>Subsection Title</h3>
+                </div>
+                <div class="speech-note">
+                    <strong>Expected:</strong> Click the 🔊 icon to hear all heading text content
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Paragraphs with Text-to-Speech</h2>
+        
+        <div class="example">
+            <h3>Text Content</h3>
+            <div class="content-example">
+                <div class="speech-icon">🔊</div>
+                <div class="paragraph-example">
+                    <p>This is a paragraph with important information that users might want to hear read aloud.</p>
+                    <p>Another paragraph with additional content that provides context and details about the topic.</p>
+                    <p>This paragraph contains specific instructions that are easier to follow when heard rather than read.</p>
+                </div>
+                <div class="speech-note">
+                    <strong>Expected:</strong> Click the 🔊 icon to hear all paragraph text content
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Lists with Text-to-Speech</h2>
+        
+        <div class="example">
+            <h3>Unordered List</h3>
+            <div class="content-example">
+                <div class="speech-icon">🔊</div>
+                <div class="list-example">
+                    <ul>
+                        <li>First item in the list</li>
+                        <li>Second item with more details</li>
+                        <li>Third item that completes the list</li>
+                    </ul>
+                </div>
+                <div class="speech-note">
+                    <strong>Expected:</strong> Click the 🔊 icon to hear all list item text content
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <h3>Ordered List</h3>
+            <div class="content-example">
+                <div class="speech-icon">🔊</div>
+                <div class="list-example">
+                    <ol>
+                        <li>Step one of the process</li>
+                        <li>Step two with additional instructions</li>
+                        <li>Step three to complete the process</li>
+                    </ol>
+                </div>
+                <div class="speech-note">
+                    <strong>Expected:</strong> Click the 🔊 icon to hear all numbered list item text content
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Form Elements with Text-to-Speech</h2>
+        
+        <div class="example">
+            <h3>Form with Labels</h3>
+            <div class="content-example">
+                <div class="speech-icon">🔊</div>
+                <div class="form-example">
+                    <label for="name">Full Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name">
+                    
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email">
+                    
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" placeholder="Enter your message here"></textarea>
+                </div>
+                <div class="speech-note">
+                    <strong>Expected:</strong> Click the 🔊 icon to hear all form label and placeholder text content
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📄 Mixed Content with Text-to-Speech</h2>
+        
+        <div class="example">
+            <h3>Article with Multiple Elements</h3>
+            <div class="content-example">
+                <div class="speech-icon">🔊</div>
+                <div class="paragraph-example">
+                    <h2>Article Title</h2>
+                    <p>This is the introduction paragraph that explains the main topic of the article.</p>
+                    <p>Here is another paragraph with additional information and context about the subject matter.</p>
+                    <ul>
+                        <li>Key point one about the topic</li>
+                        <li>Key point two with more details</li>
+                        <li>Key point three that summarizes the main ideas</li>
+                    </ul>
+                    <p>This concluding paragraph wraps up the article and provides final thoughts on the topic.</p>
+                </div>
+                <div class="speech-note">
+                    <strong>Expected:</strong> Click the 🔊 icon to hear all text content including headings, paragraphs, and list items
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 Testing Instructions</h2>
+        <div class="description">
+            <ol>
+                <li><strong>Load the extension</strong> in Chrome</li>
+                <li><strong>Navigate to this page</strong> and enable the extension</li>
+                <li><strong>Look for colored borders</strong> around elements with text content</li>
+                <li><strong>Notice the 🔊 speech icons</strong> that appear on elements with text</li>
+                <li><strong>Click the speech icons</strong> to hear the content read aloud</li>
+                <li><strong>Watch for feedback notifications</strong> that show what's being spoken</li>
+                <li><strong>Test different content types:</strong>
+                    <ul>
+                        <li>Images (uses alt text or generated description)</li>
+                        <li>Buttons (reads button text or aria-label)</li>
+                        <li>Links (reads link text)</li>
+                        <li>Headings (reads heading text)</li>
+                        <li>Paragraphs (reads paragraph text)</li>
+                        <li>Lists (reads list item text)</li>
+                        <li>Forms (reads labels and placeholders)</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <h3>Key Features:</h3>
+            <ul>
+                <li><strong>Smart Content Detection:</strong> Only shows speech icons on elements with actual text content</li>
+                <li><strong>Context-Aware Reading:</strong> For images, reads alt text or generates appropriate description</li>
+                <li><strong>Visual Feedback:</strong> Shows notification when speaking with text preview</li>
+                <li><strong>Voice Selection:</strong> Automatically selects the best available voice for clarity</li>
+                <li><strong>Accessibility Focused:</strong> Helps users with visual impairments or reading difficulties</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Text-to-speech test page loaded');
+            console.log('Enable the extension to see speech icons on elements with text content');
+            
+            // Add click handlers to the speech icons for demonstration
+            const speechIcons = document.querySelectorAll('.speech-icon');
+            speechIcons.forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const content = this.parentElement.querySelector('p, h1, h2, h3, ul, ol, button, a, label, input, textarea, img');
+                    if (content) {
+                        let textToSpeak = '';
+                        if (content.tagName.toLowerCase() === 'img') {
+                            textToSpeak = content.alt || 'Image without description';
+                        } else {
+                            textToSpeak = content.textContent || content.placeholder || content.value || '';
+                        }
+                        
+                        if (textToSpeak) {
+                            // Show feedback
+                            const feedback = document.createElement('div');
+                            feedback.style.position = 'fixed';
+                            feedback.style.top = '20px';
+                            feedback.style.right = '20px';
+                            feedback.style.backgroundColor = '#007cba';
+                            feedback.style.color = 'white';
+                            feedback.style.padding = '12px 16px';
+                            feedback.style.borderRadius = '8px';
+                            feedback.style.fontSize = '14px';
+                            feedback.style.zIndex = '10004';
+                            feedback.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+                            feedback.innerHTML = `
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 16px;">🔊</span>
+                                    <span>Demo: "${textToSpeak.substring(0, 50)}${textToSpeak.length > 50 ? '...' : ''}"</span>
+                                </div>
+                            `;
+                            document.body.appendChild(feedback);
+                            
+                            // Remove after 3 seconds
+                            setTimeout(() => {
+                                if (feedback.parentNode) {
+                                    feedback.parentNode.removeChild(feedback);
+                                }
+                            }, 3000);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

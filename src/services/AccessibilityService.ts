@@ -493,6 +493,41 @@ export class AccessibilityService {
         infoBadge.textContent = elementInfo.label;
         infoBadge.title = elementInfo.description;
         
+        // Create text-to-speech icon for elements with text content
+        const textContent = element.textContent?.trim() || '';
+        const hasTextContent = textContent.length > 0;
+        let speechIcon = null;
+        
+        if (hasTextContent) {
+            speechIcon = document.createElement('div');
+            speechIcon.className = 'inclusify-speech-icon';
+            speechIcon.style.position = 'absolute';
+            speechIcon.style.top = '-30px';
+            speechIcon.style.right = '-10px';
+            speechIcon.style.backgroundColor = '#007cba';
+            speechIcon.style.color = 'white';
+            speechIcon.style.padding = '4px';
+            speechIcon.style.borderRadius = '50%';
+            speechIcon.style.fontSize = '12px';
+            speechIcon.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+            speechIcon.style.zIndex = '10001';
+            speechIcon.style.cursor = 'pointer';
+            speechIcon.style.pointerEvents = 'auto';
+            speechIcon.style.width = '20px';
+            speechIcon.style.height = '20px';
+            speechIcon.style.display = 'flex';
+            speechIcon.style.alignItems = 'center';
+            speechIcon.style.justifyContent = 'center';
+            speechIcon.innerHTML = '🔊';
+            speechIcon.title = 'Click to hear this content';
+            
+            // Add click handler for text-to-speech
+            speechIcon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.speakElement(element);
+            });
+        }
+        
         // Create detailed tooltip
         const tooltip = document.createElement('div');
         tooltip.className = 'inclusify-element-tooltip';
@@ -534,6 +569,9 @@ export class AccessibilityService {
         });
         
         overlay.appendChild(infoBadge);
+        if (speechIcon) {
+            overlay.appendChild(speechIcon);
+        }
         overlay.appendChild(tooltip);
         document.body.appendChild(overlay);
         
@@ -1927,5 +1965,99 @@ export class AccessibilityService {
                 suggestion: 'Remove this div if it serves no purpose, or add content and semantic markup'
             };
         }
+    }
+
+    private speakElement(element: HTMLElement): void {
+        // Stop any currently speaking
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+        }
+        
+        // Get the text content to speak
+        let textToSpeak = '';
+        
+        // For images, use alt text or generate description
+        if (element.tagName.toLowerCase() === 'img') {
+            const alt = element.getAttribute('alt') || '';
+            if (alt) {
+                textToSpeak = alt;
+            } else {
+                textToSpeak = this.generateAltText(element);
+            }
+        } else {
+            // For other elements, get their text content
+            textToSpeak = element.textContent?.trim() || '';
+        }
+        
+        // If no text content, try to get a description
+        if (!textToSpeak) {
+            const elementInfo = this.getElementContextualInfo(element);
+            textToSpeak = elementInfo.description;
+        }
+        
+        // Create speech utterance
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        
+        // Configure speech settings
+        utterance.rate = 0.9; // Slightly slower for clarity
+        utterance.pitch = 1.0;
+        utterance.volume = 0.8;
+        
+        // Try to use a good voice
+        const voices = window.speechSynthesis.getVoices();
+        const preferredVoice = voices.find(voice => 
+            voice.lang.startsWith('en') && voice.name.includes('Female')
+        ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+        
+        if (preferredVoice && utterance.voice !== undefined && preferredVoice) {
+            utterance.voice = preferredVoice;
+        }
+        
+        // Add visual feedback
+        this.showSpeechFeedback(element, textToSpeak, utterance);
+        
+        // Speak the text
+        window.speechSynthesis.speak(utterance);
+        
+        // Log for debugging
+        console.log('Speaking:', textToSpeak);
+    }
+    
+    private showSpeechFeedback(element: HTMLElement, text: string, utterance: SpeechSynthesisUtterance): void {
+        // Create a temporary feedback element
+        const feedback = document.createElement('div');
+        feedback.style.position = 'fixed';
+        feedback.style.top = '20px';
+        feedback.style.right = '20px';
+        feedback.style.backgroundColor = '#007cba';
+        feedback.style.color = 'white';
+        feedback.style.padding = '12px 16px';
+        feedback.style.borderRadius = '8px';
+        feedback.style.fontSize = '14px';
+        feedback.style.zIndex = '10004';
+        feedback.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+        feedback.style.maxWidth = '300px';
+        feedback.style.wordWrap = 'break-word';
+        feedback.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 16px;">🔊</span>
+                <span>Speaking: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"</span>
+            </div>
+        `;
+        
+        document.body.appendChild(feedback);
+        
+        // Remove feedback after speech ends
+        const removeFeedback = () => {
+            if (feedback.parentNode) {
+                feedback.parentNode.removeChild(feedback);
+            }
+        };
+        
+        // Remove after 3 seconds or when speech ends
+        setTimeout(removeFeedback, 3000);
+        
+        // Also remove when speech ends
+        utterance.onend = removeFeedback;
     }
 } 
