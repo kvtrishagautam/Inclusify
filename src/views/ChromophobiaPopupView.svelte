@@ -1,15 +1,29 @@
 <script lang="ts">
 	import { chromophobiaSettings, type ColorMode } from "../storage";
+	import {
+		cognitiveModel,
+		type CognitiveSettings,
+	} from "../models/CognitiveModel";
 
 	let settings = $chromophobiaSettings;
+	let cognitiveSettings: CognitiveSettings;
+	const cognitiveSettingsStore = cognitiveModel.getSettings();
 
 	// Subscribe to settings changes
 	chromophobiaSettings.subscribe((value) => {
 		settings = value;
 	});
 
-	function toggleEnabled() {
+	cognitiveSettingsStore.subscribe((value) => {
+		cognitiveSettings = value;
+	});
+
+	function toggleChromophobiaEnabled() {
 		chromophobiaSettings.update((s) => ({ ...s, enabled: !s.enabled }));
+	}
+
+	function toggleCognitiveEnabled() {
+		cognitiveModel.updateSettings((s) => ({ ...s, enabled: !s.enabled }));
 	}
 
 	function setColorMode(mode: ColorMode) {
@@ -29,71 +43,126 @@
 <div class="popup-container">
 	<div class="header">
 		<h2>Inclusify</h2>
-		<p class="subtitle">Chromophobia-Friendly Browser</p>
+		<p class="subtitle">Accessibility Browser Extension</p>
 	</div>
 
-	<div class="main-toggle">
-		<label class="toggle-switch">
-			<input
-				type="checkbox"
-				checked={settings.enabled}
-				on:change={toggleEnabled}
-			/>
-			<span class="slider"></span>
-		</label>
-		<span class="toggle-label">
-			{settings.enabled ? "Color-Free Mode ON" : "Color-Free Mode OFF"}
-		</span>
-	</div>
+	<div class="accessibility-options">
+		<div class="option-section">
+			<h3>🎨 Chromophobia-Friendly</h3>
+			<div class="main-toggle">
+				<label class="toggle-switch">
+					<input
+						type="checkbox"
+						checked={settings.enabled}
+						on:change={toggleChromophobiaEnabled}
+					/>
+					<span class="slider"></span>
+				</label>
+				<span class="toggle-label">
+					{settings.enabled ? "Color-Free Mode ON" : "Color-Free Mode OFF"}
+				</span>
+			</div>
 
-	{#if settings.enabled}
-		<div class="mode-selector">
-			<fieldset>
-				<legend>Quick Mode:</legend>
-				<div class="mode-buttons">
-					<button
-						class="mode-btn {settings.colorMode === 'grayscale'
-							? 'active'
-							: ''}"
-						on:click={() => setColorMode("grayscale")}
-						aria-pressed={settings.colorMode === "grayscale"}
-					>
-						Grayscale
-					</button>
-					<button
-						class="mode-btn {settings.colorMode === 'monochrome'
-							? 'active'
-							: ''}"
-						on:click={() => setColorMode("monochrome")}
-						aria-pressed={settings.colorMode === "monochrome"}
-					>
-						Monochrome
-					</button>
-					<button
-						class="mode-btn {settings.colorMode === 'desaturated'
-							? 'active'
-							: ''}"
-						on:click={() => setColorMode("desaturated")}
-						aria-pressed={settings.colorMode === "desaturated"}
-					>
-						Desaturated
-					</button>
+			{#if settings.enabled}
+				<div class="mode-selector">
+					<fieldset>
+						<legend>Quick Mode:</legend>
+						<div class="mode-buttons">
+							<button
+								class="mode-btn {settings.colorMode === 'grayscale'
+									? 'active'
+									: ''}"
+								on:click={() => setColorMode("grayscale")}
+								aria-pressed={settings.colorMode === "grayscale"}
+							>
+								Grayscale
+							</button>
+							<button
+								class="mode-btn {settings.colorMode === 'monochrome'
+									? 'active'
+									: ''}"
+								on:click={() => setColorMode("monochrome")}
+								aria-pressed={settings.colorMode === "monochrome"}
+							>
+								Monochrome
+							</button>
+							<button
+								class="mode-btn {settings.colorMode === 'desaturated'
+									? 'active'
+									: ''}"
+								on:click={() => setColorMode("desaturated")}
+								aria-pressed={settings.colorMode === "desaturated"}
+							>
+								Desaturated
+							</button>
+						</div>
+					</fieldset>
 				</div>
-			</fieldset>
+
+				<div class="current-settings">
+					<div class="setting-item">
+						<span>Saturation: {settings.saturationLevel}%</span>
+					</div>
+					<div class="setting-item">
+						<span>Brightness: {settings.brightness}%</span>
+					</div>
+					<div class="setting-item">
+						<span>Contrast: {settings.contrast}%</span>
+					</div>
+				</div>
+			{/if}
 		</div>
 
-		<div class="current-settings">
-			<div class="setting-item">
-				<span>Saturation: {settings.saturationLevel}%</span>
+		<div class="option-section">
+			<h3>🧠 Cognitive Accessibility</h3>
+			<div class="main-toggle">
+				<label class="toggle-switch">
+					<input
+						type="checkbox"
+						checked={cognitiveSettings.enabled}
+						on:change={toggleCognitiveEnabled}
+					/>
+					<span class="slider"></span>
+				</label>
+				<span class="toggle-label">
+					{cognitiveSettings.enabled
+						? "Cognitive Mode ON"
+						: "Cognitive Mode OFF"}
+				</span>
 			</div>
-			<div class="setting-item">
-				<span>Brightness: {settings.brightness}%</span>
-			</div>
-			<div class="setting-item">
-				<span>Contrast: {settings.contrast}%</span>
-			</div>
+
+			{#if cognitiveSettings.enabled}
+				<div class="cognitive-features">
+					<div class="feature-list">
+						<div class="feature-item">
+							<span class="feature-icon">📖</span>
+							<span class="feature-text">Readability Mode</span>
+						</div>
+						<div class="feature-item">
+							<span class="feature-icon">🔊</span>
+							<span class="feature-text">Text-to-Speech</span>
+						</div>
+						<div class="feature-item">
+							<span class="feature-icon">👁️</span>
+							<span class="feature-text">Bionic Reading</span>
+						</div>
+						<div class="feature-item">
+							<span class="feature-icon">🎯</span>
+							<span class="feature-text">Focus Mode</span>
+						</div>
+						<div class="feature-item">
+							<span class="feature-icon">📝</span>
+							<span class="feature-text">Language Simplifier</span>
+						</div>
+						<div class="feature-item">
+							<span class="feature-icon">🚫</span>
+							<span class="feature-text">Hide Distractions</span>
+						</div>
+					</div>
+				</div>
+			{/if}
 		</div>
-	{/if}
+	</div>
 
 	<div class="actions">
 		<button class="action-btn" on:click={openSidePanel}>
@@ -107,13 +176,14 @@
 	</div>
 
 	<div class="footer">
-		<small>Press Ctrl+Shift+C on any page to open controls</small>
+		<small>Press Ctrl+Shift+C for chromophobia controls</small>
+		<small>Press Ctrl+Shift+D for cognitive controls</small>
 	</div>
 </div>
 
 <style>
 	.popup-container {
-		width: 320px;
+		width: 350px;
 		padding: 16px;
 		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
 			sans-serif;
@@ -139,15 +209,37 @@
 		font-size: 12px;
 	}
 
+	.accessibility-options {
+		margin-bottom: 16px;
+	}
+
+	.option-section {
+		margin-bottom: 20px;
+		padding: 12px;
+		border: 1px solid #e9ecef;
+		border-radius: 8px;
+		background-color: #f8f9fa;
+	}
+
+	.option-section h3 {
+		margin: 0 0 12px 0;
+		color: #333;
+		font-size: 16px;
+		font-weight: 600;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
 	.main-toggle {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		gap: 12px;
-		margin-bottom: 16px;
-		padding: 12px;
-		background-color: #f8f9fa;
-		border-radius: 8px;
+		margin-bottom: 12px;
+		padding: 8px;
+		background-color: #ffffff;
+		border-radius: 6px;
 	}
 
 	.toggle-switch {
@@ -202,7 +294,7 @@
 	}
 
 	.mode-selector {
-		margin-bottom: 16px;
+		margin-bottom: 12px;
 	}
 
 	.mode-selector legend {
@@ -228,7 +320,6 @@
 		cursor: pointer;
 		transition: all 0.2s;
 		font-size: 12px;
-		font-weight: 500;
 	}
 
 	.mode-btn:hover {
@@ -243,10 +334,10 @@
 	}
 
 	.current-settings {
-		margin-bottom: 16px;
-		padding: 12px;
-		background-color: #f8f9fa;
-		border-radius: 6px;
+		margin-bottom: 12px;
+		padding: 8px;
+		background-color: #ffffff;
+		border-radius: 4px;
 	}
 
 	.setting-item {
@@ -257,6 +348,35 @@
 
 	.setting-item:last-child {
 		margin-bottom: 0;
+	}
+
+	.cognitive-features {
+		margin-bottom: 12px;
+	}
+
+	.feature-list {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 8px;
+	}
+
+	.feature-item {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		padding: 6px 8px;
+		background-color: #ffffff;
+		border-radius: 4px;
+		font-size: 12px;
+		color: #333;
+	}
+
+	.feature-icon {
+		font-size: 14px;
+	}
+
+	.feature-text {
+		font-weight: 500;
 	}
 
 	.actions {
@@ -297,7 +417,13 @@
 	}
 
 	.footer small {
+		display: block;
 		color: #666;
 		font-size: 11px;
+		margin-bottom: 4px;
+	}
+
+	.footer small:last-child {
+		margin-bottom: 0;
 	}
 </style>

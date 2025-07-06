@@ -1,6 +1,8 @@
 import { mount } from "svelte";
 import ChromophobiaControlsView from "../views/ChromophobiaControlsView.svelte";
+import CognitiveControlsView from "../views/CognitiveControlsView.svelte";
 import { chromophobiaController } from "../controllers/ChromophobiaController";
+import { cognitiveController } from "../controllers/CognitiveController";
 
 // Content scripts
 // https://developer.chrome.com/docs/extensions/mv3/content_scripts/
@@ -51,9 +53,9 @@ function applyChromophobiaFilters(settings: any) {
     }
 }
 
-// Subscribe to settings changes and apply filters
+// Subscribe to chromophobia settings changes and apply filters
 chromophobiaController.getSettings().subscribe((settings) => {
-    console.log('Settings changed:', settings);
+    console.log('Chromophobia settings changed:', settings);
     chromophobiaController.applyFiltersToPage(settings);
     
     // Ensure any existing filters are removed when disabled
@@ -66,47 +68,78 @@ chromophobiaController.getSettings().subscribe((settings) => {
     }
 });
 
-// Global flag to prevent multiple mounts
-let isMounted = false;
+// Subscribe to cognitive settings changes and apply features
+cognitiveController.getSettings().subscribe((settings) => {
+    console.log('Cognitive settings changed:', settings);
+    cognitiveController.applyCognitiveFeaturesToPage(settings);
+});
+
+// Initialize cognitive features when page loads
+cognitiveController.initializeFeatures();
+
+// Global flags to prevent multiple mounts
+let isChromophobiaMounted = false;
+let isCognitiveMounted = false;
 
 // Mount the controls component with error handling
 try {
     // Wait for DOM to be ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
-            if (!isMounted) {
-                mountControls();
-            }
+            mountChromophobiaControls();
+            mountCognitiveControls();
         });
     } else {
         // If DOM is already ready, mount immediately
-        if (!isMounted) {
-            mountControls();
-        }
+        mountChromophobiaControls();
+        mountCognitiveControls();
     }
 } catch (error) {
     console.error('Failed to mount Inclusify controls:', error);
 }
 
-function mountControls() {
+function mountChromophobiaControls() {
     try {
         // Check if already mounted
-        if (isMounted || document.getElementById('inclusify-controls-container')) {
-            console.log('Inclusify controls already mounted');
+        if (isChromophobiaMounted || document.getElementById('inclusify-chromophobia-controls-container')) {
+            console.log('Inclusify chromophobia controls already mounted');
             return;
         }
         
-        // Create a container for the controls
+        // Create a container for the chromophobia controls
         const container = document.createElement('div');
-        container.id = 'inclusify-controls-container';
+        container.id = 'inclusify-chromophobia-controls-container';
         container.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483646; pointer-events: none; transform: none; filter: none;';
         document.body.appendChild(container);
         
         // Mount the Svelte component
         mount(ChromophobiaControlsView, { target: container });
-        isMounted = true;
-        console.log('Inclusify controls mounted successfully');
+        isChromophobiaMounted = true;
+        console.log('Inclusify chromophobia controls mounted successfully');
     } catch (error) {
-        console.error('Error mounting Inclusify controls:', error);
+        console.error('Error mounting Inclusify chromophobia controls:', error);
+    }
+}
+
+function mountCognitiveControls() {
+    try {
+        // Check if already mounted
+        if (isCognitiveMounted || document.getElementById('inclusify-cognitive-controls-container')) {
+            console.log('Inclusify cognitive controls already mounted');
+            return;
+        }
+        
+        // Create a container for the cognitive controls
+        const container = document.createElement('div');
+        container.id = 'inclusify-cognitive-controls-container';
+        container.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483646; pointer-events: none; transform: none; filter: none;';
+        document.body.appendChild(container);
+        
+        // Mount the Svelte component
+        mount(CognitiveControlsView, { target: container });
+        isCognitiveMounted = true;
+        console.log('Inclusify cognitive controls mounted successfully');
+    } catch (error) {
+        console.error('Error mounting Inclusify cognitive controls:', error);
     }
 }
