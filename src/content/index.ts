@@ -1,8 +1,8 @@
 import { mount } from "svelte";
 import ChromophobiaControlsView from "../views/ChromophobiaControlsView.svelte";
 import CognitiveControlsView from "../views/CognitiveControlsView.svelte";
-import AccessibilityFloatingIcon from "../views/AccessibilityFloatingIcon.svelte";
-import DyslexiaFloatingIcon from "../views/DyslexiaFloatingIcon.svelte";
+import AccessibilityControlsView from "../views/AccessibilityControlsView.svelte";
+import DyslexiaControlsView from "../views/DyslexiaControlsView.svelte";
 import UnifiedFloatingIcon from "../views/UnifiedFloatingIcon.svelte";
 import { chromophobiaController } from "../controllers/ChromophobiaController";
 import { cognitiveController } from "../controllers/CognitiveController";
@@ -102,7 +102,7 @@ function mountAccessibilityControls() {
         container.id = 'inclusify-accessibility-controls-container';
         container.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483646; pointer-events: none; transform: none; filter: none;';
         document.body.appendChild(container);
-        mount(AccessibilityFloatingIcon, { target: container });
+        mount(AccessibilityControlsView, { target: container });
         isAccessibilityMounted = true;
     } catch (error) { console.error('Error mounting Inclusify accessibility controls:', error); }
 }
@@ -114,7 +114,7 @@ function mountDyslexiaControls() {
         container.id = 'inclusify-dyslexia-controls-container';
         container.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2147483646; pointer-events: none; transform: none; filter: none;';
         document.body.appendChild(container);
-        mount(DyslexiaFloatingIcon, { target: container });
+        mount(DyslexiaControlsView, { target: container });
         isDyslexiaMounted = true;
     } catch (error) { console.error('Error mounting Inclusify dyslexia controls:', error); }
 }
