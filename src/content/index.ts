@@ -6,6 +6,7 @@ import DyslexiaControlsView from "../views/DyslexiaControlsView.svelte";
 import UnifiedFloatingIcon from "../views/UnifiedFloatingIcon.svelte";
 import { chromophobiaController } from "../controllers/ChromophobiaController";
 import { cognitiveController } from "../controllers/CognitiveController";
+import { DyslexiaController } from "../controllers/DyslexiaController";
 
 // Import global styles
 import "./styles.css";
@@ -52,6 +53,10 @@ cognitiveController.getSettings().subscribe((settings) => {
 });
 
 cognitiveController.initializeFeatures();
+
+// Initialize Dyslexia Controller
+const dyslexiaController = DyslexiaController.getInstance();
+dyslexiaController.initialize();
 
 let isChromophobiaMounted = false;
 let isCognitiveMounted = false;
@@ -119,9 +124,19 @@ function mountDyslexiaControls() {
     } catch (error) { console.error('Error mounting Inclusify dyslexia controls:', error); }
 }
 
+// Helper function to close all sidebars
+function closeAllSidebars() {
+    // Dispatch close events for all sidebars
+    document.dispatchEvent(new CustomEvent('inclusify-close-chromophobia'));
+    document.dispatchEvent(new CustomEvent('inclusify-close-cognitive'));
+    document.dispatchEvent(new CustomEvent('inclusify-close-accessibility'));
+    document.dispatchEvent(new CustomEvent('inclusify-close-dyslexia'));
+}
+
 // Event listeners for unified floating icon
 function setupUnifiedIconEventListeners() {
     document.addEventListener('inclusify-open-chromophobia', () => {
+        closeAllSidebars(); // Close all other sidebars first
         mountChromophobiaControls();
         // Show the chromophobia controls
         const container = document.getElementById('inclusify-chromophobia-controls-container');
@@ -131,6 +146,7 @@ function setupUnifiedIconEventListeners() {
     });
 
     document.addEventListener('inclusify-open-cognitive', () => {
+        closeAllSidebars(); // Close all other sidebars first
         mountCognitiveControls();
         // Show the cognitive controls
         const container = document.getElementById('inclusify-cognitive-controls-container');
@@ -140,20 +156,48 @@ function setupUnifiedIconEventListeners() {
     });
 
     document.addEventListener('inclusify-open-accessibility', () => {
+        console.log('[Inclusify] Opening accessibility controls');
+        closeAllSidebars(); // Close all other sidebars first
+        const wasAlreadyMounted = isAccessibilityMounted;
         mountAccessibilityControls();
         // Show the accessibility controls
         const container = document.getElementById('inclusify-accessibility-controls-container');
         if (container) {
             container.style.pointerEvents = 'auto';
+            console.log('[Inclusify] Accessibility container pointer-events set to auto');
+
+            // If we just mounted the component, dispatch the event again after a brief delay
+            // to ensure the component's event listener is attached
+            if (!wasAlreadyMounted) {
+                setTimeout(() => {
+                    document.dispatchEvent(new CustomEvent('inclusify-open-accessibility'));
+                }, 50);
+            }
+        } else {
+            console.error('[Inclusify] Accessibility container not found');
         }
     });
 
     document.addEventListener('inclusify-open-dyslexia', () => {
+        console.log('[Inclusify] Opening dyslexia controls');
+        closeAllSidebars(); // Close all other sidebars first
+        const wasAlreadyMounted = isDyslexiaMounted;
         mountDyslexiaControls();
         // Show the dyslexia controls
         const container = document.getElementById('inclusify-dyslexia-controls-container');
         if (container) {
             container.style.pointerEvents = 'auto';
+            console.log('[Inclusify] Dyslexia container pointer-events set to auto');
+
+            // If we just mounted the component, dispatch the event again after a brief delay
+            // to ensure the component's event listener is attached
+            if (!wasAlreadyMounted) {
+                setTimeout(() => {
+                    document.dispatchEvent(new CustomEvent('inclusify-open-dyslexia'));
+                }, 50);
+            }
+        } else {
+            console.error('[Inclusify] Dyslexia container not found');
         }
     });
 }

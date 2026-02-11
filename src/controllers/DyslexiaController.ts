@@ -7,18 +7,12 @@ export interface DyslexiaSettings {
     lineSpacing: number;
     wordSpacing: number;
     letterSpacing: number;
-    colorOverlay: boolean;
-    focusMode: boolean;
     lineFocus: boolean;
-    highContrast: boolean;
-    linkHighlighting: boolean;
-    readingMode: boolean;
     dyslexiaRuler: boolean;
-    magnifier: boolean;
 }
 
 export class DyslexiaController {
-    private static instance: DyslexiaController;
+    private static instance: DyslexiaController | undefined;
     private settingsStore: Writable<DyslexiaSettings>;
     private domController: DOMController;
     private eventController: EventController;
@@ -31,14 +25,8 @@ export class DyslexiaController {
             lineSpacing: 1.5,
             wordSpacing: 0.16,
             letterSpacing: 0.12,
-            colorOverlay: false,
-            focusMode: false,
             lineFocus: false,
-            highContrast: false,
-            linkHighlighting: false,
-            readingMode: false,
-            dyslexiaRuler: false,
-            magnifier: false
+            dyslexiaRuler: false
         });
 
         this.domController = new DOMController();
@@ -167,16 +155,19 @@ class DOMController {
         
         // Add dyslexia class
         html.classList.add('inclusify-dyslexia-enabled');
-        
-        // Apply visual aids
-        if (settings.colorOverlay) this.applyColorOverlay();
-        if (settings.focusMode) this.applyFocusMode();
-        if (settings.lineFocus) this.applyLineFocus();
-        if (settings.highContrast) this.applyHighContrast();
-        if (settings.linkHighlighting) this.applyLinkHighlighting();
-        if (settings.readingMode) this.applyReadingMode();
-        if (settings.dyslexiaRuler) this.applyDyslexiaRuler();
-        if (settings.magnifier) this.applyMagnifier();
+
+        // Apply or remove visual aids based on settings
+        if (settings.lineFocus) {
+            this.applyLineFocus();
+        } else {
+            this.removeLineFocus();
+        }
+
+        if (settings.dyslexiaRuler) {
+            this.applyDyslexiaRuler();
+        } else {
+            this.removeDyslexiaRuler();
+        }
     }
 
     public removeSettings(): void {
@@ -193,55 +184,8 @@ class DOMController {
         html.style.removeProperty('--dyslexia-letter-spacing');
         
         // Remove overlays
-        this.removeColorOverlay();
-        this.removeFocusMode();
         this.removeLineFocus();
-        this.removeHighContrast();
-        this.removeLinkHighlighting();
-        this.removeReadingMode();
         this.removeDyslexiaRuler();
-        this.removeMagnifier();
-    }
-
-    private applyColorOverlay(): void {
-        const overlay = document.createElement('div');
-        overlay.id = 'dyslexia-color-overlay';
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 0, 0.1);
-            pointer-events: none;
-            z-index: 9999;
-        `;
-        document.body.appendChild(overlay);
-    }
-
-    private removeColorOverlay(): void {
-        const overlay = document.getElementById('dyslexia-color-overlay');
-        if (overlay) overlay.remove();
-    }
-
-    private applyFocusMode(): void {
-        const highlight = document.createElement('div');
-        highlight.id = 'dyslexia-focus-highlight';
-        highlight.style.cssText = `
-            position: absolute;
-            background-color: yellow;
-            opacity: 0.3;
-            pointer-events: none;
-            z-index: 10000;
-            border-radius: 2px;
-            transition: all 0.2s ease;
-        `;
-        document.body.appendChild(highlight);
-    }
-
-    private removeFocusMode(): void {
-        const highlight = document.getElementById('dyslexia-focus-highlight');
-        if (highlight) highlight.remove();
     }
 
     private applyLineFocus(): void {
@@ -265,39 +209,6 @@ class DOMController {
         if (lineFocus) lineFocus.remove();
     }
 
-    private applyHighContrast(): void {
-        const html = document.documentElement;
-        html.classList.add('inclusify-high-contrast');
-    }
-
-    private removeHighContrast(): void {
-        const html = document.documentElement;
-        html.classList.remove('inclusify-high-contrast');
-    }
-
-    private applyLinkHighlighting(): void {
-        const links = document.querySelectorAll('a');
-        links.forEach(link => {
-            link.classList.add('inclusify-link-highlight');
-        });
-    }
-
-    private removeLinkHighlighting(): void {
-        const links = document.querySelectorAll('.inclusify-link-highlight');
-        links.forEach(link => {
-            link.classList.remove('inclusify-link-highlight');
-        });
-    }
-
-    private applyReadingMode(): void {
-        const html = document.documentElement;
-        html.classList.add('inclusify-reading-mode');
-    }
-
-    private removeReadingMode(): void {
-        const html = document.documentElement;
-        html.classList.remove('inclusify-reading-mode');
-    }
 
     private applyDyslexiaRuler(): void {
         const ruler = document.createElement('div');
@@ -305,11 +216,13 @@ class DOMController {
         ruler.style.cssText = `
             position: fixed;
             width: 100%;
-            height: 2px;
+            height: 3px;
             background: linear-gradient(to right, transparent, #ff6b35, transparent);
             pointer-events: none;
             z-index: 10001;
             transition: top 0.1s ease;
+            top: 50vh;
+            box-shadow: 0 0 4px rgba(255, 107, 53, 0.5);
         `;
         document.body.appendChild(ruler);
     }
@@ -317,30 +230,6 @@ class DOMController {
     private removeDyslexiaRuler(): void {
         const ruler = document.getElementById('dyslexia-ruler');
         if (ruler) ruler.remove();
-    }
-
-    private applyMagnifier(): void {
-        const magnifier = document.createElement('div');
-        magnifier.id = 'dyslexia-magnifier';
-        magnifier.style.cssText = `
-            position: fixed;
-            width: 200px;
-            height: 200px;
-            border: 2px solid #ff6b35;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10002;
-            background: rgba(255, 255, 255, 0.9);
-            transform: scale(2);
-            transform-origin: center;
-            display: none;
-        `;
-        document.body.appendChild(magnifier);
-    }
-
-    private removeMagnifier(): void {
-        const magnifier = document.getElementById('dyslexia-magnifier');
-        if (magnifier) magnifier.remove();
     }
 
     private styleElement(element: Element): void {
@@ -388,15 +277,6 @@ class EventController {
     }
 
     private handleMouseMove(e: MouseEvent): void {
-        // Update focus highlight
-        const highlight = document.getElementById('dyslexia-focus-highlight');
-        if (highlight) {
-            highlight.style.left = (e.clientX - 50) + 'px';
-            highlight.style.top = (e.clientY - 25) + 'px';
-            highlight.style.width = '100px';
-            highlight.style.height = '50px';
-        }
-
         // Update line focus
         const lineFocus = document.getElementById('dyslexia-line-focus');
         if (lineFocus) {
@@ -413,13 +293,6 @@ class EventController {
         const ruler = document.getElementById('dyslexia-ruler');
         if (ruler) {
             ruler.style.top = (e.clientY - 1) + 'px';
-        }
-
-        // Update magnifier
-        const magnifier = document.getElementById('dyslexia-magnifier');
-        if (magnifier) {
-            magnifier.style.left = (e.clientX - 100) + 'px';
-            magnifier.style.top = (e.clientY - 100) + 'px';
         }
     }
 

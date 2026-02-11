@@ -66,10 +66,24 @@ export class CognitiveController {
 
     public setMaskOpacity(value: number): void {
         cognitiveModel.setMaskOpacity(value);
+        // Update the mask opacity if reading mask is currently active
+        const window = document.getElementById('inclusify-reading-window');
+        if (window) {
+            const opacityDecimal = value / 100;
+            window.style.boxShadow = `0 0 0 9999px rgba(0,0,0,${opacityDecimal})`;
+        }
     }
 
     public setGuideColor(value: string): void {
         cognitiveModel.setGuideColor(value);
+        // Update CSS variable for guide color
+        document.documentElement.style.setProperty('--inclusify-guide-color', value);
+        // Update the guide color if reading guide is currently active
+        const guide = document.getElementById('inclusify-reading-guide');
+        if (guide) {
+            guide.style.backgroundColor = value;
+            guide.style.boxShadow = `0 0 10px ${value}`;
+        }
     }
 
     public resetToDefaults(): void {
@@ -104,8 +118,7 @@ export class CognitiveController {
     public applyCognitiveFeaturesToPage(settings: CognitiveSettings): void {
         console.log('Applying cognitive features:', settings);
         const html = document.documentElement;
-        const body = document.body;
-        
+
         if (settings.enabled) {
             // Remove any existing cognitive classes
             html.classList.remove(
@@ -209,25 +222,20 @@ export class CognitiveController {
     // Reading mask implementation
     public applyReadingMask(): void {
         console.log('Applying reading mask');
-        
+
         // Remove any existing reading mask first
         this.removeReadingMask();
-        
-        // Create a subtle overlay that dims the page slightly
-        const mask = document.createElement('div');
-        mask.id = 'inclusify-reading-mask';
-        mask.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.1);
-            pointer-events: none;
-            z-index: 2147483646;
-        `;
-        
-        // Create the reading highlight window
+
+        // Get current settings to use maskOpacity
+        let maskOpacity = 50; // Default
+        this.getSettings().subscribe(settings => {
+            maskOpacity = settings.maskOpacity || 50;
+        })();
+
+        // Convert percentage to decimal (50% = 0.5)
+        const opacityDecimal = maskOpacity / 100;
+
+        // Create the reading highlight window with box-shadow for mask effect
         const window = document.createElement('div');
         window.id = 'inclusify-reading-window';
         window.style.cssText = `
@@ -241,10 +249,9 @@ export class CognitiveController {
             border-top: 3px solid #007bff;
             border-bottom: 3px solid #007bff;
             transition: top 0.1s ease;
-            box-shadow: 0 0 0 9999px rgba(0,0,0,0.15);
+            box-shadow: 0 0 0 9999px rgba(0,0,0,${opacityDecimal});
         `;
-        
-        document.body.appendChild(mask);
+
         document.body.appendChild(window);
         
         // Set initial position
@@ -252,11 +259,17 @@ export class CognitiveController {
         
         // Move the window to follow the mouse Y position
         const moveWindow = (e: MouseEvent) => {
-            // Check if mouse is over sidebar elements
+            // Check if mouse is over ANY sidebar elements
             const target = e.target as HTMLElement;
             if (
                 target.closest('#inclusify-chromophobia-controls-container') ||
                 target.closest('#inclusify-cognitive-controls-container') ||
+                target.closest('#inclusify-accessibility-controls-container') ||
+                target.closest('#inclusify-dyslexia-controls-container') ||
+                target.closest('.controls-overlay') ||
+                target.closest('.cognitive-controls-overlay') ||
+                target.closest('.accessibility-overlay') ||
+                target.closest('.dyslexia-overlay') ||
                 target.closest('.sidepanel-container')
             ) {
                 // Hide the reading window when over sidebar
@@ -276,25 +289,20 @@ export class CognitiveController {
             window.style.top = `${top}px`;
         };
         
-        window._inclusifyMoveHandler = moveWindow;
+        (window as any)._inclusifyMoveHandler = moveWindow;
         document.addEventListener('mousemove', moveWindow);
-        
+
         console.log('Reading mask applied with elements:', {
-            mask: document.getElementById('inclusify-reading-mask'),
             window: document.getElementById('inclusify-reading-window'),
             body: document.body,
-            maskElement: mask,
             windowElement: window
         });
-        
+
         // Verify elements are in the DOM
         setTimeout(() => {
-            const maskInDOM = document.getElementById('inclusify-reading-mask');
             const windowInDOM = document.getElementById('inclusify-reading-window');
             console.log('Reading mask verification after 100ms:', {
-                maskInDOM,
                 windowInDOM,
-                maskVisible: maskInDOM ? maskInDOM.offsetWidth > 0 : false,
                 windowVisible: windowInDOM ? windowInDOM.offsetWidth > 0 : false
             });
         }, 100);
@@ -302,9 +310,7 @@ export class CognitiveController {
 
     public removeReadingMask(): void {
         console.log('Removing reading mask');
-        const mask = document.getElementById('inclusify-reading-mask');
         const window = document.getElementById('inclusify-reading-window');
-        if (mask) mask.remove();
         if (window) {
             // Remove the mousemove event
             if ((window as any)._inclusifyMoveHandler) {
@@ -340,8 +346,8 @@ export class CognitiveController {
         };
         
         document.addEventListener('mousemove', moveHandler);
-        cursor._inclusifyMoveHandler = moveHandler;
-        
+        (cursor as any)._inclusifyMoveHandler = moveHandler;
+
         // Hide default cursor
         document.body.style.cursor = 'none';
     }
@@ -360,6 +366,9 @@ export class CognitiveController {
 
     // Reading guide implementation
     public applyReadingGuide(): void {
+        // Remove any existing guide first
+        this.removeReadingGuide();
+
         // Create reading guide line
         const guide = document.createElement('div');
         guide.id = 'inclusify-reading-guide';
@@ -375,14 +384,24 @@ export class CognitiveController {
         document.body.appendChild(guide);
 
         // Track mouse movement for guide
-        document.addEventListener('mousemove', (e) => {
+        const moveHandler = (e: MouseEvent) => {
             guide.style.left = (e.clientX - 1) + 'px';
-        });
+        };
+
+        // Store the handler so it can be removed later
+        (guide as any)._inclusifyMoveHandler = moveHandler;
+        document.addEventListener('mousemove', moveHandler);
     }
 
     public removeReadingGuide(): void {
         const guide = document.getElementById('inclusify-reading-guide');
-        if (guide) guide.remove();
+        if (guide) {
+            // Remove the mousemove event
+            if ((guide as any)._inclusifyMoveHandler) {
+                document.removeEventListener('mousemove', (guide as any)._inclusifyMoveHandler);
+            }
+            guide.remove();
+        }
     }
 }
 

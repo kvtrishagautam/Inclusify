@@ -17,10 +17,10 @@ export default defineManifest(async () => ({
     version: `${major}.${minor}.${patch}`,
     version_name: version,
     icons: {
-        "16": "src/assets/icons/new-icon1.png",
-        "32": "src/assets/icons/new-icon1.png",
-        "48": "src/assets/icons/new-icon1.png",
-        "128": "src/assets/icons/new-icon1.png",
+        "16": "new-icon1.png",
+        "32": "new-icon1.png",
+        "48": "new-icon1.png",
+        "128": "new-icon1.png",
     },
     content_scripts: [
         {
@@ -34,10 +34,10 @@ export default defineManifest(async () => ({
 
     action: {
         default_icon: {
-            "16": "src/assets/icons/new-icon1.png",
-            "32": "src/assets/icons/new-icon1.png",
-            "48": "src/assets/icons/new-icon1.png",
-            "128": "src/assets/icons/new-icon1.png",
+            "16": "new-icon1.png",
+            "32": "new-icon1.png",
+            "48": "new-icon1.png",
+            "128": "new-icon1.png",
         },
     },
     permissions: ["storage", "sidePanel", "activeTab", "scripting"] as chrome.runtime.ManifestPermissions[],

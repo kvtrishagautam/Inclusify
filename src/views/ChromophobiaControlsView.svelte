@@ -2,7 +2,7 @@
 	import { chromophobiaSettings, type ColorMode } from "../storage";
 	import { onMount } from "svelte";
 
-	let isVisible = false;
+	let isVisible = true; // Auto-show when mounted from unified icon
 	let settings = $chromophobiaSettings;
 
 	// Subscribe to settings changes
@@ -12,6 +12,10 @@
 
 	function toggleVisibility() {
 		isVisible = !isVisible;
+	}
+
+	function closePanel() {
+		isVisible = false;
 	}
 
 	function toggleEnabled() {
@@ -55,34 +59,35 @@
 			}
 		}
 
+		// Listen for open event from unified icon
+		function handleOpenEvent() {
+			isVisible = true;
+		}
+
+		// Listen for close event
+		function handleCloseEvent() {
+			isVisible = false;
+		}
+
 		document.addEventListener("keydown", handleKeyPress);
+		document.addEventListener("inclusify-open-chromophobia", handleOpenEvent);
+		document.addEventListener("inclusify-close-chromophobia", handleCloseEvent);
 
 		return () => {
 			document.removeEventListener("keydown", handleKeyPress);
+			document.removeEventListener("inclusify-open-chromophobia", handleOpenEvent);
+			document.removeEventListener("inclusify-close-chromophobia", handleCloseEvent);
 		};
 	});
 </script>
 
-<!-- Floating toggle button -->
-<button
-	class="floating-toggle {settings.enabled ? 'enabled' : ''}"
-	on:click={toggleVisibility}
-	on:keydown={(e) => e.key === "Enter" && toggleVisibility()}
-	on:keydown={(e) => e.key === " " && (e.preventDefault(), toggleVisibility())}
-	aria-label="Toggle chromophobia controls"
-	tabindex="0"
-	title="Inclusify - Chromophobia Controls (Ctrl+Shift+C)"
-	type="button"
->
-	<span class="icon">🎨</span>
-</button>
-
 <!-- Main controls panel -->
 {#if isVisible}
-	<div class="controls-overlay">
-		<div class="controls-panel">
+	<div class="controls-overlay" role="button" tabindex="0" on:click={closePanel} on:keydown={(e) => e.key === 'Escape' && closePanel()}>
+		<div class="controls-panel" role="dialog" aria-modal="true" on:click|stopPropagation on:keydown|stopPropagation>
+			<button class="close-btn-left" on:click={closePanel}>×</button>
+
 			<div class="header">
-				<button class="close-btn-left" on:click={toggleVisibility}>×</button>
 				<h3>Inclusify - Chromophobia-Friendly</h3>
 			</div>
 
@@ -192,78 +197,6 @@
 {/if}
 
 <style>
-	.floating-toggle {
-		position: fixed !important;
-		top: 20px !important;
-		right: 20px !important;
-		width: 50px !important;
-		height: 50px !important;
-		background-color: #ffffff !important;
-		border: 2px solid #007bff !important;
-		border-radius: 50% !important;
-		display: flex !important;
-		align-items: center !important;
-		justify-content: center !important;
-		cursor: pointer !important;
-		z-index: 2147483647 !important;
-		box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3) !important;
-		transition: all 0.3s ease !important;
-		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-			sans-serif !important;
-		user-select: none !important;
-		-webkit-user-select: none !important;
-		-moz-user-select: none !important;
-		-ms-user-select: none !important;
-		animation: inclusify-fade-in 0.5s ease-out !important;
-		transform: none !important;
-		filter: none !important;
-		margin: 0 !important;
-		padding: 0 !important;
-		box-sizing: border-box !important;
-	}
-
-	@keyframes inclusify-fade-in {
-		from {
-			opacity: 0;
-			transform: scale(0.8) translateY(-10px);
-		}
-		to {
-			opacity: 1;
-			transform: scale(1) translateY(0);
-		}
-	}
-
-	.floating-toggle.enabled {
-		background-color: #007bff;
-		color: #ffffff;
-		border-color: #0056b3;
-		box-shadow: 0 4px 12px rgba(0, 123, 255, 0.5);
-	}
-
-	.floating-toggle:hover {
-		background-color: #007bff;
-		color: #ffffff;
-		transform: scale(1.1);
-		box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
-	}
-
-	.floating-toggle.enabled:hover {
-		background-color: #0056b3;
-		border-color: #004085;
-		box-shadow: 0 6px 16px rgba(0, 123, 255, 0.6);
-	}
-
-	.floating-toggle:focus {
-		outline: none;
-		box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
-	}
-
-	.icon {
-		font-size: 20px;
-		line-height: 1;
-		pointer-events: none;
-	}
-
 	.controls-overlay {
 		position: fixed !important;
 		top: 0 !important;
@@ -299,6 +232,7 @@
 		align-items: center;
 		margin-bottom: 20px;
 		padding-bottom: 15px;
+		padding-left: 45px;
 		border-bottom: 1px solid #dee2e6;
 		position: relative;
 	}
@@ -312,25 +246,27 @@
 
 	.close-btn-left {
 		position: absolute !important;
-		top: 15px !important;
-		left: 15px !important;
-		background: none !important;
-		border: none !important;
-		font-size: 24px !important;
-		cursor: pointer !important;
-		color: #666 !important;
+		top: 10px !important;
+		left: 10px !important;
 		width: 30px !important;
 		height: 30px !important;
+		background: #dc3545 !important;
+		color: white !important;
+		border: none !important;
+		border-radius: 50% !important;
+		cursor: pointer !important;
+		font-size: 16px !important;
 		display: flex !important;
 		align-items: center !important;
 		justify-content: center !important;
 		border-radius: 50% !important;
 		transition: all 0.3s ease !important;
+		z-index: 10 !important;
+		pointer-events: auto !important;
 	}
 
 	.close-btn-left:hover {
-		background-color: #f0f0f0 !important;
-		color: #333 !important;
+		background: #c82333 !important;
 	}
 
 	.reset-default-btn {

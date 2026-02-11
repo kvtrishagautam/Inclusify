@@ -4,7 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-/* Ensure the Inclusify controls containers are properly positioned */
+/* Ensure the Inclusify controls containers are properly positioned and unaffected by page changes */
 #inclusify-chromophobia-controls-container,
 #inclusify-cognitive-controls-container,
 #inclusify-accessibility-controls-container,
@@ -19,6 +19,48 @@
 #inclusify-accessibility-controls-container > *,
 #inclusify-dyslexia-controls-container > * {
     pointer-events: auto !important;
+}
+
+/* Exclude all control panels and their children from ALL accessibility modifications */
+#inclusify-chromophobia-controls-container,
+#inclusify-chromophobia-controls-container *,
+#inclusify-cognitive-controls-container,
+#inclusify-cognitive-controls-container *,
+#inclusify-accessibility-controls-container,
+#inclusify-accessibility-controls-container *,
+#inclusify-dyslexia-controls-container,
+#inclusify-dyslexia-controls-container *,
+.controls-overlay,
+.controls-overlay *,
+.cognitive-controls-overlay,
+.cognitive-controls-overlay *,
+.accessibility-overlay,
+.accessibility-overlay *,
+.dyslexia-overlay,
+.dyslexia-overlay *,
+.controls-panel,
+.controls-panel *,
+.cognitive-controls-panel,
+.cognitive-controls-panel *,
+.accessibility-controls-panel,
+.accessibility-controls-panel *,
+.dyslexia-controls-panel,
+.dyslexia-controls-panel * {
+    /* Reset typography */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: initial !important;
+    line-height: normal !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+
+    /* Reset colors and filters */
+    filter: none !important;
+
+    /* Reset transforms */
+    transform: none !important;
+
+    /* Preserve original colors - don't apply grayscale or other color modifications */
+    -webkit-filter: none !important;
 }
 
 /* Ensure the floating toggles are never affected by page filters or transforms */
@@ -271,43 +313,52 @@
     filter: inherit;
 }
 
-/* Exclude the floating toggle from any chromophobia filters */
+/* CRITICAL: Exclude ALL Inclusify controls from chromophobia filters and ALL modifications */
+.inclusify-enabled #inclusify-chromophobia-controls-container,
+.inclusify-enabled #inclusify-chromophobia-controls-container *,
+.inclusify-enabled #inclusify-cognitive-controls-container,
+.inclusify-enabled #inclusify-cognitive-controls-container *,
+.inclusify-enabled #inclusify-accessibility-controls-container,
+.inclusify-enabled #inclusify-accessibility-controls-container *,
+.inclusify-enabled #inclusify-dyslexia-controls-container,
+.inclusify-enabled #inclusify-dyslexia-controls-container *,
+.inclusify-enabled #inclusify-unified-floating-container,
+.inclusify-enabled #inclusify-unified-floating-container *,
+.inclusify-enabled .controls-overlay,
+.inclusify-enabled .controls-overlay *,
+.inclusify-enabled .controls-panel,
+.inclusify-enabled .controls-panel *,
+.inclusify-enabled .cognitive-controls-overlay,
+.inclusify-enabled .cognitive-controls-overlay *,
+.inclusify-enabled .cognitive-controls-panel,
+.inclusify-enabled .cognitive-controls-panel *,
+.inclusify-enabled .accessibility-overlay,
+.inclusify-enabled .accessibility-overlay *,
+.inclusify-enabled .accessibility-controls-panel,
+.inclusify-enabled .accessibility-controls-panel *,
+.inclusify-enabled .dyslexia-overlay,
+.inclusify-enabled .dyslexia-overlay *,
+.inclusify-enabled .dyslexia-controls-panel,
+.inclusify-enabled .dyslexia-controls-panel *,
 .inclusify-enabled .floating-toggle,
-.inclusify-enabled #inclusify-controls-container .floating-toggle,
-.floating-toggle,
-#inclusify-controls-container .floating-toggle {
+.inclusify-enabled .unified-floating-container,
+.inclusify-enabled .unified-floating-container * {
+    /* Reset ALL filters and transforms */
     filter: none !important;
+    -webkit-filter: none !important;
     transform: none !important;
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    left: auto !important;
-    bottom: auto !important;
-    width: 50px !important;
-    height: 50px !important;
-    background-color: #ffffff !important;
-    border: 2px solid #007bff !important;
-    border-radius: 50% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
-    z-index: 2147483647 !important;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3) !important;
-    transition: all 0.3s ease !important;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-    user-select: none !important;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    outline: none !important;
-    text-decoration: none !important;
-    list-style: none !important;
-    box-sizing: border-box !important;
+
+    /* Reset typography to default system fonts */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+    font-size: initial !important;
+    line-height: normal !important;
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
+
+    /* Do NOT inherit colors from chromophobia mode - keep original colors */
     background-color: initial !important;
     color: initial !important;
+    border-color: initial !important;
 }
 
 /* Override for images and videos to ensure proper filtering */
@@ -345,14 +396,39 @@
 
 /* Exclude control panels from cognitive styling */
 .inclusify-cognitive-enabled #inclusify-chromophobia-controls-container,
+.inclusify-cognitive-enabled #inclusify-chromophobia-controls-container *,
 .inclusify-cognitive-enabled #inclusify-cognitive-controls-container,
+.inclusify-cognitive-enabled #inclusify-cognitive-controls-container *,
+.inclusify-cognitive-enabled #inclusify-accessibility-controls-container,
+.inclusify-cognitive-enabled #inclusify-accessibility-controls-container *,
+.inclusify-cognitive-enabled #inclusify-dyslexia-controls-container,
+.inclusify-cognitive-enabled #inclusify-dyslexia-controls-container *,
+.inclusify-cognitive-enabled #inclusify-unified-floating-container,
+.inclusify-cognitive-enabled #inclusify-unified-floating-container *,
+.inclusify-cognitive-enabled .controls-overlay,
+.inclusify-cognitive-enabled .controls-overlay *,
+.inclusify-cognitive-enabled .cognitive-controls-overlay,
+.inclusify-cognitive-enabled .cognitive-controls-overlay *,
 .inclusify-cognitive-enabled .cognitive-controls-panel,
+.inclusify-cognitive-enabled .cognitive-controls-panel *,
 .inclusify-cognitive-enabled .controls-panel,
+.inclusify-cognitive-enabled .controls-panel *,
+.inclusify-cognitive-enabled .accessibility-overlay,
+.inclusify-cognitive-enabled .accessibility-overlay *,
+.inclusify-cognitive-enabled .accessibility-controls-panel,
+.inclusify-cognitive-enabled .accessibility-controls-panel *,
+.inclusify-cognitive-enabled .dyslexia-overlay,
+.inclusify-cognitive-enabled .dyslexia-overlay *,
+.inclusify-cognitive-enabled .dyslexia-controls-panel,
+.inclusify-cognitive-enabled .dyslexia-controls-panel *,
 .inclusify-cognitive-enabled .floating-toggle,
-.inclusify-cognitive-enabled .cognitive-floating-toggle {
+.inclusify-cognitive-enabled .cognitive-floating-toggle,
+.inclusify-cognitive-enabled .unified-floating-container,
+.inclusify-cognitive-enabled .unified-floating-container * {
     font-size: initial !important;
-    line-height: initial !important;
+    line-height: normal !important;
     filter: none !important;
+    -webkit-filter: none !important;
 }
 
 /* Big cursor styles */
@@ -646,22 +722,42 @@
 
 /* Exclude control panels from dyslexia styling */
 .inclusify-dyslexia-enabled #inclusify-chromophobia-controls-container,
+.inclusify-dyslexia-enabled #inclusify-chromophobia-controls-container *,
 .inclusify-dyslexia-enabled #inclusify-cognitive-controls-container,
+.inclusify-dyslexia-enabled #inclusify-cognitive-controls-container *,
 .inclusify-dyslexia-enabled #inclusify-accessibility-controls-container,
+.inclusify-dyslexia-enabled #inclusify-accessibility-controls-container *,
 .inclusify-dyslexia-enabled #inclusify-dyslexia-controls-container,
+.inclusify-dyslexia-enabled #inclusify-dyslexia-controls-container *,
+.inclusify-dyslexia-enabled #inclusify-unified-floating-container,
+.inclusify-dyslexia-enabled #inclusify-unified-floating-container *,
+.inclusify-dyslexia-enabled .controls-overlay,
+.inclusify-dyslexia-enabled .controls-overlay *,
+.inclusify-dyslexia-enabled .cognitive-controls-overlay,
+.inclusify-dyslexia-enabled .cognitive-controls-overlay *,
 .inclusify-dyslexia-enabled .controls-panel,
+.inclusify-dyslexia-enabled .controls-panel *,
 .inclusify-dyslexia-enabled .cognitive-controls-panel,
+.inclusify-dyslexia-enabled .cognitive-controls-panel *,
+.inclusify-dyslexia-enabled .accessibility-overlay,
+.inclusify-dyslexia-enabled .accessibility-overlay *,
 .inclusify-dyslexia-enabled .accessibility-controls-panel,
+.inclusify-dyslexia-enabled .accessibility-controls-panel *,
+.inclusify-dyslexia-enabled .dyslexia-overlay,
+.inclusify-dyslexia-enabled .dyslexia-overlay *,
 .inclusify-dyslexia-enabled .dyslexia-controls-panel,
+.inclusify-dyslexia-enabled .dyslexia-controls-panel *,
 .inclusify-dyslexia-enabled .floating-toggle,
 .inclusify-dyslexia-enabled .cognitive-floating-toggle,
 .inclusify-dyslexia-enabled .accessibility-floating-toggle,
-.inclusify-dyslexia-enabled .dyslexia-floating-toggle {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+.inclusify-dyslexia-enabled .dyslexia-floating-toggle,
+.inclusify-dyslexia-enabled .unified-floating-container,
+.inclusify-dyslexia-enabled .unified-floating-container * {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
     font-size: initial !important;
-    line-height: initial !important;
-    word-spacing: initial !important;
-    letter-spacing: initial !important;
+    line-height: normal !important;
+    word-spacing: normal !important;
+    letter-spacing: normal !important;
 }
 
 /* High contrast mode */
@@ -688,26 +784,6 @@
     padding: 2px 4px !important;
     border-radius: 3px !important;
     text-decoration: underline !important;
-}
-
-/* Reading mode */
-.inclusify-reading-mode {
-    background-color: #f8f9fa !important;
-}
-
-.inclusify-reading-mode * {
-    background-color: #f8f9fa !important;
-}
-
-.inclusify-reading-mode img,
-.inclusify-reading-mode video,
-.inclusify-reading-mode iframe,
-.inclusify-reading-mode .ad,
-.inclusify-reading-mode .advertisement,
-.inclusify-reading-mode .sidebar,
-.inclusify-reading-mode .nav,
-.inclusify-reading-mode .menu {
-    display: none !important;
 }
 
 /* Dyslexia ruler */

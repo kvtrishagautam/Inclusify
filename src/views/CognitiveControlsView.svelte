@@ -6,7 +6,7 @@
 	import { cognitiveController } from "../controllers/CognitiveController";
 	import { onMount } from "svelte";
 
-	let isVisible = false;
+	let isVisible = true; // Auto-show when mounted from unified icon
 	let settings: CognitiveSettings = {
 		enabled: false,
 		bigCursor: false,
@@ -28,6 +28,10 @@
 
 	function toggleVisibility() {
 		isVisible = !isVisible;
+	}
+
+	function closePanel() {
+		isVisible = false;
 	}
 
 	function toggleEnabled() {
@@ -88,34 +92,35 @@
 			}
 		}
 
+		// Listen for open event from unified icon
+		function handleOpenEvent() {
+			isVisible = true;
+		}
+
+		// Listen for close event
+		function handleCloseEvent() {
+			isVisible = false;
+		}
+
 		document.addEventListener("keydown", handleKeyPress);
+		document.addEventListener("inclusify-open-cognitive", handleOpenEvent);
+		document.addEventListener("inclusify-close-cognitive", handleCloseEvent);
 
 		return () => {
 			document.removeEventListener("keydown", handleKeyPress);
+			document.removeEventListener("inclusify-open-cognitive", handleOpenEvent);
+			document.removeEventListener("inclusify-close-cognitive", handleCloseEvent);
 		};
 	});
 </script>
 
-<!-- Floating toggle button -->
-<button
-	class="cognitive-floating-toggle {settings.enabled ? 'enabled' : ''}"
-	on:click={toggleVisibility}
-	on:keydown={(e) => e.key === "Enter" && toggleVisibility()}
-	on:keydown={(e) => e.key === " " && (e.preventDefault(), toggleVisibility())}
-	aria-label="Toggle cognitive accessibility controls"
-	tabindex="0"
-	title="Inclusify - Cognitive Accessibility Controls (Ctrl+Shift+D)"
-	type="button"
->
-	<span class="icon">🧠</span>
-</button>
-
 <!-- Main controls panel -->
 {#if isVisible}
-	<div class="cognitive-controls-overlay">
-		<div class="cognitive-controls-panel">
+	<div class="cognitive-controls-overlay" role="button" tabindex="0" on:click={closePanel} on:keydown={(e) => e.key === 'Escape' && closePanel()}>
+		<div class="cognitive-controls-panel" role="dialog" aria-modal="true" on:click|stopPropagation on:keydown|stopPropagation>
+			<button class="close-btn-left" on:click={closePanel}>×</button>
+
 			<div class="header">
-				<button class="close-btn-left" on:click={toggleVisibility}>×</button>
 				<h3>Inclusify - Cognitive Accessibility</h3>
 			</div>
 
@@ -267,67 +272,6 @@
 {/if}
 
 <style>
-	.cognitive-floating-toggle {
-		position: fixed !important;
-		top: 20px !important;
-		right: 80px !important;
-		width: 50px !important;
-		height: 50px !important;
-		background-color: #ffffff !important;
-		border: 2px solid #28a745 !important;
-		border-radius: 50% !important;
-		display: flex !important;
-		align-items: center !important;
-		justify-content: center !important;
-		cursor: pointer !important;
-		z-index: 2147483647 !important;
-		box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3) !important;
-		transition: all 0.3s ease !important;
-		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-			sans-serif !important;
-		user-select: none !important;
-		-webkit-user-select: none !important;
-		-moz-user-select: none !important;
-		-ms-user-select: none !important;
-		animation: inclusify-fade-in 0.5s ease-out !important;
-		transform: none !important;
-		filter: none !important;
-		margin: 0 !important;
-		padding: 0 !important;
-		box-sizing: border-box !important;
-	}
-
-	.cognitive-floating-toggle.enabled {
-		background-color: #28a745 !important;
-		color: #ffffff !important;
-		border-color: #1e7e34 !important;
-		box-shadow: 0 4px 12px rgba(40, 167, 69, 0.5) !important;
-	}
-
-	.cognitive-floating-toggle:hover {
-		background-color: #28a745 !important;
-		color: #ffffff !important;
-		transform: scale(1.1) !important;
-		box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4) !important;
-	}
-
-	.cognitive-floating-toggle.enabled:hover {
-		background-color: #1e7e34 !important;
-		border-color: #155724 !important;
-		box-shadow: 0 6px 16px rgba(40, 167, 69, 0.6) !important;
-	}
-
-	.cognitive-floating-toggle:focus {
-		outline: none !important;
-		box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3) !important;
-	}
-
-	.icon {
-		font-size: 20px;
-		line-height: 1;
-		pointer-events: none;
-	}
-
 	.cognitive-controls-overlay {
 		position: fixed !important;
 		top: 0 !important;
@@ -365,6 +309,7 @@
 		align-items: center;
 		margin-bottom: 20px;
 		padding-bottom: 15px;
+		padding-left: 45px;
 		border-bottom: 1px solid #dee2e6;
 		position: relative;
 	}
@@ -378,25 +323,26 @@
 
 	.close-btn-left {
 		position: absolute !important;
-		top: 15px !important;
-		left: 15px !important;
-		background: none !important;
-		border: none !important;
-		font-size: 24px !important;
-		cursor: pointer !important;
-		color: #666 !important;
+		top: 10px !important;
+		left: 10px !important;
 		width: 30px !important;
 		height: 30px !important;
+		background: #dc3545 !important;
+		color: white !important;
+		border: none !important;
+		border-radius: 50% !important;
+		cursor: pointer !important;
+		font-size: 16px !important;
 		display: flex !important;
 		align-items: center !important;
 		justify-content: center !important;
-		border-radius: 50% !important;
 		transition: all 0.3s ease !important;
+		z-index: 10 !important;
+		pointer-events: auto !important;
 	}
 
 	.close-btn-left:hover {
-		background-color: #f0f0f0 !important;
-		color: #333 !important;
+		background: #c82333 !important;
 	}
 
 	.control-group {

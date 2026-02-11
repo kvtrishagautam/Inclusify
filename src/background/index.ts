@@ -13,15 +13,3 @@ chrome.runtime.onInstalled.addListener(() => {
         }
     });
 });
-
-// Handle extension icon click to open side panel
-chrome.action.onClicked.addListener((tab) => {
-    if (tab.id) {
-        chrome.sidePanel.open({ tabId: tab.id });
-    }
-});
-
-// NOTE: If you want to toggle the side panel from the extension's action button,
-// you can use the following code:
-// chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
-//    .catch((error) => console.error(error));

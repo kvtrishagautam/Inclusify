@@ -3,7 +3,16 @@
 	import { DyslexiaController } from "../controllers/DyslexiaController";
 
 	let isVisible = true;
-	let settings: any = {};
+	let settings: any = {
+		enabled: false,
+		fontFamily: 'OpenDyslexic',
+		fontSize: 16,
+		lineSpacing: 1.5,
+		wordSpacing: 0.16,
+		letterSpacing: 0.12,
+		lineFocus: false,
+		dyslexiaRuler: false
+	};
 	let dyslexiaController: DyslexiaController;
 
 	onMount(() => {
@@ -11,7 +20,32 @@
 		dyslexiaController.getSettingsStore().subscribe((newSettings) => {
 			settings = newSettings;
 		});
+		console.log('[Inclusify] DyslexiaControlsView mounted, isVisible:', isVisible);
+
+		// Listen for open event from unified icon
+		function handleOpenEvent() {
+			console.log('[Inclusify] DyslexiaControlsView received open event, setting isVisible to true');
+			isVisible = true;
+			console.log('[Inclusify] DyslexiaControlsView isVisible is now:', isVisible);
+		}
+
+		// Listen for close event
+		function handleCloseEvent() {
+			console.log('[Inclusify] DyslexiaControlsView received close event');
+			isVisible = false;
+		}
+
+		document.addEventListener("inclusify-open-dyslexia", handleOpenEvent);
+		document.addEventListener("inclusify-close-dyslexia", handleCloseEvent);
+
+		return () => {
+			document.removeEventListener("inclusify-open-dyslexia", handleOpenEvent);
+			document.removeEventListener("inclusify-close-dyslexia", handleCloseEvent);
+		};
 	});
+
+	// Debug: Log whenever isVisible changes
+	$: console.log('[Inclusify] DyslexiaControlsView isVisible changed to:', isVisible);
 
 	function toggleVisibility() {
 		isVisible = !isVisible;
@@ -52,6 +86,11 @@
 		dyslexiaController.getSettingsStore().set(newSettings);
 	}
 
+	function toggleLineFocus() {
+		const newSettings = { ...settings, lineFocus: !settings.lineFocus };
+		dyslexiaController.getSettingsStore().set(newSettings);
+	}
+
 	function toggleDyslexiaRuler() {
 		const newSettings = { ...settings, dyslexiaRuler: !settings.dyslexiaRuler };
 		dyslexiaController.getSettingsStore().set(newSettings);
@@ -65,26 +104,32 @@
 			lineSpacing: 1.5,
 			wordSpacing: 0.1,
 			letterSpacing: 0.1,
+			lineFocus: false,
 			dyslexiaRuler: false
 		};
 		dyslexiaController.getSettingsStore().set(defaultSettings);
 	}
 </script>
 
-<div class="dyslexia-controls-panel {isVisible ? 'visible' : ''}">
-	<!-- Close button -->
-	<button class="close-button" on:click={toggleVisibility} aria-label="Close dyslexia controls">
-		✕
-	</button>
+{#if isVisible}
+<div class="dyslexia-overlay" role="button" tabindex="0" on:click={toggleVisibility} on:keydown={(e) => e.key === 'Escape' && toggleVisibility()}>
+	<div class="dyslexia-controls-panel" role="dialog" aria-modal="true" on:click|stopPropagation on:keydown|stopPropagation>
+		<!-- Close button -->
+		<button class="close-button" on:click={toggleVisibility} aria-label="Close dyslexia controls">
+			✕
+		</button>
 
-	<div class="controls-content">
-		<h3>Dyslexia Support</h3>
+		<div class="header">
+			<h3>Inclusify - Dyslexia</h3>
+		</div>
+
+		<div class="controls-content">
 		
 		<div class="control-section">
 			<label class="toggle-label">
-				<input 
-					type="checkbox" 
-					bind:checked={settings.enabled} 
+				<input
+					type="checkbox"
+					checked={settings.enabled}
 					on:change={toggleDyslexiaMode}
 				/>
 				<span class="toggle-text">Enable Dyslexia Support</span>
@@ -157,14 +202,27 @@
 					/>
 				</div>
 
+				<h4 style="margin-top: 20px;">Reading Aids</h4>
+
 				<div class="setting-group">
 					<label class="toggle-label">
-						<input 
-							type="checkbox" 
-							bind:checked={settings.dyslexiaRuler} 
+						<input
+							type="checkbox"
+							checked={settings.lineFocus}
+							on:change={toggleLineFocus}
+						/>
+						<span class="toggle-text">Line Focus (highlights current line)</span>
+					</label>
+				</div>
+
+				<div class="setting-group">
+					<label class="toggle-label">
+						<input
+							type="checkbox"
+							checked={settings.dyslexiaRuler}
 							on:change={toggleDyslexiaRuler}
 						/>
-						<span class="toggle-text">Dyslexia Ruler</span>
+						<span class="toggle-text">Reading Ruler (tracks mouse position)</span>
 					</label>
 				</div>
 			</div>
@@ -175,26 +233,41 @@
 				</button>
 			</div>
 		{/if}
+		</div>
 	</div>
 </div>
+{/if}
 
 <style>
-	.dyslexia-controls-panel {
+	.dyslexia-overlay {
 		position: fixed !important;
 		top: 0 !important;
-		right: -400px !important;
-		width: 400px !important;
-		height: 100vh !important;
-		background-color: #ffffff !important;
-		box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1) !important;
+		left: 0 !important;
+		width: 100% !important;
+		height: 100% !important;
+		background-color: rgba(0, 0, 0, 0.5) !important;
 		z-index: 2147483646 !important;
-		transition: right 0.3s ease !important;
-		overflow-y: auto !important;
-		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+		display: flex !important;
+		align-items: flex-start !important;
+		justify-content: flex-end !important;
+		pointer-events: auto !important;
+		padding: 80px 20px 20px 20px !important;
 	}
 
-	.dyslexia-controls-panel.visible {
-		right: 0 !important;
+	.dyslexia-controls-panel {
+		background-color: #ffffff !important;
+		border-radius: 12px !important;
+		padding: 20px !important;
+		width: 350px !important;
+		max-width: 90vw !important;
+		max-height: calc(100vh - 120px) !important;
+		overflow-y: auto !important;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+		border: 1px solid #dee2e6 !important;
+		position: relative !important;
+		z-index: 2147483647 !important;
+		pointer-events: auto !important;
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 	}
 
 	.close-button {
@@ -219,18 +292,29 @@
 		background: #c82333 !important;
 	}
 
-	.controls-content {
-		padding: 50px 20px 20px 20px !important;
+	.header {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 20px;
+		padding: 40px 20px 15px 45px;
+		border-bottom: 1px solid #dee2e6;
+		position: relative;
 	}
 
-	.controls-content h3 {
-		margin: 0 0 20px 0 !important;
-		color: #333 !important;
-		font-size: 18px !important;
+	.header h3 {
+		margin: 0;
+		color: #333;
+		font-size: 18px;
+		font-weight: 600;
+	}
+
+	.controls-content {
+		padding: 0 !important;
 	}
 
 	.control-section {
-		margin-bottom: 20px !important;
+		margin-bottom: 15px !important;
 	}
 
 	.settings-section {
@@ -290,7 +374,7 @@
 	.reset-button {
 		width: 100% !important;
 		padding: 12px !important;
-		background-color: #6c757d !important;
+		background-color: #343a40 !important;
 		color: white !important;
 		border: none !important;
 		border-radius: 6px !important;
@@ -300,6 +384,6 @@
 	}
 
 	.reset-button:hover {
-		background-color: #545b62 !important;
+		background-color: #23272b !important;
 	}
 </style> 
